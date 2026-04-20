@@ -28,6 +28,7 @@
 
   --color-border:                 hsl(var(--border));
   --color-ring:                   hsl(var(--ring));
+  @variant dark (&:where(.dark, .dark *));
 }
 
 /* ─── Variables CSS por tema ────────────────────────────────────────────── */

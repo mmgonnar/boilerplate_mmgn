@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui/button';
+import { Button, ThemeToggle } from '@/components/ui';
 import { ExternalLink } from 'lucide-react';
 
 export default function Home() {
@@ -14,6 +14,7 @@ export default function Home() {
       >
         Ir alDesign System
       </Button>
+      <ThemeToggle />
     </main>
   );
 }

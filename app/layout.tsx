@@ -1,12 +1,14 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 
+import { ThemeProvider } from '@/providers';
+
 import './globals.css';
 
 export const metadata: Metadata = {
   title: {
     default: 'mmgn - boilerplate',
-    template: '%s | Project',
+    template: '%s | boilerplate',
   },
   description: 'mmgn boilerplate',
   authors: [
@@ -27,8 +29,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es" className={`${inter.variable}`}>
-      <body>{children}</body>
+    <html lang="es" suppressHydrationWarning>
+      <body className={`${inter.variable} font-sans antialiased`}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          {children}
+        </ThemeProvider>
+      </body>
     </html>
   );
 }

@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui';
 import {
   ChevronLeft,
   ExternalLink,
@@ -16,7 +16,7 @@ export default function DesignSystemPage() {
   const [loading, setLoading] = useState(false);
 
   return (
-    <main className="p-10 space-y-12 bg-neutral-100 min-h-screen text-neutral-800">
+    <main className="p-10 space-y-12 bg-neutral-200 min-h-screen text-neutral-800">
       <nav className="mb-8">
         <Button
           href="/"
