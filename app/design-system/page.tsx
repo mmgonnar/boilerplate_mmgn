@@ -2,6 +2,10 @@
 
 import { useState } from 'react';
 
+import {
+  LoginFormExample,
+  ProfileFormExample,
+} from '@/components/design-system';
 import { Button, Input, ThemeToggle } from '@/components/ui';
 import {
   ChevronLeft,
@@ -186,6 +190,21 @@ export default function DesignSystemPage() {
             </Button>
           </div>
         </section>
+        <section className="py-12 px-6 border-2 border-dashed border-border rounded-3xl text-center space-y-4">
+          <div className="bg-muted w-16 h-16 rounded-full flex items-center justify-center mx-auto">
+            <Plus size={24} className="text-muted-foreground" />
+          </div>
+          <div className="space-y-1">
+            <h3 className="text-lg font-semibold text-foreground">
+              No hay proyectos activos
+            </h3>
+            <p className="text-sm text-muted-foreground max-w-xs mx-auto">
+              Comienza creando tu primer proyecto de gestión o importa uno desde
+              tu dashboard.
+            </p>
+          </div>
+          <Button leftIcon={<Plus size={18} />}>Crear Proyecto</Button>
+        </section>
 
         <section className="space-y-4">
           <h2 className="text-sm font-mono text-muted-foreground uppercase tracking-widest">
@@ -207,19 +226,10 @@ export default function DesignSystemPage() {
         </section>
 
         <section className="py-12 px-6 border-2 border-dashed border-border rounded-3xl text-center space-y-4">
-          <div className="bg-muted w-16 h-16 rounded-full flex items-center justify-center mx-auto">
-            <Plus size={24} className="text-muted-foreground" />
-          </div>
-          <div className="space-y-1">
-            <h3 className="text-lg font-semibold text-foreground">
-              No hay proyectos activos
-            </h3>
-            <p className="text-sm text-muted-foreground max-w-xs mx-auto">
-              Comienza creando tu primer proyecto de gestión o importa uno desde
-              tu dashboard.
-            </p>
-          </div>
-          <Button leftIcon={<Plus size={18} />}>Crear Proyecto</Button>
+          <LoginFormExample />
+        </section>
+        <section className="py-12 px-6 border-2 border-dashed border-border rounded-3xl text-center space-y-4">
+          <ProfileFormExample />
         </section>
       </main>
     </>

@@ -45,7 +45,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         .join(' ') || undefined;
 
     return (
-      <div className="flex w-full flex-col gap-1.5">
+      <div className="flex w-full flex-col gap-1.5 text-left">
         {/* Label */}
         {label && (
           <label
