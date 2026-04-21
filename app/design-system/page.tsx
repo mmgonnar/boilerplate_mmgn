@@ -19,6 +19,11 @@ import {
   CardSeparator,
   CardTitle,
   Input,
+  Skeleton,
+  SkeletonAvatar,
+  SkeletonButton,
+  SkeletonInput,
+  SkeletonText,
   ThemeToggle,
 } from '@/components/ui';
 import {
@@ -401,6 +406,7 @@ export default function DesignSystemPage() {
           </div>
         </SectionWrapper>
 
+        {/* --- BREADCRUMB --- */}
         <SectionWrapper title="Navigation: Breadcrumb (Data-driven)">
           <div className="space-y-8 p-8 border border-border rounded-2xl bg-card/10">
             {/* Caso 1: Básico con Iconos */}
@@ -474,6 +480,49 @@ export default function DesignSystemPage() {
                 ]}
                 className="font-light tracking-widest text-zinc-400"
               />
+            </div>
+          </div>
+        </SectionWrapper>
+
+        {/* --- SKELETON --- */}
+        <SectionWrapper title="Feedback: Skeletons">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {/* Ejemplo 1: Card de Usuario Cargando */}
+            <div className="p-6 border border-border rounded-xl space-y-4">
+              <div className="flex items-center gap-3">
+                <SkeletonAvatar size="lg" />
+                <div className="space-y-2 flex-1">
+                  <Skeleton className="h-4 w-1/2" />
+                  <Skeleton className="h-3 w-1/3" />
+                </div>
+              </div>
+              <SkeletonText lines={2} lastLineWidth="1/2" />
+              <div className="flex justify-end">
+                <SkeletonButton size="sm" width="w-20" />
+              </div>
+            </div>
+
+            {/* Ejemplo 2: Formulario Cargando */}
+            <div className="space-y-4">
+              <SkeletonInput />
+              <SkeletonInput />
+              <SkeletonButton className="w-full" />
+            </div>
+
+            {/* Ejemplo 3: List Item Minimalista */}
+            <div className="space-y-4">
+              {[1, 2, 3].map((i) => (
+                <div
+                  key={i}
+                  className="flex items-center justify-between p-3 border-b border-border/50"
+                >
+                  <div className="flex items-center gap-3 flex-1">
+                    <Skeleton className="h-2 w-2 rounded-full" />
+                    <Skeleton className="h-4 w-1/2" />
+                  </div>
+                  <Skeleton className="h-4 w-12" />
+                </div>
+              ))}
             </div>
           </div>
         </SectionWrapper>
