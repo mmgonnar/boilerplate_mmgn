@@ -3,3 +3,4 @@ export * from './theme-toggle';
 export * from './input';
 export * from './form';
 export * from './badge';
+export * from './card';
