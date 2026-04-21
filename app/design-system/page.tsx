@@ -9,6 +9,7 @@ import {
 import { SectionWrapper } from '@/components/design-system/section-wrapper';
 import {
   Badge,
+  Breadcrumb,
   Button,
   Card,
   CardContent,
@@ -21,11 +22,14 @@ import {
   ThemeToggle,
 } from '@/components/ui';
 import {
+  Book,
   Building,
   Check,
   ChevronLeft,
+  ChevronRight,
   Clock,
   ExternalLink,
+  Home,
   Lock,
   Mail,
   Phone,
@@ -394,6 +398,83 @@ export default function DesignSystemPage() {
                 </Button>
               </CardFooter>
             </Card>
+          </div>
+        </SectionWrapper>
+
+        <SectionWrapper title="Navigation: Breadcrumb (Data-driven)">
+          <div className="space-y-8 p-8 border border-border rounded-2xl bg-card/10">
+            {/* Caso 1: Básico con Iconos */}
+            <div className="space-y-3">
+              <p className="text-[10px] font-bold text-muted-foreground uppercase">
+                Con Iconos y Rutas
+              </p>
+              <Breadcrumb
+                items={[
+                  { label: 'Home', href: '/', icon: <Home size={14} /> },
+                  {
+                    label: 'Cursos',
+                    href: '/cursos',
+                    icon: <Book size={14} />,
+                  },
+                  { label: 'Inglés Avanzado' },
+                ]}
+              />
+            </div>
+
+            {/* Caso 2: Colapsado Automático */}
+            <div className="space-y-3">
+              <p className="text-[10px] font-bold text-muted-foreground uppercase">
+                Auto-colapso (maxItems: 3)
+              </p>
+              <Breadcrumb
+                maxItems={3}
+                items={[
+                  { label: 'Dashboard', href: '/' },
+                  { label: 'Usuarios', href: '/users' },
+                  { label: 'Estudiantes', href: '/users/students' },
+                  { label: 'Expedientes', href: '/users/students/files' },
+                  { label: 'Mariela González' },
+                ]}
+              />
+            </div>
+
+            {/* Caso 3: Separador Custom */}
+            <div className="space-y-3">
+              <p className="text-[10px] font-bold text-muted-foreground uppercase">
+                Separador Minimalista
+              </p>
+              <Breadcrumb
+                separator={
+                  <span className="text-muted-foreground/30 mx-1">/</span>
+                }
+                items={[
+                  { label: 'Proyectos', href: '/projects' },
+                  { label: 'Braaiasao Website' },
+                ]}
+              />
+            </div>
+
+            <div className="space-y-3">
+              <p className="text-[10px] font-bold text-muted-foreground uppercase">
+                Navegación
+              </p>
+              <Breadcrumb
+                separator={
+                  <ChevronRight
+                    className="h-4 w-4 shrink-0 text-zinc-600 font-extralight"
+                    strokeWidth={1}
+                  />
+                }
+                items={[
+                  { label: 'Inicio', href: '/' },
+                  { label: 'Nosotros', href: '/nosotros' },
+                  { label: 'Menú', href: '/menu' },
+                  { label: 'Ubicaciones', href: '/ubicaciones' },
+                  { label: 'Contacto' },
+                ]}
+                className="font-light tracking-widest text-zinc-400"
+              />
+            </div>
           </div>
         </SectionWrapper>
       </main>
