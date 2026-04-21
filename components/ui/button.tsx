@@ -71,7 +71,7 @@ type ButtonAsButton = BaseProps &
 type ButtonAsLink = BaseProps &
   Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, keyof BaseProps> & {
     href: string;
-    external?: boolean; // abre en _blank con rel seguro
+    external?: boolean;
   };
 
 // Union type — TypeScript elige el tipo correcto según si href existe
@@ -85,7 +85,7 @@ const Button = React.forwardRef<
   (
     {
       className,
-      variant,
+      variant = 'primary',
       size,
       isLoading = false,
       leftIcon,
