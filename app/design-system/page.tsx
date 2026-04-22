@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import React, { useState } from 'react';
 
 import {
   LoginFormExample,
@@ -18,6 +18,7 @@ import {
   CardHeader,
   CardSeparator,
   CardTitle,
+  Dialog,
   Input,
   Skeleton,
   SkeletonAvatar,
@@ -50,6 +51,8 @@ import {
 
 export default function DesignSystemPage() {
   const [loading, setLoading] = useState(false);
+
+  const [showModal, setShowModal] = React.useState(false);
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -524,6 +527,30 @@ export default function DesignSystemPage() {
                 </div>
               ))}
             </div>
+          </div>
+        </SectionWrapper>
+
+        <SectionWrapper title="Interactions: Dialog (Modal)">
+          <div className="p-10 border border-border rounded-xl bg-card/20 flex flex-col items-center gap-4">
+            <p className="text-sm text-muted-foreground">
+              Prueba el flujo de edición:
+            </p>
+            <Button onClick={() => setShowModal(true)}>
+              Editar Perfil del Alumno
+            </Button>
+
+            <Dialog
+              isOpen={showModal}
+              onClose={() => setShowModal(false)}
+              title="Editar Perfil"
+              description="Modifica la información del estudiante. Los cambios se guardarán instantáneamente."
+            >
+              <div className="p-1 border-2 border-dashed border-border rounded-3xl mt-4">
+                <div className="p-2">
+                  <ProfileFormExample />
+                </div>
+              </div>
+            </Dialog>
           </div>
         </SectionWrapper>
       </main>

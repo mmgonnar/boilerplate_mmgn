@@ -1,5 +1,20 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+> [!NOTE]
+> Útil para información general importante.
+
+> [!TIP]
+> Útil para advertir sobre riesgos.
+
+> [!IMPORTANT]
+> Útil para advertir sobre riesgos.
+
+> [!CAUTION]
+> Útil para advertir sobre riesgos.
+
+> [!WARNING]
+> Útil para advertir sobre riesgos.
+
 ## Getting Started
 
 First, run the development server:
