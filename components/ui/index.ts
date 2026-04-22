@@ -7,3 +7,4 @@ export * from './card';
 export * from './breadcrumb';
 export * from './skeleton';
 export * from './dialog';
+export * from './logo';
