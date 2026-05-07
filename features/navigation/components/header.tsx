@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 
+import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
@@ -21,13 +22,12 @@ interface HeaderProps {
 export function Header({ isAuthenticated = false }: HeaderProps) {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = React.useState(false);
+  const t = useTranslations('nav');
 
-  // ✅ Cierra el menú mobile al cambiar de ruta
   React.useEffect(() => {
     setMobileOpen(false);
   }, [pathname]);
 
-  // ✅ Bloquea scroll del body cuando el menú mobile está abierto
   React.useEffect(() => {
     document.body.style.overflow = mobileOpen ? 'hidden' : '';
     return () => {
@@ -35,7 +35,6 @@ export function Header({ isAuthenticated = false }: HeaderProps) {
     };
   }, [mobileOpen]);
 
-  // Links según estado de autenticación
   const navLinks = isAuthenticated
     ? NAV_CONFIG.authenticated
     : NAV_CONFIG.public;
@@ -60,12 +59,12 @@ export function Header({ isAuthenticated = false }: HeaderProps) {
                 'hover:text-foreground hover:bg-accent',
                 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
                 pathname === link.href
-                  ? 'text-foreground font-medium bg-accent' // ✅ estado activo
+                  ? 'text-foreground font-medium bg-accent'
                   : 'text-muted-foreground',
               )}
               aria-current={pathname === link.href ? 'page' : undefined}
             >
-              {link.label}
+              {t(link.label)}
             </Link>
           ))}
         </nav>
