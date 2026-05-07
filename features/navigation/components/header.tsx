@@ -5,7 +5,8 @@ import * as React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
-import { Button, Logo, ThemeToggle } from '@/components/ui';
+import { Logo } from '@/components';
+import { Button, ThemeToggle } from '@/components/ui';
 import { cn } from '@/lib/utils';
 import { Globe, Menu, X } from 'lucide-react';
 

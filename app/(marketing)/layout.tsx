@@ -16,7 +16,7 @@ export default function MarketingLayout({
   return (
     <div className="grid min-h-dvh grid-rows-[auto_1fr_auto]">
       <Header />
-      <main className="h-full w-full">{children}</main>
+      <main className="w-full overflow-x-hidden">{children}</main>
       <Footer />
     </div>
   );

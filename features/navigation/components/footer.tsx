@@ -1,9 +1,8 @@
 import Link from 'next/link';
 
-import { Logo } from '@/components/ui';
+import { Logo } from '@/components';
 import { cn } from '@/lib/utils';
 
-// ✅ Configura las columnas del footer por proyecto
 const FOOTER_LINKS = [
   {
     title: 'Producto',
@@ -42,8 +41,7 @@ export function Footer() {
           <div className="col-span-2 md:col-span-1 space-y-4">
             <Logo />
             <p className="text-sm text-muted-foreground max-w-xs">
-              Boilerplate production-ready para arrancar proyectos sin perder
-              tiempo.
+              Boilerplate production-ready para arrancar proyectos.
             </p>
           </div>
 
@@ -77,10 +75,11 @@ export function Footer() {
         {/* ── Bottom bar ────────────────────────────────────────────── */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-8 border-t border-border">
           <p className="text-xs text-muted-foreground">
-            © {currentYear} Boilerplate. Todos los derechos reservados.
+            © {currentYear} mmgonnar - boilerplate. Todos los derechos
+            reservados.
           </p>
           <p className="text-xs text-muted-foreground">
-            Hecho con ♥ por{' '}
+            Hecho por:{' '}
             <Link
               href="https://github.com/mmgonnar"
               target="_blank"

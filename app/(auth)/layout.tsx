@@ -1,4 +1,5 @@
-import { Logo, ThemeToggle } from '@/components/ui';
+import { Logo } from '@/components';
+import { ThemeToggle } from '@/components/ui';
 
 export const metadata = {
   robots: { index: false, follow: false },
