@@ -5,5 +5,7 @@
   "about": "Nosotros",
   "login": "Iniciar sesión",
   "register": "Registrarse",
-  "language": "Idioma"
+  "language": "Idioma",
+  "dashboard": "Panel",
+  "profile": "Perfil"
 }

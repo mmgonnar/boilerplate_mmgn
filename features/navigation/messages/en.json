@@ -5,5 +5,7 @@
   "about": "About",
   "login": "Sign in",
   "register": "Sign up",
-  "language": "Language"
+  "language": "Language",
+  "dashboard": "Dashboard",
+  "profile": "Profile"
 }

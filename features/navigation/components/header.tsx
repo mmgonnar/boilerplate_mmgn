@@ -94,10 +94,10 @@ export function Header({ isAuthenticated = false }: HeaderProps) {
           ) : (
             <div className="flex items-center gap-2">
               <Button variant="ghost" size="sm" href="/login">
-                Iniciar sesión
+                {t('login')}
               </Button>
               <Button size="sm" href="/register">
-                Registrarse
+                {t('register')}
               </Button>
             </div>
           )}
@@ -160,7 +160,7 @@ export function Header({ isAuthenticated = false }: HeaderProps) {
               aria-label="Cambiar idioma"
             >
               <Globe className="h-4 w-4" />
-              Cambiar idioma
+              {t('language')}
             </Button>
 
             {isAuthenticated ? (

@@ -7,30 +7,37 @@
 
 ## 1. Technical Stack
 
-### Core Framework
-- **Next.js**: 16.2.2 (App Router)
+### Dependencies
+
+- **Next.js**: 16.2.2 (App Router with Turbopack)
 - **React**: 19.2.4
-- **TypeScript**: 5.x (strict mode enabled)
-- **Runtime**: Bun
+- **TypeScript**: 5.x (strict mode)
+- **Bun**: Runtime
+- **next-intl**: 3.26.5 ← not v4, downgraded for Next.js 16 compatibility
 
 ### Styling
-- **Tailwind CSS**: 4.x (with `@theme` custom properties)
-- **PostCSS**: Configured via `postcss.config.mjs`
-- **class-variance-authority**: 0.7.1 (for component variants)
-- **clsx** + **tailwind-merge**: For className composition
 
-### Forms & Validation
+- **Tailwind CSS**: 4.x
+- **PostCSS**: 4.x
+- **class-variance-authority**: 0.7.1
+- **clsx** + **tailwind-merge**: className composition
+
+### Forms
+
 - **react-hook-form**: 7.73.1
-- **zod**: 4.3.6 (schema validation)
+- **zod**: 4.3.6
 - **@hookform/resolvers**: 5.2.2
 
-### Theming & UI
-- **next-themes**: 0.4.6 (dark mode)
-- **lucide-react**: 1.8.0 (icons)
+### Theming & i18n
+
+- **next-themes**: 0.4.6
+- **next-intl**: 4.x
+- **lucide-react**: 1.8.0
 
 ### Development
+
 - **ESLint**: 9.x
-- **Prettier**: With tailwindcss and import-sort plugins
+- **Prettier**
 
 ---
 
@@ -41,22 +48,25 @@
 ```
 /
 ├── app/                          # Next.js App Router pages
-│   ├── (auth)/                  # Auth route group
-│   │   ├── login/
-│   │   └── register/
-│   ├── (dashboard)/             # Authenticated route group
-│   │   └── dashboard/
-│   ├── (marketing)/            # Public marketing pages
-│   │   ├── about/
-│   │   ├── features/
-│   │   ├── pricing/
-│   │   └── page.tsx            # Landing
-│   ├── design-system/           # Component showcase
-│   ├── globals.css             # Tailwind v4 theme config
-│   └── layout.tsx              # Root layout with providers
+│   ├── [locale]/                 # Locale segment (i18n)
+│   │   ├── (auth)/              # Auth route group
+│   │   │   ├── login/
+│   │   │   └── register/
+│   │   ├── (dashboard)/         # Authenticated route group
+│   │   │   └── dashboard/
+│   │   ├── (marketing)/        # Public marketing pages
+│   │   │   ├── about/
+│   │   │   ├── features/
+│   │   │   ├── pricing/
+│   │   │   └── page.tsx       # Landing
+│   │   ├── design-system/     # Component showcase
+│   │   ├── layout.tsx         # Locale layout with providers
+│   │   └── page.tsx          # Redirect or 404
+│   └── globals.css            # Tailwind v4 theme config
+│
 │
 ├── components/
-│   ├── assets/                 # Static assets (SVG, etc.)
+│   ├── assets/                 # Static assets (SVG)
 │   ├── design-system/           # Design system demo sections
 │   ├── ui/                     # Reusable UI primitives
 │   │   ├── button.tsx
@@ -70,29 +80,50 @@
 │   │   ├── theme-toggle.tsx
 │   │   └── index.ts           # Barrel export
 │   ├── index.ts                # Component exports
-│   └── logo.tsx                # Logo component
+│   └── logo.tsx                # Logo component (auto dark/light)
 │
 ├── features/                   # Feature-based modules
-│   └── navigation/
-│       ├── components/
-│       │   ├── header.tsx
-│       │   └── footer.tsx
-│       ├── types/
-│       │   └── types.ts
-│       ├── utils/
-│       │   └── config.tsx
-│       └── index.ts            # Barrel export
+│   ├── navigation/
+│   │   ├── components/
+│   │   │   ├── header.tsx
+│   │   │   └── footer.tsx
+│   │   ├── types/
+│   │   │   └── types.ts
+│   │   ├── utils/
+│   │   │   └── config.tsx
+│   │   ├── messages/          # Feature translations
+│   │   │   ├── en.json
+│   │   │   └── es.json
+│   │   └── index.ts          # Barrel export
+│   ├── auth/
+│   │   └── messages/
+│   │       ├── en.json
+│   │       └── es.json
+│   └── dashboard/
+│       └── messages/
+│           ├── en.json
+│           └── es.json
+│
+├── i18n/                       # Internationalization
+│   ├── routing.ts              # defineRouting config
+│   └── request.ts             # getRequestConfig
+│
+├── messages/                   # Root translations
+│   ├── en.json
+│   └── es.json
+│
+├── middleware.ts              # Locale detection middleware
 │
 ├── lib/
 │   └── utils.ts               # Shared utilities (cn function)
 │
 ├── providers/
 │   ├── index.ts
-│   └── theme-provider.tsx    # next-themes wrapper
+│   └── theme-provider.tsx      # next-themes wrapper
 │
 ├── package.json
 ├── tsconfig.json
-├── next.config.ts
+├── next.config.ts             # With next-intl plugin
 ├── postcss.config.mjs
 ├── eslint.config.mjs
 └── prettierrc
@@ -100,11 +131,11 @@
 
 ### Route Groups
 
-| Group | Purpose | Layout |
-|-------|---------|--------|
-| `(auth)` | Authentication pages | Minimal, centered content |
-| `(dashboard)` | Authenticated app | With sidebar/layout |
-| `(marketing)` | Public marketing | With Header/Footer |
+| Group         | Purpose              | Layout                    |
+| ------------- | -------------------- | ------------------------- |
+| `(auth)`      | Authentication pages | Minimal, centered content |
+| `(dashboard)` | Authenticated app    | With sidebar/layout       |
+| `(marketing)` | Public marketing     | With Header/Footer        |
 
 ---
 
@@ -152,21 +183,22 @@ export { Button, buttonVariants };
 
 ### Naming Conventions
 
-| Type | Convention | Example |
-|------|------------|---------|
-| Components | PascalCase | `Button`, `CardHeader` |
-| Files | kebab-case | `button.tsx`, `card-header.tsx` |
-| Features | kebab-case | `navigation`, `user-profile` |
-| Types | PascalCase | `ButtonProps`, `NavLink` |
-| Variants | camelCase | `buttonVariants`, `cardVariants` |
-| Props | camelCase | `className`, `leftIcon` |
+| Type       | Convention | Example                          |
+| ---------- | ---------- | -------------------------------- |
+| Components | PascalCase | `Button`, `CardHeader`           |
+| Files      | kebab-case | `button.tsx`, `card-header.tsx`  |
+| Features   | kebab-case | `navigation`, `user-profile`     |
+| Types      | PascalCase | `ButtonProps`, `NavLink`         |
+| Variants   | camelCase  | `buttonVariants`, `cardVariants` |
+| Props      | camelCase  | `className`, `leftIcon`          |
 
 ### Import Path Aliases
 
 ```typescript
 // @/ resolves to project root
-import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui';
+import { cn } from '@/lib/utils';
+
 import { Header } from '@/features/navigation';
 ```
 
@@ -174,33 +206,33 @@ import { Header } from '@/features/navigation';
 
 ```css
 /* globals.css - Tailwind v4 */
-@import "tailwindcss";
+@import 'tailwindcss';
 
 @theme {
   --color-primary: hsl(var(--primary));
   --color-primary-foreground: hsl(var(--primary-foreground));
-  /* ... */
 }
 
 @layer base {
   :root {
     --primary: 142 71% 35%;
-    --primary-foreground: 0 0% 100%;
   }
-  .dark { /* ... */ }
+  .dark {
+    /* ... */
+  }
 }
 ```
 
 ### Dark Mode Integration
 
-All components must support both light/dark themes via CSS variables. Use semantic colors:
+All components must use semantic colors:
 
 ```typescript
 // Correct
-className="bg-background text-foreground"
+className = 'bg-background text-foreground';
 
 // Avoid
-className="bg-white dark:bg-gray-900"
+className = 'bg-white dark:bg-gray-900';
 ```
 
 ---
@@ -209,8 +241,7 @@ className="bg-white dark:bg-gray-900"
 
 ### Button Component (`components/ui/button.tsx`)
 
-**Features:**
-- Dual mode: renders as `<button>` or `<Link>` based on `href` prop
+- Dual mode: `<button>` or `<Link>` based on `href` prop
 - Loading state with spinner
 - Left/right icons
 - Sizes: `default`, `sm`, `lg`, `icon`
@@ -218,15 +249,12 @@ className="bg-white dark:bg-gray-900"
 
 ### Input Component (`components/ui/input.tsx`)
 
-**Features:**
 - Label + input + error/hint messages
 - Left/right icons
 - Full ARIA accessibility
-- Error state styling
 
 ### Card Component (`components/ui/card.tsx`)
 
-**Features:**
 - Sub-components: `CardHeader`, `CardTitle`, `CardDescription`, `CardContent`, `CardFooter`, `CardSeparator`
 - Variants: `default`, `elevated`, `ghost`, `outline`
 - Padding: `none`, `sm`, `default`, `lg`
@@ -234,7 +262,6 @@ className="bg-white dark:bg-gray-900"
 
 ### Badge Component (`components/ui/badge.tsx`)
 
-**Features:**
 - Variants: `default`, `secondary`, `success`, `warning`, `danger`, `outline`, `ghost`
 - Sizes: `sm`, `default`, `lg`
 - Dot indicator for status
@@ -255,16 +282,18 @@ features/[feature-name]/
 │   └── types.ts           # TypeScript interfaces
 ├── utils/
 │   └── config.tsx       # Configuration constants
+├── messages/           # Feature translations
+│   ├── en.json
+│   └── es.json
 ├── constants.ts         # (optional)
 ├── hooks.ts            # (optional) custom hooks
-├── services.ts        # (optional) API services
+├── services.ts         # (optional) API services
 └── index.ts          # Barrel export all public APIs
 ```
 
 ### Index Export Pattern
 
 ```typescript
-// features/navigation/index.ts
 export { Header } from './components/header';
 export { Footer } from './components/footer';
 export { NAV_CONFIG } from './utils/config';
@@ -276,23 +305,24 @@ export type { NavConfig, NavLink } from './types/types';
 ## 6. Deployment & Environments
 
 ### Current Setup
-- **Platform**: Vercel (ready for deployment)
-- **Build**: `npm run build` or `bun run build`
-- **Dev Server**: `npm run dev` or `bun run dev`
-- **Lint**: `npm run lint` or `bun run lint`
+
+- **Platform**: Vercel
+- **Build**: `bun run build`
+- **Dev Server**: `bun run dev`
+- **Lint**: `bun run lint`
 
 ### Environment Variables
+
 - `.env` file present (development)
 
 ### Not Yet Configured
-- Supabase (prepared for Auth integration)
-- Database (prepared for persistence)
+
+- Supabase (Auth + Database)
+- Prisma (ORM)
 
 ---
 
 ## 7. API Integration Patterns (Future)
-
-When integrating APIs:
 
 ```typescript
 // lib/api.ts
@@ -303,17 +333,10 @@ async function fetchAPI<T>(path: string, options?: RequestInit): Promise<T> {
     ...options,
     headers: {
       'Content-Type': 'application/json',
-      ...options?.headers,
     },
   });
   if (!res.ok) throw new APIError(res.status);
   return res.json();
-}
-
-// Usage in server components or server actions
-async function getProjects() {
-  'use server';
-  return fetchAPI<Project[]>('/projects');
 }
 ```
 
@@ -325,7 +348,6 @@ Not yet configured. When adding tests:
 
 - **Unit**: Vitest or Jest
 - **E2E**: Playwright
-- **Location**: `__tests__/` or `tests/` directories
 
 ---
 
@@ -334,12 +356,10 @@ Not yet configured. When adding tests:
 ### Adding New Variants
 
 ```typescript
-// To add a new variant to an existing component:
 const buttonVariants = cva([...], {
   variants: {
     variant: {
-      // ...existing variants
-      newVariant: ['bg-new text-new-foreground hover:bg-new/90'],
+      newVariant: ['bg-new text-new-foreground'],
     },
   },
 });
@@ -347,7 +367,6 @@ const buttonVariants = cva([...], {
 
 ### Creating New UI Components
 
-Follow the existing pattern:
 1. Create `components/ui/new-component.tsx`
 2. Use CVA for variants
 3. Export from `components/ui/index.ts`
@@ -356,23 +375,174 @@ Follow the existing pattern:
 ### Creating New Features
 
 1. Create `features/feature-name/` directory
-2. Add components, types, utils, index.ts
+2. Add components, types, utils, messages, index.ts
 3. Import into pages via `@/features/feature-name`
 
 ---
 
-## 10. Quick Reference
+## 10. Internationalization (next-intl v4)
 
-| Need | Reference |
-|------|-----------|
-| Button styles | `components/ui/button.tsx` - `buttonVariants` |
-| Input with label | `components/ui/input.tsx` |
-| Card layouts | `components/ui/card.tsx` - sub-components |
-| Navigation | `features/navigation/` |
-| Theme config | `app/globals.css` - `@theme` section |
-| Dark mode | `providers/theme-provider.tsx` |
-| Icons | `lucide-react` - import from package |
+### Configuration Files
+
+| File               | Purpose                               |
+| ------------------ | ------------------------------------- |
+| `i18n/routing.ts`  | `defineRouting()` config              |
+| `i18n/request.ts`  | `getRequestConfig()` - loads messages |
+| `middleware.ts`    | Locale detection + redirect           |
+| `messages/en.json` | Root English translations             |
+| `messages/es.json` | Root Spanish translations             |
+
+### Routing Config (`i18n/routing.ts`)
+
+```typescript
+import { defineRouting } from 'next-intl/routing';
+
+export const routing = defineRouting({
+  locales: ['es', 'en'],
+  defaultLocale: 'es',
+  localeDetection: true,
+  localePrefix: 'as-needed',
+});
+```
+
+### Locale Layout (`app/[locale]/layout.tsx`)
+
+```tsx
+import { NextIntlClientProvider } from 'next-intl';
+import { getMessages } from 'next-intl/server';
+import { ThemeProvider } from 'next-themes';
+
+export default async function LocaleLayout({ children, params }) {
+  const { locale } = await params;
+  const messages = await getMessages();
+
+  return (
+    <html lang={locale} suppressHydrationWarning>
+      <body>
+        <NextIntlClientProvider messages={messages}>
+          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+            {children}
+          </ThemeProvider>
+        </NextIntlClientProvider>
+      </body>
+    </html>
+  );
+}
+```
+
+### Feature Translations Pattern
+
+```
+features/[feature-name]/
+├── components/
+├── messages/
+│   ├── en.json
+│   └── es.json
+└── index.ts
+```
+
+### Usage in Components
+
+**Server Component**:
+
+```tsx
+import { getTranslations } from 'next-intl/server';
+
+export default async function Page() {
+  const t = await getTranslations('Navigation');
+  return <h1>{t('home')}</h1>;
+}
+```
+
+**Client Component**:
+
+```tsx
+'use client';
+import { useTranslations } from 'next-intl';
+
+export function ClientComponent() {
+  const t = useTranslations('Navigation');
+  return <button>{t('login')}</button>;
+}
+```
+
+### Locale Detection Priority
+
+1. **URL path** (e.g., `/es/about`) - highest
+2. **Cookie** (user preference)
+3. **Accept-Language header** (browser settings)
+4. **Default** (`es`)
+
+### Middleware (`middleware.ts`)
+
+```ts
+import createMiddleware from 'next-intl/middleware';
+
+import { routing } from './i18n/routing';
+
+export default createMiddleware(routing);
+
+export const config = {
+  matcher: ['/((?!api|_next|_vercel|.*\\..*).*)'],
+};
+```
+
+### Notes
+
+- All routes are under `[locale]` segment: `/en/...`, `/es/...`
+- Feature translations live in `features/*/messages/`
+- Root `messages/` can be merged at build time (manual for now)
 
 ---
 
-*This document serves as the definitive guide for this project. All new code should follow the patterns established in this reference.*
+## 11. Project Status
+
+### Completed
+
+- ✅ Next.js 16 with App Router + Turbopack
+- ✅ Tailwind CSS 4 with custom theme (CSS variables)
+- ✅ Feature-based architecture
+- ✅ UI Components (Button, Input, Card, Badge, Dialog, Skeleton, Breadcrumb)
+- ✅ Dark/Light mode theming (next-themes)
+- ✅ Logo with auto dark/light switching
+- ✅ next-intl v4 i18n setup
+- ✅ Locale routing (`/en/`, `/es/`)
+- ✅ Feature translations (navigation, auth, dashboard)
+- ✅ Root translations (`messages/`)
+- ✅ Middleware for locale detection
+- ✅ CVA pattern for all variant components
+
+### In Progress
+
+- [ ] Header translations connected (t(link.label) key mismatch pending)
+- [ ] Language toggle component
+
+### Pending
+
+1. Fix nav translation key mismatch (t(link.label) → lowercase keys)
+2. Build LanguageToggle component
+3. Prisma + Supabase setup
+4. Auth implementation
+5. Dashboard sidebar
+
+---
+
+## 12. Quick Reference
+
+| Need             | Reference                                     |
+| ---------------- | --------------------------------------------- |
+| Button styles    | `components/ui/button.tsx` - `buttonVariants` |
+| Input with label | `components/ui/input.tsx`                     |
+| Card layouts     | `components/ui/card.tsx` - sub-components     |
+| Navigation       | `features/navigation/`                        |
+| Theme config     | `app/globals.css` - `@theme` section          |
+| Dark mode        | `providers/theme-provider.tsx`                |
+| Icons            | `lucide-react`                                |
+| i18n config      | `i18n/routing.ts`, `i18n/request.ts`          |
+| Translations     | `messages/`, `features/*/messages/`           |
+| Locale layout    | `app/[locale]/layout.tsx`                     |
+| Middleware       | `middleware.ts`                               |
+
+---
+
+_This document serves as the definitive guide for this project. All new code should follow the patterns established in this reference._

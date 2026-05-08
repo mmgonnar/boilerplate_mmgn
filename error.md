@@ -1,56 +1,218 @@
-Module not found: Can't resolve '@/features/navigation/utils/config'
-12 | import { Globe, Menu, X } from 'lucide-react';
-13 |
+cd /Volumes/mmgn_SSD/Web/Repositories/projects/boilerplate_mmgn
+cat features/navigation/messages/es.json
+cat features/navigation/utils/config.tsx
+cat features/navigation/components/header.tsx
+{
+"home": "Inicio",
+"features": "Features",
+"pricing": "Precios",
+"about": "Nosotros",
+"login": "Iniciar sesión",
+"register": "Registrarse",
+"language": "Idioma"
+}
+import { NavConfig } from '../types/types';
 
-> 14 | import { NAV_CONFIG } from '@/features/navigation/utils/config';
+export const NAV_CONFIG: NavConfig = {
+public: [
+{ label: 'home', href: '/' },
+{ label: 'features', href: '/features' },
+{ label: 'pricing', href: '/pricing' },
+{ label: 'about', href: '/about' },
+],
+authenticated: [
+{ label: 'dashboard', href: '/dashboard' },
+{ label: 'perfil', href: '/profile' },
+],
+};
+'use client';
 
-     | ^
+import \* as React from 'react';
 
-15 |
-16 | // ─── Props ────────────────────────────────────────────────────────────────────
-17 | interface HeaderProps {
+import { useTranslations } from 'next-intl';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
-https://nextjs.org/docs/messages/module-not-found
-⨯ ./features/navigation/components/header.tsx:14:1
-Module not found: Can't resolve '@/features/navigation/utils/config'
-12 | import { Globe, Menu, X } from 'lucide-react';
-13 |
+import { Logo } from '@/components';
+import { Button, ThemeToggle } from '@/components/ui';
+import { cn } from '@/lib/utils';
+import { Globe, Menu, X } from 'lucide-react';
 
-> 14 | import { NAV_CONFIG } from '@/features/navigation/utils/config';
+import { NAV_CONFIG } from '@/features/navigation/utils/config';
 
-     | ^
+// ─── Props ────────────────────────────────────────────────────────────────────
+interface HeaderProps {
+isAuthenticated?: boolean; // ← vendrá de Supabase Auth cuando lo conectemos
+}
 
-15 |
-16 | // ─── Props ────────────────────────────────────────────────────────────────────
-17 | interface HeaderProps {
+// ─── Componente ───────────────────────────────────────────────────────────────
+export function Header({ isAuthenticated = false }: HeaderProps) {
+const pathname = usePathname();
+const [mobileOpen, setMobileOpen] = React.useState(false);
+const t = useTranslations('nav');
 
-https://nextjs.org/docs/messages/module-not-found
-⨯ ./features/navigation/components/header.tsx:14:1
-Module not found: Can't resolve '@/features/navigation/utils/config'
-12 | import { Globe, Menu, X } from 'lucide-react';
-13 |
+React.useEffect(() => {
+setMobileOpen(false);
+}, [pathname]);
 
-> 14 | import { NAV_CONFIG } from '@/features/navigation/utils/config';
+React.useEffect(() => {
+document.body.style.overflow = mobileOpen ? 'hidden' : '';
+return () => {
+document.body.style.overflow = '';
+};
+}, [mobileOpen]);
 
-     | ^
+const navLinks = isAuthenticated
+? NAV_CONFIG.authenticated
+: NAV_CONFIG.public;
 
-15 |
-16 | // ─── Props ────────────────────────────────────────────────────────────────────
-17 | interface HeaderProps {
+return (
+<header className="sticky top-0 z-40 w-full border-b border-border bg-background/80 backdrop-blur-md">
+<div className="container mx-auto flex h-16 items-center justify-between px-4">
+{/_ ── Logo ────────────────────────────────────────────────────── _/}
+<Logo />
 
-https://nextjs.org/docs/messages/module-not-found
-GET / 500 in 11824ms
-⨯ ./features/navigation/components/header.tsx:14:1
-Module not found: Can't resolve '@/features/navigation/utils/config'
-12 | import { Globe, Menu, X } from 'lucide-react';
-13 |
+        {/* ── Navegación central — desktop ────────────────────────────── */}
+        <nav
+          className="hidden md:flex items-center gap-1"
+          aria-label="Navegación principal"
+        >
+          {navLinks.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className={cn(
+                'px-3 py-2 rounded-md text-sm transition-colors duration-150',
+                'hover:text-foreground hover:bg-accent',
+                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
+                pathname === link.href
+                  ? 'text-foreground font-medium bg-accent'
+                  : 'text-muted-foreground',
+              )}
+              aria-current={pathname === link.href ? 'page' : undefined}
+            >
+              {t(link.label)}
+            </Link>
+          ))}
+        </nav>
 
-> 14 | import { NAV_CONFIG } from '@/features/navigation/utils/config';
+        {/* ── Acciones — desktop ──────────────────────────────────────── */}
+        <div className="hidden md:flex items-center gap-2">
+          {/* i18n — preparado, sin lógica aún */}
+          <Button
+            variant="ghost"
+            size="icon"
+            aria-label="Cambiar idioma"
+            title="Cambiar idioma (próximamente)"
+          >
+            <Globe className="h-4 w-4" />
+          </Button>
 
-     | ^
+          <ThemeToggle />
 
-15 |
-16 | // ─── Props ────────────────────────────────────────────────────────────────────
-17 | interface HeaderProps {
+          {isAuthenticated ? (
+            // ✅ Avatar placeholder — se reemplaza con el componente Avatar
+            // cuando conectemos Supabase Auth
+            <Button variant="ghost" size="icon" aria-label="Perfil de usuario">
+              <div className="h-7 w-7 rounded-full bg-primary/20 flex items-center justify-center">
+                <span className="text-xs font-medium text-primary">U</span>
+              </div>
+            </Button>
+          ) : (
+            <div className="flex items-center gap-2">
+              <Button variant="ghost" size="sm" href="/login">
+                Iniciar sesión
+              </Button>
+              <Button size="sm" href="/register">
+                Registrarse
+              </Button>
+            </div>
+          )}
+        </div>
 
-https://nextjs.org/docs/messages/module-not-found
+        {/* ── Hamburger — mobile ──────────────────────────────────────── */}
+        <div className="flex md:hidden items-center gap-2">
+          <ThemeToggle />
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setMobileOpen((prev) => !prev)}
+            aria-label={mobileOpen ? 'Cerrar menú' : 'Abrir menú'}
+            aria-expanded={mobileOpen}
+            aria-controls="mobile-menu"
+          >
+            {mobileOpen ? (
+              <X className="h-5 w-5" />
+            ) : (
+              <Menu className="h-5 w-5" />
+            )}
+          </Button>
+        </div>
+      </div>
+
+      {/* ── Menú mobile ─────────────────────────────────────────────────── */}
+      <div
+        id="mobile-menu"
+        className={cn(
+          'md:hidden border-t border-border bg-background',
+          'transition-[max-height,opacity] duration-300 overflow-hidden',
+          mobileOpen ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0',
+        )}
+        aria-hidden={!mobileOpen}
+      >
+        <nav className="flex flex-col gap-1 p-4" aria-label="Navegación mobile">
+          {navLinks.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className={cn(
+                'px-3 py-2.5 rounded-md text-sm transition-colors duration-150',
+                'hover:text-foreground hover:bg-accent',
+                pathname === link.href
+                  ? 'text-foreground font-medium bg-accent'
+                  : 'text-muted-foreground',
+              )}
+              aria-current={pathname === link.href ? 'page' : undefined}
+            >
+              {link.label}
+            </Link>
+          ))}
+
+          {/* Acciones mobile */}
+          <div className="flex flex-col gap-2 mt-4 pt-4 border-t border-border">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="w-full justify-start gap-2"
+              aria-label="Cambiar idioma"
+            >
+              <Globe className="h-4 w-4" />
+              Cambiar idioma
+            </Button>
+
+            {isAuthenticated ? (
+              <Button variant="outline" size="sm" className="w-full">
+                Mi perfil
+              </Button>
+            ) : (
+              <>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  href="/login"
+                  className="w-full"
+                >
+                  Iniciar sesión
+                </Button>
+                <Button size="sm" href="/register" className="w-full">
+                  Registrarse
+                </Button>
+              </>
+            )}
+          </div>
+        </nav>
+      </div>
+    </header>
+
+);
+}
