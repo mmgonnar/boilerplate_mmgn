@@ -124,7 +124,7 @@ export function Header({ isAuthenticated = false }: HeaderProps) {
   }, [mobileOpen]);
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-border bg-background/80 backdrop-blur-md">
+    <header className="sticky top-0 z-40 w-full border-b border-border bg-background/80 backdrop-blur-md" role="navigation" aria-label="Primary">
       {/* ── Desktop bar ─────────────────────────────────────────────────── */}
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         <Logo />

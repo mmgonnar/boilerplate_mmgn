@@ -9,5 +9,16 @@
   "register": "Registrarse",
   "language": "Cambiar idioma",
   "open_menu": "Abrir menú",
-  "close_menu": "Cerrar menú"
+  "close_menu": "Cerrar menú",
+  "changelog": "Changelog",
+  "blog": "Blog",
+  "careers": "Empleo",
+  "privacy": "Privacidad",
+  "terms": "Términos",
+  "product": "Producto",
+  "company": "Compañía",
+  "legal": "Legal",
+  "footer_brand": "Boilerplate production-ready para arrancar proyectos.",
+  "copyright": "Todos los derechos reservados.",
+  "made_by": "Hecho por"
 }
