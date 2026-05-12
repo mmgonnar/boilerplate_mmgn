@@ -1,5 +1,6 @@
 export * from './button';
 export * from './theme-toggle';
+export * from './language-toggle';
 export * from './input';
 export * from './form';
 export * from './badge';
@@ -7,3 +8,4 @@ export * from './card';
 export * from './breadcrumb';
 export * from './skeleton';
 export * from './dialog';
+export * from './language-toggle';

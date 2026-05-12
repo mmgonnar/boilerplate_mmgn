@@ -3,13 +3,15 @@
 import * as React from 'react';
 
 import { useTranslations } from 'next-intl';
+import { useLocale } from 'next-intl';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
 
 import { Logo } from '@/components';
-import { Button, ThemeToggle } from '@/components/ui';
+import { Button, LanguageToggle, ThemeToggle } from '@/components/ui';
+// useLocale lives here
+import { usePathname, useRouter } from '@/i18n/navigation';
 import { cn } from '@/lib/utils';
-import { Globe, Menu, X } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 
 import type { NavLink } from '@/features/navigation/types/types';
 import { NAV_CONFIG } from '@/features/navigation/utils/config';
@@ -102,6 +104,45 @@ function MobileActions({ isAuthenticated, t }: HeaderActionsProps) {
   );
 }
 
+function MobileLanguageToggle() {
+  const router = useRouter();
+  const localePathname = usePathname();
+  const locale = useLocale();
+  const [isOpen, setIsOpen] = React.useState(false);
+  const t = useTranslations('nav');
+
+  const handleLocaleChange = (newLocale: string) => {
+    router.replace(localePathname, { locale: newLocale });
+    setIsOpen(false);
+  };
+
+  return (
+    <div className="relative">
+      <Button
+        variant="ghost"
+        size="sm"
+        className="w-full justify-start"
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        <span className="mr-2">{locale === 'en' ? '🇬🇧' : '🇪🇸'}</span>
+        {locale === 'en' ? t('locale_en') : t('locale_es')}
+      </Button>
+
+      {isOpen && (
+        <div className="absolute left-0 right-0 mt-1 z-50 bg-background border border-border rounded-md shadow-lg">
+          <button
+            onClick={() => handleLocaleChange(locale === 'en' ? 'es' : 'en')}
+            className="w-full flex items-center gap-2 px-3 py-2 text-sm hover:bg-accent"
+          >
+            <span>{locale === 'en' ? '🇪🇸' : '🇬🇧'}</span>
+            <span>{locale === 'en' ? t('locale_es') : t('locale_en')}</span>
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
 // ─── Header ───────────────────────────────────────────────────────────────────
 export function Header({ isAuthenticated = false }: HeaderProps) {
   const pathname = usePathname();
@@ -124,7 +165,11 @@ export function Header({ isAuthenticated = false }: HeaderProps) {
   }, [mobileOpen]);
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-border bg-background/80 backdrop-blur-md" role="navigation" aria-label="Primary">
+    <header
+      className="sticky top-0 z-40 w-full border-b border-border bg-background/80 backdrop-blur-md"
+      role="navigation"
+      aria-label="Primary"
+    >
       {/* ── Desktop bar ─────────────────────────────────────────────────── */}
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         <Logo />
@@ -137,9 +182,7 @@ export function Header({ isAuthenticated = false }: HeaderProps) {
         </nav>
 
         <div className="hidden md:flex items-center gap-2">
-          <Button variant="ghost" size="icon" aria-label={t('language')}>
-            <Globe className="h-4 w-4" />
-          </Button>
+          <LanguageToggle />
           <ThemeToggle />
           <HeaderActions isAuthenticated={isAuthenticated} t={t} />
         </div>
@@ -178,15 +221,7 @@ export function Header({ isAuthenticated = false }: HeaderProps) {
           <NavLinks links={navLinks} pathname={pathname} t={t} mobile />
 
           <div className="flex flex-col gap-2 mt-4 pt-4 border-t border-border">
-            <Button
-              variant="ghost"
-              size="sm"
-              className="w-full justify-start"
-              leftIcon={<Globe className="h-4 w-4" />}
-              aria-label={t('language')}
-            >
-              {t('language')}
-            </Button>
+            <LanguageToggle mobile />
             <MobileActions isAuthenticated={isAuthenticated} t={t} />
           </div>
         </nav>

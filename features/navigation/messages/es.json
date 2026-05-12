@@ -20,5 +20,7 @@
   "legal": "Legal",
   "footer_brand": "Boilerplate production-ready para arrancar proyectos.",
   "copyright": "Todos los derechos reservados.",
-  "made_by": "Hecho por"
+  "made_by": "Hecho por",
+  "locale_es": "Español",
+  "locale_en": "English"
 }
