@@ -11,18 +11,106 @@ import { Button, ThemeToggle } from '@/components/ui';
 import { cn } from '@/lib/utils';
 import { Globe, Menu, X } from 'lucide-react';
 
+import type { NavLink } from '@/features/navigation/types/types';
 import { NAV_CONFIG } from '@/features/navigation/utils/config';
 
-// ─── Props ────────────────────────────────────────────────────────────────────
+// ─── Types ────────────────────────────────────────────────────────────────────
 interface HeaderProps {
-  isAuthenticated?: boolean; // ← vendrá de Supabase Auth cuando lo conectemos
+  isAuthenticated?: boolean;
 }
 
-// ─── Componente ───────────────────────────────────────────────────────────────
+interface NavLinksProps {
+  links: NavLink[];
+  pathname: string;
+  t: ReturnType<typeof useTranslations>;
+  mobile?: boolean;
+}
+
+interface HeaderActionsProps {
+  isAuthenticated: boolean;
+  t: ReturnType<typeof useTranslations>;
+}
+
+// ─── Subcomponents ────────────────────────────────────────────────────────────
+
+function NavLinks({ links, pathname, t, mobile = false }: NavLinksProps) {
+  return (
+    <>
+      {links.map((link) => (
+        <Link
+          key={link.href}
+          href={link.href}
+          className={cn(
+            'rounded-md text-sm transition-colors duration-150',
+            'hover:text-foreground hover:bg-accent',
+            'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
+            mobile ? 'px-3 py-2.5' : 'px-3 py-2',
+            pathname === link.href
+              ? 'text-foreground font-medium bg-accent'
+              : 'text-muted-foreground',
+          )}
+          aria-current={pathname === link.href ? 'page' : undefined}
+        >
+          {t(link.label)}
+        </Link>
+      ))}
+    </>
+  );
+}
+
+function HeaderActions({ isAuthenticated, t }: HeaderActionsProps) {
+  if (isAuthenticated) {
+    return (
+      <Button variant="ghost" size="icon" aria-label={t('profile')}>
+        <div className="h-7 w-7 rounded-full bg-primary/20 flex items-center justify-center">
+          <span className="text-xs font-medium text-primary">U</span>
+        </div>
+      </Button>
+    );
+  }
+
+  return (
+    <div className="flex items-center gap-2">
+      <Button variant="ghost" size="sm" href="/login">
+        {t('login')}
+      </Button>
+      <Button size="sm" href="/register">
+        {t('register')}
+      </Button>
+    </div>
+  );
+}
+
+function MobileActions({ isAuthenticated, t }: HeaderActionsProps) {
+  if (isAuthenticated) {
+    return (
+      <Button variant="outline" size="sm" className="w-full">
+        {t('profile')}
+      </Button>
+    );
+  }
+
+  return (
+    <>
+      <Button variant="outline" size="sm" href="/login" className="w-full">
+        {t('login')}
+      </Button>
+      <Button size="sm" href="/register" className="w-full">
+        {t('register')}
+      </Button>
+    </>
+  );
+}
+
+// ─── Header ───────────────────────────────────────────────────────────────────
 export function Header({ isAuthenticated = false }: HeaderProps) {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const t = useTranslations('nav');
+
+  const navLinks = isAuthenticated
+    ? NAV_CONFIG.authenticated
+    : NAV_CONFIG.public;
 
   React.useEffect(() => {
     setMobileOpen(false);
@@ -35,82 +123,35 @@ export function Header({ isAuthenticated = false }: HeaderProps) {
     };
   }, [mobileOpen]);
 
-  const navLinks = isAuthenticated
-    ? NAV_CONFIG.authenticated
-    : NAV_CONFIG.public;
-
   return (
     <header className="sticky top-0 z-40 w-full border-b border-border bg-background/80 backdrop-blur-md">
+      {/* ── Desktop bar ─────────────────────────────────────────────────── */}
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
-        {/* ── Logo ────────────────────────────────────────────────────── */}
         <Logo />
 
-        {/* ── Navegación central — desktop ────────────────────────────── */}
         <nav
           className="hidden md:flex items-center gap-1"
-          aria-label="Navegación principal"
+          aria-label="Primary navigation"
         >
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className={cn(
-                'px-3 py-2 rounded-md text-sm transition-colors duration-150',
-                'hover:text-foreground hover:bg-accent',
-                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
-                pathname === link.href
-                  ? 'text-foreground font-medium bg-accent'
-                  : 'text-muted-foreground',
-              )}
-              aria-current={pathname === link.href ? 'page' : undefined}
-            >
-              {t(link.label)}
-            </Link>
-          ))}
+          <NavLinks links={navLinks} pathname={pathname} t={t} />
         </nav>
 
-        {/* ── Acciones — desktop ──────────────────────────────────────── */}
         <div className="hidden md:flex items-center gap-2">
-          {/* i18n — preparado, sin lógica aún */}
-          <Button
-            variant="ghost"
-            size="icon"
-            aria-label="Cambiar idioma"
-            title="Cambiar idioma (próximamente)"
-          >
+          <Button variant="ghost" size="icon" aria-label={t('language')}>
             <Globe className="h-4 w-4" />
           </Button>
-
           <ThemeToggle />
-
-          {isAuthenticated ? (
-            // ✅ Avatar placeholder — se reemplaza con el componente Avatar
-            // cuando conectemos Supabase Auth
-            <Button variant="ghost" size="icon" aria-label="Perfil de usuario">
-              <div className="h-7 w-7 rounded-full bg-primary/20 flex items-center justify-center">
-                <span className="text-xs font-medium text-primary">U</span>
-              </div>
-            </Button>
-          ) : (
-            <div className="flex items-center gap-2">
-              <Button variant="ghost" size="sm" href="/login">
-                {t('login')}
-              </Button>
-              <Button size="sm" href="/register">
-                {t('register')}
-              </Button>
-            </div>
-          )}
+          <HeaderActions isAuthenticated={isAuthenticated} t={t} />
         </div>
 
-        {/* ── Hamburger — mobile ──────────────────────────────────────── */}
+        {/* ── Hamburger ───────────────────────────────────────────────── */}
         <div className="flex md:hidden items-center gap-2">
           <ThemeToggle />
           <Button
             variant="ghost"
             size="icon"
             onClick={() => setMobileOpen((prev) => !prev)}
-            aria-label={mobileOpen ? 'Cerrar menú' : 'Abrir menú'}
+            aria-label={mobileOpen ? t('close_menu') : t('open_menu')}
             aria-expanded={mobileOpen}
             aria-controls="mobile-menu"
           >
@@ -123,65 +164,30 @@ export function Header({ isAuthenticated = false }: HeaderProps) {
         </div>
       </div>
 
-      {/* ── Menú mobile ─────────────────────────────────────────────────── */}
+      {/* ── Mobile menu ─────────────────────────────────────────────────── */}
       <div
         id="mobile-menu"
         className={cn(
-          'md:hidden border-t border-border bg-background',
-          'transition-[max-height,opacity] duration-300 overflow-hidden',
+          'md:hidden border-t border-border bg-background overflow-hidden',
+          'transition-[max-height,opacity] duration-300',
           mobileOpen ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0',
         )}
         aria-hidden={!mobileOpen}
       >
-        <nav className="flex flex-col gap-1 p-4" aria-label="Navegación mobile">
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className={cn(
-                'px-3 py-2.5 rounded-md text-sm transition-colors duration-150',
-                'hover:text-foreground hover:bg-accent',
-                pathname === link.href
-                  ? 'text-foreground font-medium bg-accent'
-                  : 'text-muted-foreground',
-              )}
-              aria-current={pathname === link.href ? 'page' : undefined}
-            >
-              {link.label}
-            </Link>
-          ))}
+        <nav className="flex flex-col gap-1 p-4" aria-label="Mobile navigation">
+          <NavLinks links={navLinks} pathname={pathname} t={t} mobile />
 
-          {/* Acciones mobile */}
           <div className="flex flex-col gap-2 mt-4 pt-4 border-t border-border">
             <Button
               variant="ghost"
               size="sm"
-              className="w-full justify-start gap-2"
-              aria-label="Cambiar idioma"
+              className="w-full justify-start"
+              leftIcon={<Globe className="h-4 w-4" />}
+              aria-label={t('language')}
             >
-              <Globe className="h-4 w-4" />
               {t('language')}
             </Button>
-
-            {isAuthenticated ? (
-              <Button variant="outline" size="sm" className="w-full">
-                Mi perfil
-              </Button>
-            ) : (
-              <>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  href="/login"
-                  className="w-full"
-                >
-                  Iniciar sesión
-                </Button>
-                <Button size="sm" href="/register" className="w-full">
-                  Registrarse
-                </Button>
-              </>
-            )}
+            <MobileActions isAuthenticated={isAuthenticated} t={t} />
           </div>
         </nav>
       </div>

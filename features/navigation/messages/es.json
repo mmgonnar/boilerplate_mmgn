@@ -3,9 +3,11 @@
   "features": "Features",
   "pricing": "Precios",
   "about": "Nosotros",
+  "dashboard": "Dashboard",
+  "profile": "Perfil",
   "login": "Iniciar sesión",
   "register": "Registrarse",
-  "language": "Idioma",
-  "dashboard": "Panel",
-  "profile": "Perfil"
+  "language": "Cambiar idioma",
+  "open_menu": "Abrir menú",
+  "close_menu": "Cerrar menú"
 }

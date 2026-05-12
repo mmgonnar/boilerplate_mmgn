@@ -235,6 +235,70 @@ className = 'bg-background text-foreground';
 className = 'bg-white dark:bg-gray-900';
 ```
 
+### Subcomponents Pattern
+
+Use subcomponents (private functions) within a parent component to improve readability and organization:
+
+```typescript
+// Types - define at top of file
+interface HeaderProps {
+  isAuthenticated?: boolean;
+}
+
+interface NavLinksProps {
+  links: NavLink[];
+  pathname: string;
+  t: ReturnType<typeof useTranslations>;
+  mobile?: boolean;
+}
+
+interface HeaderActionsProps {
+  isAuthenticated: boolean;
+  t: ReturnType<typeof useTranslations>;
+}
+
+// Subcomponents - private, defined before main component
+function NavLinks({ links, pathname, t, mobile = false }: NavLinksProps) {
+  return (
+    <>
+      {links.map((link) => (
+        <Link key={link.href} href={link.href} ...>
+          {t(link.label)}
+        </Link>
+      ))}
+    </>
+  );
+}
+
+function HeaderActions({ isAuthenticated, t }: HeaderActionsProps) {
+  // Handle authenticated/unauthenticated states
+}
+
+function MobileActions({ isAuthenticated, t }: HeaderActionsProps) {
+  // Mobile-specific auth buttons
+}
+
+// Main component - uses subcomponents
+export function Header({ isAuthenticated = false }: HeaderProps) {
+  const t = useTranslations('nav');
+  
+  return (
+    <header>
+      <nav><NavLinks ... /></nav>
+      <div className="actions">
+        <HeaderActions ... />
+      </div>
+    </header>
+  );
+}
+```
+
+**Benefits:**
+- Cleaner main component (10-20 lines instead of 100+)
+- Each subcomponent has a single responsibility
+- Types co-located with their subcomponent
+- Easier to maintain and debug
+
 ---
 
 ## 4. Component Patterns
@@ -266,6 +330,17 @@ className = 'bg-white dark:bg-gray-900';
 - Sizes: `sm`, `default`, `lg`
 - Dot indicator for status
 - Left/right icons
+
+### Header Component (`features/navigation/components/header.tsx`)
+
+- Uses subcomponents pattern for organization:
+  - `NavLinks` - renders navigation links
+  - `HeaderActions` - desktop auth buttons (login/register or profile)
+  - `MobileActions` - mobile auth buttons
+- Mobile menu with hamburger toggle
+- Language toggle button placeholder
+- Theme toggle integration
+- Responsive: hidden nav on mobile, hamburger on mobile
 
 ---
 

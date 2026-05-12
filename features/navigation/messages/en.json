@@ -3,9 +3,11 @@
   "features": "Features",
   "pricing": "Pricing",
   "about": "About",
+  "dashboard": "Dashboard",
+  "profile": "Profile",
   "login": "Sign in",
   "register": "Sign up",
-  "language": "Language",
-  "dashboard": "Dashboard",
-  "profile": "Profile"
+  "language": "Change language",
+  "open_menu": "Open menu",
+  "close_menu": "Close menu"
 }

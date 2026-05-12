@@ -10,4 +10,5 @@ export interface NavLink {
 export interface NavConfig {
   public: NavLink[];
   authenticated: NavLink[];
+  isFooter: boolean;
 }

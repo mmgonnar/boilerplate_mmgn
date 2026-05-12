@@ -7,7 +7,7 @@ const FOOTER_LINKS = [
   {
     title: 'Producto',
     links: [
-      { label: 'Features', href: '/features' },
+      { label: 'Features', href: '/features', isFooter: false},
       { label: 'Pricing', href: '/pricing' },
       { label: 'Changelog', href: '/changelog' },
     ],
@@ -28,6 +28,34 @@ const FOOTER_LINKS = [
     ],
   },
 ];
+
+function NavLinks () {
+  <>
+  {FOOTER_LINKS.map((column) => (
+            <div key={column.title} className="space-y-4">
+              <h3 className="text-sm font-semibold text-foreground">
+                {column.title}
+              </h3>
+              <ul className="space-y-2">
+                {column.links.map((link) => (
+                  <li key={link.href}>
+                    <Link
+                      href={link.href}
+                      className={cn(
+                        'text-sm text-muted-foreground',
+                        'transition-colors duration-150 hover:text-foreground',
+                        'focus-visible:outline-none focus-visible:ring-2',
+                        'focus-visible:ring-ring rounded-sm',
+                      )}
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}</>
+}
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
