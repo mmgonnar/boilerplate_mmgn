@@ -77,6 +77,7 @@ bun run start    # production server
 | next-intl v4 crashes                | Next.js 16 incompatible       | Pinned to 3.26.5                   |
 | Dynamic locale imports fail         | Next.js 16 bundler            | Static imports in `request.ts`     |
 | `middleware.ts` deprecation warning | Next.js 16 prefers `proxy.ts` | Blocked by next-intl, non-blocking |
+| next-intl navigation hooks          | Requires createNavigation()   | Import from `@/i18n/navigation`    |
 
 ## Pending Implementation
 
