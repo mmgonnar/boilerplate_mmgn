@@ -181,7 +181,10 @@ export function Header({ isAuthenticated = false }: HeaderProps) {
           <NavLinks links={navLinks} pathname={pathname} t={t} mobile />
 
           <div className="flex flex-col gap-2 mt-4 pt-4 border-t border-border">
-            <LanguageToggle mobile />
+            <span className="text-sm">{t('language')}</span>
+            <div>
+              <LanguageToggle mobile />
+            </div>
             <MobileActions isAuthenticated={isAuthenticated} t={t} />
           </div>
         </nav>
