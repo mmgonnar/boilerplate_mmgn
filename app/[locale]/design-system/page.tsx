@@ -20,6 +20,7 @@ import {
   CardTitle,
   Dialog,
   Input,
+  LanguageToggle,
   Skeleton,
   SkeletonAvatar,
   SkeletonButton,
@@ -68,6 +69,7 @@ export default function DesignSystemPage() {
             Regresar
           </Button>
           <div className="flex items-center gap-4">
+            <LanguageToggle />
             <span className="hidden sm:inline-block text-[10px] font-mono text-muted-foreground uppercase tracking-widest">
               Probar Temas:
             </span>
