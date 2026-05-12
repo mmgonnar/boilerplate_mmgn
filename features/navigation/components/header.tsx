@@ -3,13 +3,12 @@
 import * as React from 'react';
 
 import { useTranslations } from 'next-intl';
-import { useLocale } from 'next-intl';
 import Link from 'next/link';
 
 import { Logo } from '@/components';
 import { Button, LanguageToggle, ThemeToggle } from '@/components/ui';
 // useLocale lives here
-import { usePathname, useRouter } from '@/i18n/navigation';
+import { usePathname } from '@/i18n/navigation';
 import { cn } from '@/lib/utils';
 import { Menu, X } from 'lucide-react';
 
@@ -101,45 +100,6 @@ function MobileActions({ isAuthenticated, t }: HeaderActionsProps) {
         {t('register')}
       </Button>
     </>
-  );
-}
-
-function MobileLanguageToggle() {
-  const router = useRouter();
-  const localePathname = usePathname();
-  const locale = useLocale();
-  const [isOpen, setIsOpen] = React.useState(false);
-  const t = useTranslations('nav');
-
-  const handleLocaleChange = (newLocale: string) => {
-    router.replace(localePathname, { locale: newLocale });
-    setIsOpen(false);
-  };
-
-  return (
-    <div className="relative">
-      <Button
-        variant="ghost"
-        size="sm"
-        className="w-full justify-start"
-        onClick={() => setIsOpen(!isOpen)}
-      >
-        <span className="mr-2">{locale === 'en' ? '🇬🇧' : '🇪🇸'}</span>
-        {locale === 'en' ? t('locale_en') : t('locale_es')}
-      </Button>
-
-      {isOpen && (
-        <div className="absolute left-0 right-0 mt-1 z-50 bg-background border border-border rounded-md shadow-lg">
-          <button
-            onClick={() => handleLocaleChange(locale === 'en' ? 'es' : 'en')}
-            className="w-full flex items-center gap-2 px-3 py-2 text-sm hover:bg-accent"
-          >
-            <span>{locale === 'en' ? '🇪🇸' : '🇬🇧'}</span>
-            <span>{locale === 'en' ? t('locale_es') : t('locale_en')}</span>
-          </button>
-        </div>
-      )}
-    </div>
   );
 }
 
