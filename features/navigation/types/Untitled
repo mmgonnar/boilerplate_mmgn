@@ -1,0 +1,8 @@
+import type { FC } from 'react';
+
+export interface SocialMediaItem {
+  icon: FC<{ className?: string }>;
+  href: string;
+  label: string;
+  ariaLabel: string;
+}

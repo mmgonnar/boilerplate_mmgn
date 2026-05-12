@@ -9,3 +9,5 @@ export * from './breadcrumb';
 export * from './skeleton';
 export * from './dialog';
 export * from './language-toggle';
+export * from './social-media';
+export * from './social-media-icons';

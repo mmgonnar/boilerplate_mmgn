@@ -1,4 +1,5 @@
 import React from 'react';
+import type { FC } from 'react';
 
 export interface NavLink {
   label: string;
@@ -12,5 +13,9 @@ export interface NavConfig {
   authenticated: NavLink[];
   isFooter?: boolean;
 }
-
-
+export interface SocialMediaItem {
+  icon: FC<{ className?: string }>;
+  href: string;
+  label: string;
+  ariaLabel: string;
+}

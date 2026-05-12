@@ -2,10 +2,43 @@ import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 
 import { Logo } from '@/components';
-import { Breadcrumb } from '@/components/ui';
+import { Breadcrumb, SocialMedia } from '@/components/ui';
 import { cn } from '@/lib/utils';
 
 import { FOOTER_LINKS } from '../utils/config';
+
+// const SOCIAL_MEDIA_ITEMS: SocialMediaItem[] = [
+//   {
+//     icon: SOCIAL_DATA.Twitter,
+//     href: 'https://twitter.com/mmgonnar',
+//     label: 'X (Twitter)',
+//     ariaLabel: 'Follow us on X (Twitter)',
+//   },
+//   {
+//     icon: SOCIAL_DATA.Facebook,
+//     href: 'https://facebook.com/mmgonnar',
+//     label: 'Facebook',
+//     ariaLabel: 'Follow us on Facebook',
+//   },
+//   {
+//     icon: SOCIAL_DATA.Instagram,
+//     href: 'https://instagram.com/mmgonnar',
+//     label: 'Instagram',
+//     ariaLabel: 'Follow us on Instagram',
+//   },
+//   {
+//     icon: SOCIAL_DATA.Linkedin,
+//     href: 'https://linkedin.com/company/mmgonnar',
+//     label: 'LinkedIn',
+//     ariaLabel: 'Follow us on LinkedIn',
+//   },
+//   {
+//     icon: SOCIAL_DATA.Github,
+//     href: 'https://github.com/mmgonnar',
+//     label: 'GitHub',
+//     ariaLabel: 'Follow us on GitHub',
+//   },
+// ];
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 interface FooterColumnType {
@@ -68,7 +101,7 @@ function Copyright({
   const currentYear = new Date().getFullYear();
 
   return (
-    <p className="text-xs text-muted-foreground">
+    <p className="text-xs text-muted-foreground text-center ">
       © {currentYear} {company} - {project}. {t('copyright')}
     </p>
   );
@@ -85,7 +118,7 @@ function MadeBy({
 }) {
   return (
     <p className="text-xs text-muted-foreground">
-      {t('made_by')}:{' '}
+      {t('made_by')}{' '}
       <Link
         href={githubUrl}
         target="_blank"
@@ -127,7 +160,10 @@ function FooterBottom({
   return (
     <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-8 border-t border-border">
       <Copyright company={company} project={project} t={t} />
-      <MadeBy company={company} githubUrl={githubUrl} t={t} />
+      <div className="flex  justify-center items-center gap-5">
+        <SocialMedia className="hidden md:block" />
+        <MadeBy company={company} githubUrl={githubUrl} t={t} />
+      </div>
     </div>
   );
 }
@@ -154,9 +190,15 @@ export function Footer() {
             </nav>
           ))}
         </div>
-        <div className="flex justify-center">
+
+        <div className="flex justify-center md:hidden">
           <FooterBreadcrumb t={t} />
         </div>
+
+        <div className="flex justify-center py-8">
+          <SocialMedia className="block md:hidden" />
+        </div>
+
         <FooterBottom t={t} />
       </div>
     </footer>
