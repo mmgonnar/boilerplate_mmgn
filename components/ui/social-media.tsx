@@ -6,6 +6,7 @@ import { useTheme } from 'next-themes';
 
 import { cn } from '@/lib/utils';
 
+import { Button } from './button';
 import {
   GithubIcon,
   InstagramIcon,
@@ -42,21 +43,18 @@ const SOCIAL_DATA: SocialItem[] = [
 
 // ─── Subcomponent ─────────────────────────────────────────────────────────────
 function SocialIcon({ item, isDark }: { item: SocialItem; isDark: boolean }) {
-  // Si isDark es true, enviamos 'white'. Si es false, enviamos 'brand' (gradiente).
   const variant: IconVariant = isDark ? 'white' : 'brand';
 
   return (
-    <a
+    <Button
       href={item.href}
-      target="_blank"
-      rel="noopener noreferrer"
-      className={cn(
-        'inline-flex items-center justify-center p-2 rounded-full transition-all duration-300',
-        isDark ? 'hover:bg-white/10' : 'hover:bg-black/5',
-      )}
-    >
-      <item.Icon className="w-5 h-5 shrink-0" variant={variant} />
-    </a>
+      external
+      variant="ghost"
+      size="icon"
+      leftIcon={<item.Icon variant={variant} className="w-5 h-5 shrink-0" />}
+      aria-label={item.name}
+      className="rounded-full"
+    />
   );
 }
 
