@@ -2,6 +2,7 @@ import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 
 import { Logo } from '@/components';
+import { Breadcrumb } from '@/components/ui';
 import { cn } from '@/lib/utils';
 
 import { FOOTER_LINKS } from '../utils/config';
@@ -97,6 +98,21 @@ function MadeBy({
   );
 }
 
+function FooterBreadcrumb({ t }: { t: ReturnType<typeof useTranslations> }) {
+  const items = [
+    { label: t('home'), href: '/' },
+    { label: t('features'), href: '/features' },
+    { label: t('pricing'), href: '/pricing' },
+    { label: t('about'), href: '/about' },
+  ];
+
+  return (
+    <div className="md:hidden mb-6">
+      <Breadcrumb items={items} maxItems={4} />
+    </div>
+  );
+}
+
 function FooterBottom({
   company,
   project,
@@ -138,7 +154,9 @@ export function Footer() {
             </nav>
           ))}
         </div>
-
+        <div className="flex justify-center">
+          <FooterBreadcrumb t={t} />
+        </div>
         <FooterBottom t={t} />
       </div>
     </footer>
