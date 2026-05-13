@@ -5,6 +5,8 @@ bun run dev      # kills existing port 3000 first via predev
 bun run build    # Next.js production build
 bun run lint     # ESLint only (no typecheck script)
 bun run start    # production server
+bunx prisma generate  # Regenerate Prisma client
+bunx prisma db push   # Push schema to database
 ```
 
 ## Key Stack
@@ -19,6 +21,8 @@ bun run start    # production server
 - class-variance-authority (CVA) — component variants
 - lucide-react — icons
 - Prettier with import sorting plugin
+- Prisma 7 + @prisma/adapter-pg — database ORM
+- Supabase Auth + @supabase/ssr — authentication
 
 ## Architecture
 
@@ -26,7 +30,9 @@ bun run start    # production server
 - Components: `components/ui/` (custom shadcn-style primitives)
 - Features: `features/[name]/` — components, types, utils, messages, index.ts (Barrel Export (Strictly named exports).)
 - Utils: `lib/utils.ts` (cn via clsx + tailwind-merge)
-- Providers: `providers/theme-provider.tsx`
+- Supabase: `lib/supabase/` — client.ts (browser), server.ts (server), middleware.ts (middleware)
+- Prisma: `lib/prisma.ts` (singleton client), `prisma/schema.prisma` (models)
+- Providers: `providers/` — theme-provider.tsx, auth-provider.tsx
 - i18n config: `i18n/request.ts`, `i18n/routing.ts`
 - Locale middleware: `middleware.ts` (proxy.ts convention pending next-intl support)
 
@@ -78,10 +84,20 @@ bun run start    # production server
 | Dynamic locale imports fail         | Next.js 16 bundler            | Static imports in `request.ts`     |
 | `middleware.ts` deprecation warning | Next.js 16 prefers `proxy.ts` | Blocked by next-intl, non-blocking |
 | next-intl navigation hooks          | Requires createNavigation()   | Import from `@/i18n/navigation`    |
+| Prisma schema `url` error           | Prisma 7 removed url from schema | Use `prisma.config.ts` instead   |
+| PrismaClient import error          | IDE cache issue               | Restart TS Server (Cmd+Shift+P)   |
+
+## Prisma 7 Configuration
+
+- Schema: `prisma/schema.prisma` — no `url`/`directUrl` (in config.ts)
+- Config: `prisma.config.ts` — datasource URL for migrations
+- Client: `lib/prisma.ts` — uses `@prisma/adapter-pg` with `Pool`
+- Generate: `bunx prisma generate` after schema changes
+- Push: `bunx prisma db push` (uses DIRECT_URL in prisma.config.ts)
 
 ## Pending Implementation
 
-- [ ] Prisma setup + Supabase connection
+- [x] Prisma setup + Supabase connection
 - [ ] Supabase Auth (login, register, session)
 - [ ] Middleware route protection
 - [ ] Dashboard sidebar
