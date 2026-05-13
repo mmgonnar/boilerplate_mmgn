@@ -159,7 +159,7 @@ export default function DesignSystemPage() {
                 >
                   Ir al Dashboard
                 </Button>
-                {/* ✅ target="_blank" eliminado — external ya lo hace */}
+
                 <Button
                   href="https://github.com/mmgonnar"
                   external

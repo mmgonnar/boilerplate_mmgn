@@ -50,116 +50,103 @@ const buttonVariants = cva(
 );
 
 // ─── Types ────────────────────────────────────────────────────────────────────
+type ButtonVariant = VariantProps<typeof buttonVariants>;
 
-// Props base compartidas entre ambos modos
-type BaseProps = VariantProps<typeof buttonVariants> & {
+interface BaseButtonProps extends ButtonVariant {
   className?: string;
   isLoading?: boolean;
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
   children?: React.ReactNode;
-};
+}
 
-// Modo botón normal
-type ButtonAsButton = BaseProps &
-  Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, keyof BaseProps> & {
-    href?: never; // ✅ nunca acepta href en modo botón
-    external?: never;
-  };
+type ButtonOnlyProps = BaseButtonProps &
+  Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, keyof BaseButtonProps>;
 
-// Modo link
-type ButtonAsLink = BaseProps &
-  Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, keyof BaseProps> & {
+type LinkOnlyProps = BaseButtonProps &
+  Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, keyof BaseButtonProps> & {
     href: string;
     external?: boolean;
   };
 
-// Union type — TypeScript elige el tipo correcto según si href existe
-export type ButtonProps = ButtonAsButton | ButtonAsLink;
+export type ButtonProps = ButtonOnlyProps | LinkOnlyProps;
 
-// ─── Componente ───────────────────────────────────────────────────────────────
-const Button = React.forwardRef<
-  HTMLButtonElement | HTMLAnchorElement,
-  ButtonProps
->(
-  (
-    {
-      className,
-      variant = 'primary',
-      size,
-      isLoading = false,
-      leftIcon,
-      rightIcon,
-      children,
-      ...props
-    },
-    ref,
-  ) => {
-    const classes = cn(buttonVariants({ variant, size, className }));
+// ─── Componente ────────────────────────────────────────────────────────────────
+function Button(
+  props: ButtonProps & { ref?: React.Ref<HTMLButtonElement | HTMLAnchorElement> },
+) {
+  const {
+    className,
+    variant = 'primary',
+    size,
+    isLoading = false,
+    leftIcon,
+    rightIcon,
+    children,
+    ...rest
+  } = props;
 
-    // Contenido compartido entre ambos modos
-    const content = (
-      <>
-        {isLoading ? (
-          <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
-        ) : (
-          leftIcon && (
-            <span className="shrink-0" aria-hidden="true">
-              {leftIcon}
-            </span>
-          )
-        )}
+  const classes = cn(buttonVariants({ variant, size, className }));
 
-        {children && (
-          <span className={cn(isLoading && size === 'icon' && 'sr-only')}>
-            {children}
-          </span>
-        )}
-
-        {!isLoading && rightIcon && (
+  const content = (
+    <>
+      {isLoading ? (
+        <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+      ) : (
+        leftIcon && (
           <span className="shrink-0" aria-hidden="true">
-            {rightIcon}
+            {leftIcon}
           </span>
-        )}
-      </>
-    );
+        )
+      )}
 
-    // ── Modo Link ──────────────────────────────────────────────────────────
-    if ('href' in props && props.href !== undefined) {
-      const { href, external, ...linkProps } = props as ButtonAsLink;
+      {children && (
+        <span className={cn(isLoading && size === 'icon' && 'sr-only')}>
+          {children}
+        </span>
+      )}
 
-      return (
-        <Link
-          ref={ref as React.Ref<HTMLAnchorElement>}
-          href={href}
-          className={classes}
-          target={external ? '_blank' : undefined}
-          rel={external ? 'noopener noreferrer' : undefined} // ✅ seguridad
-          {...linkProps}
-        >
-          {content}
-        </Link>
-      );
-    }
+      {!isLoading && rightIcon && (
+        <span className="shrink-0" aria-hidden="true">
+          {rightIcon}
+        </span>
+      )}
+    </>
+  );
 
-    // ── Modo Button ────────────────────────────────────────────────────────
-    const { disabled, ...buttonProps } = props as ButtonAsButton;
-    const isDisabled = disabled || isLoading;
+  if ('href' in rest) {
+    const { href, external } = rest as LinkOnlyProps;
 
     return (
-      <button
-        ref={ref as React.Ref<HTMLButtonElement>}
+      <Link
+        href={href}
         className={classes}
-        disabled={isDisabled}
-        aria-busy={isLoading}
-        aria-disabled={isDisabled}
-        {...buttonProps}
+        target={external ? '_blank' : undefined}
+        rel={external ? 'noopener noreferrer' : undefined}
       >
         {content}
-      </button>
+      </Link>
     );
-  },
-);
+  }
+
+  const { disabled } = rest as ButtonOnlyProps;
+  const { type, onClick, ...buttonRest } = rest as ButtonOnlyProps;
+  const isDisabled = disabled || isLoading;
+
+  return (
+    <button
+      className={classes}
+      disabled={isDisabled}
+      aria-busy={isLoading}
+      aria-disabled={isDisabled}
+      type={type ?? 'button'}
+      onClick={onClick as React.MouseEventHandler<HTMLButtonElement>}
+      {...buttonRest}
+    >
+      {content}
+    </button>
+  );
+}
 
 Button.displayName = 'Button';
 

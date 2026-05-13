@@ -20,9 +20,9 @@ export default getRequestConfig(async ({ requestLocale }) => {
     locale,
     messages: {
       ...common.default,
-      nav: navigation.default,
-      auth: auth.default,
-      dashboard: dashboard.default,
+      ...auth.default,
+      ...navigation.default,
+      ...dashboard.default,
     },
   };
 });

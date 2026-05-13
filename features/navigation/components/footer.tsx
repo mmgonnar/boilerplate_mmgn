@@ -168,6 +168,24 @@ function FooterBottom({
   );
 }
 
+function FooterBottomAuth({
+  company,
+  project,
+  githubUrl,
+  t,
+}: {
+  company?: string;
+  project?: string;
+  githubUrl?: string;
+  t: ReturnType<typeof useTranslations>;
+}) {
+  return (
+    <div className="container mx-auto px-4 py-12 flex flex-col items-center justify-between gap-4 pt-8 border-t border-border">
+      <Copyright company={company} project={project} t={t} />
+    </div>
+  );
+}
+
 // ─── Footer ───────────────────────────────────────────────────────────────────
 
 export function Footer() {
@@ -201,6 +219,16 @@ export function Footer() {
 
         <FooterBottom t={t} />
       </div>
+    </footer>
+  );
+}
+
+export function FooterAuth() {
+  const t = useTranslations('nav');
+
+  return (
+    <footer className="border-t border-border bg-background">
+      <FooterBottomAuth t={t} />
     </footer>
   );
 }

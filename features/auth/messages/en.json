@@ -1,1 +1,42 @@
-{}
+{
+  "auth": {
+    "data": {
+      "email": "Email",
+      "email_placeholder": "your@email.com",
+      "password": "Password",
+      "confirm_password": "Confirm password",
+      "name": "Name",
+      "name_placeholder": "Your Name"
+    },
+
+    "register": {
+      "title": "Create account",
+      "subtitle": "Complete the form to get started",
+      "submit": "Create account",
+      "submit_loading": "Creating account...",
+      "has_account": "Already have an account?",
+      "sign_in": "Sign in"
+    },
+
+    "login": {
+      "title": "Sign in",
+      "subtitle": "Enter your credentials to continue",
+      "submit": "Sign in",
+      "submit_loading": "Signing in...",
+      "no_account": "Don't have an account?",
+      "sign_up": "Sign up",
+      "forgot_password": "Forgot your password?"
+    },
+
+    "errors": {
+      "invalid_credentials": "Invalid email or password",
+      "email_taken": "This email is already registered",
+      "email_not_verified": "Please verify your email first",
+      "passwords_dont_match": "Passwords don't match",
+      "password_too_short": "Password must be at least 8 characters",
+      "required_field": "This field is required",
+      "invalid_email": "Please enter a valid email",
+      "unexpected_error": "An unexpected error occurred"
+    }
+  }
+}

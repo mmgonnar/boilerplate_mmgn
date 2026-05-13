@@ -1,1 +1,42 @@
-{}
+{
+  "auth": {
+    "data": {
+      "email": "Correo",
+      "email_placeholder": "tu@correo.com",
+      "password": "Contraseña",
+      "confirm_password": "Confirmar Contraseña",
+      "name": "Nombre",
+      "name_placeholder": "Tu nombre"
+    },
+
+    "register": {
+      "title": "Crear cuenta",
+      "subtitle": "Completa el formulario para comenzar",
+      "submit": "Crear cuenta",
+      "submit_loading": "Creando cuenta...",
+      "has_account": "¿Ya tienes cuenta?",
+      "sign_in": "Inicia sesión"
+    },
+
+    "login": {
+      "title": "Iniciar sesión",
+      "subtitle": "Ingresa tus credenciales para continuar",
+      "submit": "Iniciar sesión",
+      "submit_loading": "Iniciando sesión...",
+      "no_account": "¿No tienes cuenta?",
+      "sign_up": "Regístrate",
+      "forgot_password": "¿Olvidaste tu contraseña?"
+    },
+
+    "errors": {
+      "invalid_credentials": "Correo o contraseña inválidos",
+      "email_taken": "Este correo ya está registrado",
+      "email_not_verified": "Por favor verifica tu correo primero",
+      "passwords_dont_match": "Las contraseñas no coinciden",
+      "password_too_short": "La contraseña debe tener al menos 8 caracteres",
+      "required_field": "Este campo es requerido",
+      "invalid_email": "Por favor ingresa un correo válido",
+      "unexpected_error": "Ocurrió un error inesperado"
+    }
+  }
+}

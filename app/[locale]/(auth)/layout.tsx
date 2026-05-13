@@ -1,5 +1,8 @@
 import { Logo } from '@/components';
-import { ThemeToggle } from '@/components/ui';
+import { LanguageToggle, ThemeToggle } from '@/components/ui';
+
+import { Footer } from '@/features/navigation';
+import { FooterAuth } from '@/features/navigation/components/footer';
 
 export const metadata = {
   robots: { index: false, follow: false },
@@ -15,7 +18,10 @@ export default function AuthLayout({
       {/* Header mínimo */}
       <header className="flex h-16 items-center justify-between px-6">
         <Logo />
-        <ThemeToggle />
+        <div className="flex gap-2">
+          <ThemeToggle />
+          <LanguageToggle />
+        </div>
       </header>
 
       {/* Contenido centrado */}
@@ -24,12 +30,8 @@ export default function AuthLayout({
       </main>
 
       {/* Footer mínimo */}
-      <footer className="flex h-16 items-center justify-center">
-        <p className="text-xs text-muted-foreground">
-          © {new Date().getFullYear()} Boilerplate. Todos los derechos
-          reservados.
-        </p>
-      </footer>
+
+      <FooterAuth />
     </div>
   );
 }
