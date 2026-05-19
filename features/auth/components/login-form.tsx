@@ -2,26 +2,21 @@
 
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 import { Button, Input } from '@/components/ui';
 import { Form, FormField } from '@/components/ui/form';
+import { createClient } from '@/lib/supabase/client';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Lock, Mail } from 'lucide-react';
 import { z } from 'zod';
 
-import { createClient } from '@/lib/supabase/client';
-
 const loginSchema = z.object({
-  email: z
-    .string()
-    .min(1)
-    .email(),
-  password: z
-    .string()
-    .min(1),
+  email: z.string().min(1).email(),
+  password: z.string().min(1),
 });
 
 type LoginFormValues = z.infer<typeof loginSchema>;
@@ -33,7 +28,7 @@ interface LoginFormProps {
 
 export function LoginForm({ onSuccess, redirectTo }: LoginFormProps) {
   const t = useTranslations('auth');
-  const tLogin = useTranslations('login');
+  // const tLogin = useTranslations('login');
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
@@ -76,11 +71,9 @@ export function LoginForm({ onSuccess, redirectTo }: LoginFormProps) {
     <div className="w-full max-w-sm space-y-6">
       <div className="space-y-1">
         <h1 className="text-2xl font-bold text-foreground">
-          {tLogin('title')}
+          {t('login.title')}
         </h1>
-        <p className="text-sm text-muted-foreground">
-          {tLogin('subtitle')}
-        </p>
+        <p className="text-sm text-muted-foreground">{t('login.subtitle')}</p>
       </div>
 
       {error && (
@@ -97,7 +90,7 @@ export function LoginForm({ onSuccess, redirectTo }: LoginFormProps) {
             <Input
               {...field}
               type="email"
-              label={t('email')}
+              label={t('data.email')}
               placeholder="tu@email.com"
               leftIcon={<Mail className="h-4 w-4" />}
               error={fieldState.error?.message && t('errors.invalid_email')}
@@ -112,7 +105,7 @@ export function LoginForm({ onSuccess, redirectTo }: LoginFormProps) {
             <Input
               {...field}
               type="password"
-              label={t('password')}
+              label={t('data.password')}
               placeholder="••••••••"
               leftIcon={<Lock className="h-4 w-4" />}
               error={fieldState.error?.message && t('errors.required_field')}
@@ -125,22 +118,22 @@ export function LoginForm({ onSuccess, redirectTo }: LoginFormProps) {
             href="/forgot-password"
             className="text-sm text-muted-foreground hover:text-foreground transition-colors"
           >
-            {tLogin('forgot_password')}
+            {t('login.forgot_password')}
           </Link>
         </div>
 
         <Button type="submit" className="w-full" isLoading={isLoading}>
-          {isLoading ? tLogin('submit_loading') : tLogin('submit')}
+          {isLoading ? t('login.submit_loading') : t('login.submit')}
         </Button>
       </Form>
 
       <p className="text-sm text-muted-foreground text-center">
-        {tLogin('no_account')}{' '}
+        {t('login.no_account')}{' '}
         <Link
           href="/register"
           className="font-medium text-foreground hover:underline"
         >
-          {tLogin('sign_up')}
+          {t('login.sign_up')}
         </Link>
       </p>
     </div>

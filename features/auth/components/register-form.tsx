@@ -23,7 +23,7 @@ interface RegisterFormProps {
 
 export function RegisterForm({ onSuccess, redirectTo }: RegisterFormProps) {
   const t = useTranslations('auth');
-  const [error, setError] = useState<string | null>(null);
+  // const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const supabase = createClient();
