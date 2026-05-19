@@ -29,6 +29,26 @@
       "forgot_password": "Forgot your password?"
     },
 
+    "forgot_password": {
+      "title": "Reset password",
+      "subtitle": "Enter your email to receive a reset link",
+      "submit": "Send link",
+      "submit_loading": "Sending...",
+      "success_message": "Password reset link sent! Check your inbox.",
+      "back": "Back",
+      "info_text": "We'll send you a secure link to reset your password.",
+      "remember_password": "Remember your password?",
+      "sign_in_link": "Sign in",
+      "success_title": "Check your email!",
+      "success_subtitle": "We sent you a link to reset your password.",
+      "help_text": "If you don't see it, check your spam folder. The link expires in 1 hour.",
+      "resend_link": "Didn't receive it? Resend",
+      "resend_loading": "Resending...",
+      "resend_success": "Email resent!",
+      "resend_countdown": "You can resend in {seconds}s seconds",
+      "try_again": "Use another email"
+    },
+
     "errors": {
       "invalid_credentials": "Invalid email or password",
       "email_taken": "This email is already registered",

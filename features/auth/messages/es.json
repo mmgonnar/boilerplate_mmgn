@@ -29,6 +29,26 @@
       "forgot_password": "¿Olvidaste tu contraseña?"
     },
 
+    "forgot_password": {
+      "title": "Recuperar contraseña",
+      "subtitle": "Ingresa tu correo para recibir un enlace de recuperación",
+      "submit": "Enviar enlace",
+      "submit_loading": "Enviando...",
+      "success_message": "¡Correo de recuperación enviado! Revisa tu bandeja.",
+      "back": "Volver",
+      "info_text": "Te enviaremos un enlace seguro para restablecer tu contraseña.",
+      "remember_password": "¿Recordaste tu contraseña?",
+      "sign_in_link": "Inicia sesión",
+      "success_title": "¡Revisa tu correo!",
+      "success_subtitle": "Te enviamos un enlace para restablecer tu contraseña.",
+      "help_text": "Si no lo ves, revisa tu carpeta de spam. El enlace vence en 1 hora.",
+      "resend_link": "¿No lo recibiste? Reenviar",
+      "resend_loading": "Reenviando...",
+      "resend_success": "¡Correo reenviado!",
+      "resend_countdown": "Podrás reenviar en {seconds}s segundos",
+      "try_again": "Usar otro correo"
+    },
+
     "errors": {
       "invalid_credentials": "Correo o contraseña inválidos",
       "email_taken": "Este correo ya está registrado",
