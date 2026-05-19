@@ -74,7 +74,7 @@ export function RegisterForm({ onSuccess, redirectTo }: RegisterFormProps) {
       successMessage: t('register.success_message'),
       errorMessage: t('errors.unexpected_error'),
       router,
-      redirectTo: redirectTo ?? '/',
+      redirectTo: redirectTo ?? '/dashboard',
     });
 
     // IMPORTANTE: No pongas setIsLoading(false) aquí directamente,
