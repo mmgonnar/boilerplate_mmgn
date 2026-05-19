@@ -11,7 +11,7 @@ export interface InputProps extends Omit<
 > {
   label?: string;
   error?: string;
-  hint?: string; // texto de ayuda bajo el input
+  hint?: string;
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
 }
@@ -33,19 +33,21 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
     },
     ref,
   ) => {
-    // ✅ id estable para conectar label + input + mensaje de error (accesibilidad)
     const inputId = id ?? React.useId();
     const errorId = `${inputId}-error`;
     const hintId = `${inputId}-hint`;
 
-    // ✅ construye aria-describedby solo con los ids que existen en el DOM
     const describedBy =
       [error ? errorId : null, hint ? hintId : null]
         .filter(Boolean)
         .join(' ') || undefined;
 
     return (
-      <div className="flex w-full flex-col gap-1.5 text-left">
+      /* Añadimos pb-5 (padding-bottom) para reservar el espacio exacto 
+        que ocupará el texto absoluto (14px de texto + margen). Así evitamos 
+        saltos de línea y que se encime con el siguiente input.
+      */
+      <div className="relative flex w-full flex-col gap-1.5 text-left pb-1">
         {/* Label */}
         {label && (
           <label
@@ -64,7 +66,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           </label>
         )}
 
-        {/* Input wrapper — necesario para posicionar iconos */}
+        {/* Input wrapper */}
         <div className="relative flex items-center">
           {/* Icono izquierdo */}
           {leftIcon && (
@@ -112,16 +114,24 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           )}
         </div>
 
-        {/* Error — tiene prioridad sobre hint */}
+        {/* Contenedor de Feedback Absoluto:
+          Se posiciona al fondo (`bottom-0`) de manera absoluta para que no empuje el DOM.
+        */}
         {error && (
-          <p id={errorId} role="alert" className="text-xs text-destructive">
+          <p
+            id={errorId}
+            role="alert"
+            className="absolute -bottom-4 left-0 text-xs font-medium text-destructive transition-all duration-200"
+          >
             {error}
           </p>
         )}
 
-        {/* Hint — solo si no hay error */}
         {!error && hint && (
-          <p id={hintId} className="text-xs text-muted-foreground">
+          <p
+            id={hintId}
+            className="absolute -bottom-4 left-0 text-xs text-muted-foreground transition-all duration-200"
+          >
             {hint}
           </p>
         )}

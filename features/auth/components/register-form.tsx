@@ -118,7 +118,7 @@ export function RegisterForm({ onSuccess, redirectTo }: RegisterFormProps) {
           />
         ))}
 
-        <Button type="submit" className="w-full" isLoading={isLoading}>
+        <Button type="submit" className="w-full mt-4" isLoading={isLoading}>
           {isLoading ? t('register.submit_loading') : t('register.submit')}
         </Button>
       </Form>

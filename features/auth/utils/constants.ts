@@ -6,3 +6,8 @@ export const REGISTER_FIELDS = [
   { name: 'password', type: 'password', icon: Lock },
   { name: 'confirmPassword', type: 'password', icon: Lock },
 ] as const;
+
+export const LOGIN_FIELDS = [
+  { name: 'email', type: 'email', icon: Mail },
+  { name: 'password', type: 'password', icon: Lock },
+] as const;
