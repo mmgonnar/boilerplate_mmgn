@@ -45,8 +45,15 @@
       "resend_link": "¿No lo recibiste? Reenviar",
       "resend_loading": "Reenviando...",
       "resend_success": "¡Correo reenviado!",
-      "resend_countdown": "Podrás reenviar en {seconds}s segundos",
+      "resend_countdown": "Podrás reenviar en {{seconds}} segundos",
       "try_again": "Usar otro correo"
+    },
+    "reset_password": {
+      "title": "Nueva contraseña",
+      "subtitle": "Ingresa tu nueva contraseña segura",
+      "submit": "Actualizar contraseña",
+      "submit_loading": "Actualizando...",
+      "success_message": "¡Contraseña actualizada! Redirigiendo al login..."
     },
 
     "errors": {

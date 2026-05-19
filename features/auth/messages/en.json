@@ -45,8 +45,15 @@
       "resend_link": "Didn't receive it? Resend",
       "resend_loading": "Resending...",
       "resend_success": "Email resent!",
-      "resend_countdown": "You can resend in {seconds}s seconds",
+      "resend_countdown": "You can resend in {seconds}s",
       "try_again": "Use another email"
+    },
+    "reset_password": {
+      "title": "Reset password",
+      "subtitle": "Enter your new secure password",
+      "submit": "Update password",
+      "submit_loading": "Updating password...",
+      "success_message": "Password updated successfully! Redirecting to login..."
     },
 
     "errors": {
