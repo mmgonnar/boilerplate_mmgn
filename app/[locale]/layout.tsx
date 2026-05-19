@@ -1,8 +1,11 @@
+import { Toaster } from 'react-hot-toast';
+
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import { ThemeProvider } from 'next-themes';
 
 import { AuthProvider } from '@/providers/auth-provider';
+
 import '../globals.css';
 
 export default async function LocaleLayout({
@@ -26,6 +29,7 @@ export default async function LocaleLayout({
             disableTransitionOnChange
           >
             <AuthProvider>{children}</AuthProvider>
+            <Toaster />
           </ThemeProvider>
         </NextIntlClientProvider>
       </body>

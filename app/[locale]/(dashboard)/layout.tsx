@@ -1,8 +1,10 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useAuth } from '@/providers/auth-provider';
+
+import { Logo } from '@/components';
 import { Button } from '@/components/ui';
+import { useAuth } from '@/providers/auth-provider';
 import { LogOut, User } from 'lucide-react';
 
 // const isAuthenticated = true; // ← temporal (para testing)
@@ -30,17 +32,18 @@ export default function DashboardLayout({
     <div className="flex min-h-screen bg-background">
       {/* Sidebar */}
       <aside className="hidden md:flex w-64 flex-col border-r border-border bg-card p-4">
-        <div className="flex items-center gap-2 mb-6 p-2 rounded-md bg-accent">
+        <Logo />
+        {/* <div className="flex items-center gap-2 mb-6 p-2 rounded-md bg-accent">
           <User className="h-4 w-4 text-muted-foreground" />
           <span className="text-sm truncate">{user.email}</span>
-        </div>
+        </div> */}
 
         <Button
           variant="ghost"
           onClick={handleLogout}
-          className="w-full justify-start"
+          className="w-full justify-start text-sm"
+          leftIcon={<LogOut size={18} />}
         >
-          <LogOut className="h-4 w-4 mr-2" />
           Cerrar sesión
         </Button>
       </aside>
@@ -49,12 +52,15 @@ export default function DashboardLayout({
       <div className="flex flex-1 flex-col">
         {/* Header */}
         <header className="flex justify-between items-center p-4 border-b border-border bg-card">
-          <div className="text-sm text-muted-foreground">
-            Dashboard
+          <div className="text-sm text-muted-foreground">Dashboard</div>
+          <div className="flex gap-4 justify-center items-center">
+            <User className="h-4 w-4 text-muted-foreground" />
+            <span className="text-sm truncate">{user.email}</span>
+
+            <Button variant="ghost" size="icon" onClick={handleLogout}>
+              <LogOut className="h-4 w-4" />
+            </Button>
           </div>
-          <Button variant="ghost" size="icon" onClick={handleLogout}>
-            <LogOut className="h-4 w-4" />
-          </Button>
         </header>
 
         <main className="flex-1 p-6">{children}</main>

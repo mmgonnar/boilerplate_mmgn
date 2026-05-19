@@ -77,8 +77,6 @@ export function RegisterForm({ onSuccess, redirectTo }: RegisterFormProps) {
       redirectTo: redirectTo ?? '/dashboard',
     });
 
-    // IMPORTANTE: No pongas setIsLoading(false) aquí directamente,
-    // porque se ejecutaría antes de que la promesa termine.
     signUpPromise.finally(() => setIsLoading(false));
   }
 
