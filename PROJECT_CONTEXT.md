@@ -28,6 +28,10 @@
 - **zod**: 4.3.6
 - **@hookform/resolvers**: 5.2.2
 
+### Notifications
+
+- **react-hot-toast**: 2.4.1 — toast notifications with `apiCallToast` helper
+
 ### Theming & i18n
 
 - **next-themes**: 0.4.6
@@ -397,7 +401,46 @@ export type { NavConfig, NavLink } from './types/types';
 
 ---
 
-## 7. API Integration Patterns (Future)
+## 7. Toast Notifications (react-hot-toast)
+
+### apiCallToast Helper
+
+```typescript
+import { apiCallToast } from '@/lib/utils';
+import { useRouter } from 'next/navigation';
+
+const router = useRouter();
+
+// Usage with fetch or async function
+const result = apiCallToast(fetch('/api/endpoint', { method: 'POST' }), {
+  loading: 'Guardando...',
+  successMessage: '¡Guardado exitosamente!',
+  errorMessage: 'Error al guardar',
+  redirectTo: '/dashboard',
+  router,
+});
+
+// For simple toasts, use react-hot-toast directly
+import toast from 'react-hot-toast';
+
+toast.success('¡Listo!');
+toast.error('Algo salió mal');
+toast.loading('Cargando...');
+```
+
+### Options
+
+| Option         | Type             | Description                          |
+| -------------- | ---------------- | ------------------------------------ |
+| `loading`      | string           | Message shown while pending          |
+| `successMessage`| string          | Message shown on success             |
+| `errorMessage`  | string           | Fallback error message               |
+| `redirectTo`   | string (optional)| Navigate here on success            |
+| `router`       | AppRouterInstance (optional) | Next.js router for redirect |
+
+---
+
+## 8. API Integration Patterns (Future)
 
 ```typescript
 // lib/api.ts
@@ -617,6 +660,7 @@ export const config = {
 | Translations     | `messages/`, `features/*/messages/`           |
 | Locale layout    | `app/[locale]/layout.tsx`                     |
 | Middleware       | `middleware.ts`                               |
+| Toast helpers    | `lib/utils.ts` - `apiCallToast()`             |
 
 ---
 

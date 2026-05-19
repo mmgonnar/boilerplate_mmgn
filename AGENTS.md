@@ -103,7 +103,7 @@ bunx prisma db push   # Push schema to database
 - [ ] Dashboard sidebar
 - [ ] Avatar component
 - [ ] Radix UI primitives (Tooltip, Dropdown, Select, Tabs)
-- [ ] Toast (Sonner)
+- [ ] Toast (react-hot-toast)
 - [ ] Table with sorting
 - [ ] Error pages (404, 500)
 - [ ] SEO: generateMetadata per page

@@ -10,27 +10,11 @@ import { useRouter } from 'next/navigation';
 import { Button, Input } from '@/components/ui';
 import { Form, FormField } from '@/components/ui/form';
 import { createClient } from '@/lib/supabase/client';
+import { apiCallToast } from '@/lib/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Lock, Mail, User } from 'lucide-react';
 
 import { RegisterFormValues, registerSchema } from '../schemas/register-schema';
 import { REGISTER_FIELDS } from '../utils/constants';
-
-//import { z } from 'zod';
-
-// const registerSchema = z
-//   .object({
-//     name: z.string().min(1),
-//     email: z.string().min(1).email(),
-//     password: z.string().min(8),
-//     confirmPassword: z.string().min(1),
-//   })
-//   .refine((data) => data.password === data.confirmPassword, {
-//     message: 'errors.passwords_dont_match',
-//     path: ['confirmPassword'],
-//   });
-
-// type RegisterFormValues = z.infer<typeof registerSchema>;
 
 interface RegisterFormProps {
   onSuccess?: () => void;
@@ -57,39 +41,45 @@ export function RegisterForm({ onSuccess, redirectTo }: RegisterFormProps) {
 
   async function onSubmit(values: RegisterFormValues) {
     setIsLoading(true);
-    setError(null);
 
-    try {
-      const { error: signUpError } = await supabase.auth.signUp({
-        email: values.email,
-        password: values.password,
-        options: {
-          data: {
-            name: values.name,
+    const signUpPromise = (async () => {
+      try {
+        const { data, error: signUpError } = await supabase.auth.signUp({
+          email: values.email,
+          password: values.password,
+          options: {
+            data: { name: values.name },
           },
-        },
-      });
+        });
 
-      if (signUpError) {
-        if (signUpError.message.includes('already registered')) {
-          setError(t('errors.email_taken'));
-        } else {
-          setError(signUpError.message);
+        if (signUpError) {
+          console.error('Error de Supabase:', signUpError);
+
+          const msg = signUpError.message.includes('already registered')
+            ? t('errors.email_taken')
+            : signUpError.message;
+
+          throw new Error(msg);
         }
-        return;
-      }
 
-      if (onSuccess) {
-        onSuccess();
-      } else {
-        router.push(redirectTo ?? '/login');
-        router.refresh();
+        return data;
+      } catch (err) {
+        console.error('Error en el flujo de registro:', err);
+        throw err;
       }
-    } catch {
-      setError('errors.unexpected_error');
-    } finally {
-      setIsLoading(false);
-    }
+    })();
+
+    apiCallToast(signUpPromise, {
+      loading: t('register.submit_loading'),
+      successMessage: t('register.success_message'),
+      errorMessage: t('errors.unexpected_error'),
+      router,
+      redirectTo: redirectTo ?? '/',
+    });
+
+    // IMPORTANTE: No pongas setIsLoading(false) aquí directamente,
+    // porque se ejecutaría antes de que la promesa termine.
+    signUpPromise.finally(() => setIsLoading(false));
   }
 
   return (
@@ -102,12 +92,6 @@ export function RegisterForm({ onSuccess, redirectTo }: RegisterFormProps) {
           {t('register.subtitle')}
         </p>
       </div>
-
-      {error && (
-        <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">
-          {error}
-        </div>
-      )}
 
       <Form form={form} onSubmit={onSubmit} className="space-y-4">
         {REGISTER_FIELDS.map((f) => (

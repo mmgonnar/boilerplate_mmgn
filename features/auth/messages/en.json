@@ -15,7 +15,8 @@
       "submit": "Create account",
       "submit_loading": "Creating account...",
       "has_account": "Already have an account?",
-      "sign_in": "Sign in"
+      "sign_in": "Sign in",
+      "success_message": "Registration succesfull!"
     },
 
     "login": {
