@@ -45,7 +45,7 @@
       "resend_link": "¿No lo recibiste? Reenviar",
       "resend_loading": "Reenviando...",
       "resend_success": "¡Correo reenviado!",
-      "resend_countdown": "Podrás reenviar en {{seconds}} segundos",
+      "resend_countdown": "Podrás reenviar en {seconds}s",
       "try_again": "Usar otro correo"
     },
     "reset_password": {

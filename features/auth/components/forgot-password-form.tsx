@@ -51,6 +51,8 @@ export function ForgotPasswordForm() {
     }
   }, [resendCountdown]);
 
+  const targetRedirectUrl = `${typeof window !== 'undefined' ? window.location.origin : ''}/auth/callback?next=/auth/reset-password`;
+
   async function onSubmit(values: ForgotPasswordFormValues) {
     setIsLoading(true);
 
@@ -59,7 +61,7 @@ export function ForgotPasswordForm() {
     const resetPromise = (async () => {
       const { data, error: resetError } =
         await supabase.auth.resetPasswordForEmail(values.email, {
-          redirectTo: `${window.location.origin}/auth/reset-password`,
+          redirectTo: targetRedirectUrl,
         });
 
       if (resetError) {
@@ -91,7 +93,7 @@ export function ForgotPasswordForm() {
     const resendPromise = (async () => {
       const { data, error: resendError } =
         await supabase.auth.resetPasswordForEmail(submittedEmail, {
-          redirectTo: `${window.location.origin}/auth/reset-password`,
+          redirectTo: targetRedirectUrl,
         });
 
       if (resendError) {
