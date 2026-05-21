@@ -1,6 +1,12 @@
 'use client';
 
-import { createContext, useCallback, useContext, useEffect, useState } from 'react';
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 
 import { createClient } from '@/lib/supabase/client';
 import type { Session, User } from '@supabase/supabase-js';
@@ -64,11 +70,23 @@ export function AuthProvider({ children }: AuthProviderProps) {
     return () => subscription.unsubscribe();
   }, [supabase.auth, refreshUser]);
 
-  const signOut = useCallback(async () => {
-    await supabase.auth.signOut();
-    setMfaVerified(false);
-    sessionStorage.removeItem('mfa_verified');
-  }, [supabase.auth]);
+  // const signOut = useCallback(async () => {
+  //   await supabase.auth.signOut();
+  //   setMfaVerified(false);
+  //   sessionStorage.removeItem('mfa_verified');
+  // }, [supabase.auth]);
+  // Dentro de tu AuthProvider
+  const signOut = async () => {
+    try {
+      setUser(null);
+
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+    } catch (error) {
+      console.error('Sign out error in provider :', error);
+      throw error;
+    }
+  };
 
   return (
     <AuthContext.Provider

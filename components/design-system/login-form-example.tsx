@@ -35,7 +35,6 @@ export function LoginFormExample() {
   async function onSubmit(values: LoginFormValues) {
     setIsLoading(true);
     try {
-      console.log(values);
       await new Promise((r) => setTimeout(r, 1500));
     } finally {
       setIsLoading(false);
