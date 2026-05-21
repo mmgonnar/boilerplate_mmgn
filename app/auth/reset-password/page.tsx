@@ -11,13 +11,12 @@ export default async function ResetPasswordPage() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user) {
-    redirect('/login?error=unauthorized');
-  }
-
-  // Cargamos y combinamos las traducciones necesarias
   const cookieStore = await cookies();
-  const locale = cookieStore.get('NEXT_LOCALE')?.value || 'en';
+  const locale = cookieStore.get('NEXT_LOCALE')?.value || 'es';
+
+  if (!user) {
+    redirect(`/${locale}/login?error=unauthorized`);
+  }
 
   const [commonMessages, authMessages] = await Promise.all([
     import(`@/messages/${locale}.json`),
