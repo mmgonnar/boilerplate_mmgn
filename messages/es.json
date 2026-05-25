@@ -3,6 +3,8 @@
     "save": "Guardar",
     "cancel": "Cancelar",
     "loading": "Cargando...",
-    "back": "Regresar"
+    "back": "Regresar",
+    "site_title": "Boilerplate",
+    "site_description": "Boilerplate listo para producción para impulsar tus proyectos."
   }
 }

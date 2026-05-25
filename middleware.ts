@@ -16,6 +16,8 @@ export async function middleware(request: NextRequest) {
 
   const response = intlMiddleware(request);
 
+  response.headers.set('x-pathname', pathname);
+
   const isProtectedRoute = PROTECTED_ROUTES.some((route) =>
     pathname.includes(route),
   );

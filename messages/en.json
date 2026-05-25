@@ -3,6 +3,8 @@
     "save": "Save",
     "cancel": "Cancel",
     "loading": "Loading...",
-    "back": "Go back"
+    "back": "Go back",
+    "site_title": "Boilerplate",
+    "site_description": "Production-ready boilerplate to kickstart your projects."
   }
 }
