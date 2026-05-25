@@ -1,4 +1,10 @@
 {
-  "dashboard": "Dashboard",
-  "profile": "profile"
+  "dashboard": {
+    "title": "Dashboard",
+
+    "logout": {
+      "sign_out": "Sign out",
+      "signing_out": "Signing out..."
+    }
+  }
 }

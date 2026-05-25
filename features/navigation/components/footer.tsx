@@ -7,39 +7,6 @@ import { cn } from '@/lib/utils';
 
 import { FOOTER_LINKS } from '../utils/config';
 
-// const SOCIAL_MEDIA_ITEMS: SocialMediaItem[] = [
-//   {
-//     icon: SOCIAL_DATA.Twitter,
-//     href: 'https://twitter.com/mmgonnar',
-//     label: 'X (Twitter)',
-//     ariaLabel: 'Follow us on X (Twitter)',
-//   },
-//   {
-//     icon: SOCIAL_DATA.Facebook,
-//     href: 'https://facebook.com/mmgonnar',
-//     label: 'Facebook',
-//     ariaLabel: 'Follow us on Facebook',
-//   },
-//   {
-//     icon: SOCIAL_DATA.Instagram,
-//     href: 'https://instagram.com/mmgonnar',
-//     label: 'Instagram',
-//     ariaLabel: 'Follow us on Instagram',
-//   },
-//   {
-//     icon: SOCIAL_DATA.Linkedin,
-//     href: 'https://linkedin.com/company/mmgonnar',
-//     label: 'LinkedIn',
-//     ariaLabel: 'Follow us on LinkedIn',
-//   },
-//   {
-//     icon: SOCIAL_DATA.Github,
-//     href: 'https://github.com/mmgonnar',
-//     label: 'GitHub',
-//     ariaLabel: 'Follow us on GitHub',
-//   },
-// ];
-
 // ─── Types ────────────────────────────────────────────────────────────────────
 interface FooterColumnType {
   title: string;

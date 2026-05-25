@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 
+import { useTranslations } from 'next-intl';
 import { useTheme } from 'next-themes';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -23,6 +24,7 @@ const sizeMap = {
 export function Logo({ size = 'default' }: LogoProps) {
   const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const t = useTranslations('nav');
 
   useEffect(() => setMounted(true), []);
 
@@ -38,7 +40,7 @@ export function Logo({ size = 'default' }: LogoProps) {
     <Link
       href="/"
       className="relative inline-flex h-10 shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-sm"
-      aria-label="Ir al inicio"
+      aria-label={t('home')}
     >
       <Image
         src={isDark ? LogoDarkSVG : LogoLightSVG}

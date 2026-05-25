@@ -1,4 +1,9 @@
 {
-  "dashboard": "Panel",
-  "profile": "Perfil"
+  "dashboard": {
+    "title": "Dashboard",
+    "logout": {
+      "sign_out": "Cerrar sesión",
+      "signing_out": "Cerrando sesión..."
+    }
+  }
 }

@@ -70,12 +70,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
     return () => subscription.unsubscribe();
   }, [supabase.auth, refreshUser]);
 
-  // const signOut = useCallback(async () => {
-  //   await supabase.auth.signOut();
-  //   setMfaVerified(false);
-  //   sessionStorage.removeItem('mfa_verified');
-  // }, [supabase.auth]);
-  // Dentro de tu AuthProvider
   const signOut = async () => {
     try {
       setUser(null);

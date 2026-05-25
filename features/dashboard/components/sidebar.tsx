@@ -3,23 +3,18 @@
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 
+import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 
 import { Logo } from '@/components';
 import { Button } from '@/components/ui';
 import { useAuth } from '@/providers/auth-provider';
-import { LogOut, User } from 'lucide-react';
+import { LogOut } from 'lucide-react';
 
-import { Sidebar } from '@/features/dashboard';
-import { HeaderDashboard } from '@/features/navigation';
-
-export default function DashboardLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export function Sidebar() {
   const { user, signOut } = useAuth();
   const router = useRouter();
+  const t = useTranslations('dashboard');
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   useEffect(() => {
@@ -50,19 +45,22 @@ export default function DashboardLayout({
   };
 
   return (
-    <div className="flex min-h-screen bg-background">
-      <Sidebar />
+    <>
+      <aside className="hidden md:flex w-64 flex-col border-r border-border bg-card p-4">
+        <Logo />
 
-      <div className="flex flex-1 flex-col">
-        {/* Header */}
-        <HeaderDashboard
-          userEmail={user?.email}
-          onLogout={handleLogout}
-          isLoggingOut={isLoggingOut}
-        />
+        <div className="flex-1 mt-6">{/* nav del dashboard aqui*/}</div>
 
-        <main className="flex-1 p-6">{children}</main>
-      </div>
-    </div>
+        <Button
+          variant="ghost"
+          onClick={handleLogout}
+          disabled={isLoggingOut}
+          className="w-full justify-start text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+          leftIcon={<LogOut size={18} />}
+        >
+          {isLoggingOut ? t('logout.signing_out') : t('logout.sign_out')}
+        </Button>
+      </aside>
+    </>
   );
 }

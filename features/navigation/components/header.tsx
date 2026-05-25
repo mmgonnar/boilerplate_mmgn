@@ -7,17 +7,23 @@ import Link from 'next/link';
 
 import { Logo } from '@/components';
 import { Button, LanguageToggle, ThemeToggle } from '@/components/ui';
-// useLocale lives here
 import { usePathname } from '@/i18n/navigation';
 import { cn } from '@/lib/utils';
-import { Menu, X } from 'lucide-react';
+import { LogOut, Menu, User, X } from 'lucide-react';
 
 import type { NavLink } from '@/features/navigation/types/types';
 import { NAV_CONFIG } from '@/features/navigation/utils/config';
 
-// ─── Types ────────────────────────────────────────────────────────────────────
+// ─── Interfaces de Props ──────────────────────────────────────────────────────
 interface HeaderProps {
   isAuthenticated?: boolean;
+  customActions?: React.ReactNode;
+}
+
+interface HeaderDashboardProps {
+  userEmail?: string;
+  onLogout: () => Promise<void>;
+  isLoggingOut: boolean;
 }
 
 interface NavLinksProps {
@@ -32,8 +38,7 @@ interface HeaderActionsProps {
   t: ReturnType<typeof useTranslations>;
 }
 
-// ─── Subcomponents ────────────────────────────────────────────────────────────
-
+// ─── Subcomponentes Compartidos ───────────────────────────────────────────────
 function NavLinks({ links, pathname, t, mobile = false }: NavLinksProps) {
   return (
     <>
@@ -103,8 +108,11 @@ function MobileActions({ isAuthenticated, t }: HeaderActionsProps) {
   );
 }
 
-// ─── Header ───────────────────────────────────────────────────────────────────
-export function Header({ isAuthenticated = false }: HeaderProps) {
+// ─── (Landing/Web) ─────────────────────
+export function Header({
+  isAuthenticated = false,
+  customActions,
+}: HeaderProps) {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const t = useTranslations('nav');
@@ -130,7 +138,7 @@ export function Header({ isAuthenticated = false }: HeaderProps) {
       role="navigation"
       aria-label="Primary"
     >
-      {/* ── Desktop bar ─────────────────────────────────────────────────── */}
+      {/* Desktop Bar */}
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         <Logo />
 
@@ -144,10 +152,16 @@ export function Header({ isAuthenticated = false }: HeaderProps) {
         <div className="hidden md:flex items-center gap-2">
           <LanguageToggle />
           <ThemeToggle />
-          <HeaderActions isAuthenticated={isAuthenticated} t={t} />
+
+          {/* Si se inyectan acciones personalizadas se muestran aquí; si no, hereda las básicas */}
+          {customActions ? (
+            customActions
+          ) : (
+            <HeaderActions isAuthenticated={isAuthenticated} t={t} />
+          )}
         </div>
 
-        {/* ── Hamburger ───────────────────────────────────────────────── */}
+        {/* Hamburger Mobile */}
         <div className="flex md:hidden items-center gap-2">
           <ThemeToggle />
           <Button
@@ -167,7 +181,7 @@ export function Header({ isAuthenticated = false }: HeaderProps) {
         </div>
       </div>
 
-      {/* ── Mobile menu ─────────────────────────────────────────────────── */}
+      {/* Mobile Menu */}
       <div
         id="mobile-menu"
         className={cn(
@@ -181,13 +195,73 @@ export function Header({ isAuthenticated = false }: HeaderProps) {
           <NavLinks links={navLinks} pathname={pathname} t={t} mobile />
 
           <div className="flex flex-col gap-2 mt-4 pt-4 border-t border-border">
-            <span className="text-sm">{t('language')}</span>
+            <span className="text-sm font-medium">{t('language')}</span>
             <div>
               <LanguageToggle mobile />
             </div>
             <MobileActions isAuthenticated={isAuthenticated} t={t} />
           </div>
         </nav>
+      </div>
+    </header>
+  );
+}
+
+// ─── (Dashboard) ─────────────
+export function HeaderDashboard({
+  userEmail,
+  onLogout,
+  isLoggingOut,
+}: HeaderDashboardProps) {
+  const t = useTranslations('dashboard');
+  return (
+    <header className="flex justify-between items-center p-4 border-b border-border bg-card">
+      <div className="text-sm text-muted-foreground font-medium">
+        {t('title')}
+      </div>
+
+      <div className="flex gap-4 items-center">
+        {/* Info del Usuario */}
+        {userEmail && (
+          <div className="flex items-center gap-2 max-w-[200px]">
+            <User className="h-4 w-4 text-muted-foreground shrink-0" />
+            <span className="text-sm truncate font-mono">{userEmail}</span>
+          </div>
+        )}
+        <LanguageToggle />
+
+        <div className="h-4 w-px bg-border" />
+
+        {/* Botón de Logout puro controlado externamente */}
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={onLogout}
+          disabled={isLoggingOut}
+          className="gap-2 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+          leftIcon={<LogOut className="h-4 w-4" />}
+        >
+          <span className="hidden sm:inline">
+            {isLoggingOut ? t('logout.signing_out') : t('logout.sign_out')}
+          </span>
+        </Button>
+      </div>
+    </header>
+  );
+}
+
+// ─── (Auth) ────────────
+export function HeaderAuth() {
+  return (
+    <header
+      role="navigation"
+      aria-label="Auth Primary"
+      className="flex h-16 items-center justify-between px-10 border-b border-border bg-background"
+    >
+      <Logo />
+      <div className="flex gap-2">
+        <ThemeToggle />
+        <LanguageToggle />
       </div>
     </header>
   );
