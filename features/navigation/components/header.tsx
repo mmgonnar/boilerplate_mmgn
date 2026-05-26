@@ -37,7 +37,13 @@ interface HeaderActionsProps {
   isAuthenticated: boolean;
   t: ReturnType<typeof useTranslations>;
 }
-
+interface HeaderDashboardProps {
+  userEmail?: string;
+  createdAt?: string;
+  lastSignInAt?: string;
+  onLogout: () => Promise<void>;
+  isLoggingOut: boolean;
+}
 // ─── Subcomponentes Compartidos ───────────────────────────────────────────────
 function NavLinks({ links, pathname, t, mobile = false }: NavLinksProps) {
   return (
@@ -210,14 +216,17 @@ export function Header({
 // ─── (Dashboard) ─────────────
 export function HeaderDashboard({
   userEmail,
+
   onLogout,
   isLoggingOut,
 }: HeaderDashboardProps) {
-  const t = useTranslations('dashboard');
   return (
     <header className="flex justify-between items-center p-4 border-b border-border bg-card">
-      <div className="text-sm text-muted-foreground font-medium">
-        {t('title')}
+      {/* 🚀 Mensaje de Bienvenida Dinámico y Personalizado */}
+      <div className="flex flex-col">
+        <span className="text-xs text-muted-foreground font-medium uppercase tracking-wider">
+          Dashboard
+        </span>
       </div>
 
       <div className="flex gap-4 items-center">
@@ -228,11 +237,9 @@ export function HeaderDashboard({
             <span className="text-sm truncate font-mono">{userEmail}</span>
           </div>
         )}
-        <LanguageToggle />
 
         <div className="h-4 w-px bg-border" />
 
-        {/* Botón de Logout puro controlado externamente */}
         <Button
           variant="ghost"
           size="sm"
@@ -242,7 +249,7 @@ export function HeaderDashboard({
           leftIcon={<LogOut className="h-4 w-4" />}
         >
           <span className="hidden sm:inline">
-            {isLoggingOut ? t('logout.signing_out') : t('logout.sign_out')}
+            {isLoggingOut ? 'Leaving...' : 'Logout'}
           </span>
         </Button>
       </div>

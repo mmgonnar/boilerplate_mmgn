@@ -56,7 +56,9 @@ export default function DashboardLayout({
       <div className="flex flex-1 flex-col">
         {/* Header */}
         <HeaderDashboard
-          userEmail={user?.email}
+          userEmail={user.email}
+          createdAt={user.created_at}
+          lastSignInAt={user.last_sign_in_at}
           onLogout={handleLogout}
           isLoggingOut={isLoggingOut}
         />
