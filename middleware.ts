@@ -10,36 +10,66 @@ const intlMiddleware = createMiddleware(routing);
 
 const PROTECTED_ROUTES = ['/dashboard', '/profile', '/settings'];
 const AUTH_ROUTES = ['/login', '/register'];
+const LOCALES = ['es', 'en'];
+
+// ✅ Strip locale prefix for clean matching
+function stripLocale(pathname: string): string {
+  for (const locale of LOCALES) {
+    if (pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`) {
+      return pathname.slice(locale.length + 1) || '/';
+    }
+  }
+  return pathname;
+}
+
+// ✅ Exact prefix match — prevents path traversal
+function matchesRoute(pathname: string, routes: string[]): boolean {
+  return routes.some(
+    (route) => pathname === route || pathname.startsWith(`${route}/`),
+  );
+}
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
-
   const response = intlMiddleware(request);
 
-  response.headers.set('x-pathname', pathname);
-
-  const isProtectedRoute = PROTECTED_ROUTES.some((route) =>
-    pathname.includes(route),
-  );
-  const isAuthRoute = AUTH_ROUTES.some((route) => pathname.includes(route));
+  const cleanPath = stripLocale(pathname);
+  const isProtectedRoute = matchesRoute(cleanPath, PROTECTED_ROUTES);
+  const isAuthRoute = matchesRoute(cleanPath, AUTH_ROUTES);
 
   if (!isProtectedRoute && !isAuthRoute) {
     return response;
   }
 
   const { client: supabase } = createClient(request);
-
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
+  // ✅ Authenticated user on auth route → redirect to dashboard with locale
   if (user && isAuthRoute) {
-    return NextResponse.redirect(new URL('/dashboard', request.url));
+    const locale = pathname.split('/')[1];
+    const localizedTarget = LOCALES.includes(locale)
+      ? `/${locale}/dashboard`
+      : '/dashboard';
+    return NextResponse.redirect(new URL(localizedTarget, request.url));
   }
 
+  // ✅ Unauthenticated user on protected route → redirect to login
   if (!user && isProtectedRoute) {
-    const redirectUrl = new URL('/login', request.url);
-    redirectUrl.searchParams.set('redirect', pathname);
+    const locale = pathname.split('/')[1];
+    const localizedLogin = LOCALES.includes(locale)
+      ? `/${locale}/login`
+      : '/login';
+    const redirectUrl = new URL(localizedLogin, request.url);
+
+    // ✅ Only allow safe internal redirects
+    const isSafeRedirect =
+      cleanPath.startsWith('/') && !cleanPath.startsWith('//');
+    if (isSafeRedirect) {
+      redirectUrl.searchParams.set('redirect', cleanPath);
+    }
+
     return NextResponse.redirect(redirectUrl);
   }
 
