@@ -2,6 +2,8 @@ import React from 'react';
 
 import type { Metadata } from 'next';
 
+import { AvatarUpload } from '@/components/ui';
+
 export const metadata: Metadata = {
   title: 'Dashboard',
 };

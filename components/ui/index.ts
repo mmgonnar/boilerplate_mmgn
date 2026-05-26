@@ -12,3 +12,4 @@ export * from './language-toggle';
 export * from './social-media';
 export * from './social-media-icons';
 export * from './avatar';
+export * from './avatar-upload';
