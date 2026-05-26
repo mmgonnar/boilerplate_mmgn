@@ -5,10 +5,7 @@ import toast from 'react-hot-toast';
 
 import { useRouter } from 'next/navigation';
 
-import { Logo } from '@/components';
-import { Button } from '@/components/ui';
 import { useAuth } from '@/providers/auth-provider';
-import { LogOut, User } from 'lucide-react';
 
 import { Sidebar } from '@/features/dashboard';
 import { HeaderDashboard } from '@/features/navigation';
@@ -51,7 +48,7 @@ export default function DashboardLayout({
 
   return (
     <div className="flex min-h-screen bg-background">
-      <Sidebar />
+      <Sidebar userEmail={user.email} />
 
       <div className="flex flex-1 flex-col">
         {/* Header */}

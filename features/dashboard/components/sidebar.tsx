@@ -7,11 +7,16 @@ import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 
 import { Logo } from '@/components';
-import { Button } from '@/components/ui';
+import { Avatar, Button } from '@/components/ui';
 import { useAuth } from '@/providers/auth-provider';
 import { LogOut } from 'lucide-react';
 
-export function Sidebar() {
+interface SidebarProps {
+  userEmail?: string;
+  userSrc?: string;
+}
+
+export function Sidebar({ userEmail, userSrc }: SidebarProps) {
   const { user, signOut } = useAuth();
   const router = useRouter();
   const t = useTranslations('dashboard');
@@ -46,11 +51,18 @@ export function Sidebar() {
 
   return (
     <>
-      <aside className="hidden md:flex w-64 flex-col border-r border-border bg-card p-4">
+      <aside className="hidden md:flex w-64 flex-col border-r border-border bg-card p-6">
         <Logo />
 
         <div className="flex-1 mt-6">{/* nav del dashboard aqui*/}</div>
-
+        <div className="flex gap-2 cursor-pointer">
+          <Avatar src={userSrc} fallbackText={userEmail} size="sm" />
+          {userEmail && (
+            <div className="flex items-center gap-2 max-w-[200px]">
+              <span className="text-sm truncate font-mono">{userEmail}</span>
+            </div>
+          )}
+        </div>
         <Button
           variant="ghost"
           onClick={handleLogout}

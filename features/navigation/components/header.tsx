@@ -6,7 +6,7 @@ import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 
 import { Logo } from '@/components';
-import { Button, LanguageToggle, ThemeToggle } from '@/components/ui';
+import { Avatar, Button, LanguageToggle, ThemeToggle } from '@/components/ui';
 import { usePathname } from '@/i18n/navigation';
 import { cn } from '@/lib/utils';
 import { LogOut, Menu, User, X } from 'lucide-react';
@@ -39,6 +39,7 @@ interface HeaderActionsProps {
 }
 interface HeaderDashboardProps {
   userEmail?: string;
+  userSrc?: string;
   createdAt?: string;
   lastSignInAt?: string;
   onLogout: () => Promise<void>;
@@ -216,7 +217,7 @@ export function Header({
 // ─── (Dashboard) ─────────────
 export function HeaderDashboard({
   userEmail,
-
+  userSrc,
   onLogout,
   isLoggingOut,
 }: HeaderDashboardProps) {
@@ -230,6 +231,7 @@ export function HeaderDashboard({
       </div>
 
       <div className="flex gap-4 items-center">
+        <Avatar src={userSrc} fallbackText={userEmail} size="sm" />
         {/* Info del Usuario */}
         {userEmail && (
           <div className="flex items-center gap-2 max-w-[200px]">

@@ -13,7 +13,6 @@ export default function DashboardPage({ createdAt, lastSignInAt }) {
     const created = new Date(createdAt).getTime();
     const lastLogin = new Date(lastSignInAt).getTime();
 
-    // Si la diferencia entre creación y login es menor a 10 segundos, es un registro fresco
     return Math.abs(lastLogin - created) < 10000;
   }, [createdAt, lastSignInAt]);
 
