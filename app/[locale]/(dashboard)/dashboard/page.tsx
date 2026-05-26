@@ -20,7 +20,7 @@ export default function DashboardPage({ createdAt, lastSignInAt }) {
   return (
     <div className="space-y-4">
       <h1 className="text-2xl font-bold text-foreground">Dashboard</h1>
-      <p className="text-muted-foreground">Bienvenido de vuelta.</p>
+
       <h1 className="text-sm font-semibold mt-0.5 text-muted-foreground">
         {isNewUser ? (
           <span className="text-primary">
