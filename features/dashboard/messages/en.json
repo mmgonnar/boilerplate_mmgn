@@ -1,10 +1,14 @@
 {
   "dashboard": {
+    "profile": "Profile",
     "title": "Dashboard",
 
     "logout": {
       "sign_out": "Sign out",
       "signing_out": "Signing out..."
+    },
+    "sidebar": {
+      "profile": "Profile"
     }
   }
 }

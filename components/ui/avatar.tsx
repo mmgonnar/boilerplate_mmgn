@@ -62,7 +62,6 @@ export function Avatar({
       {...props}
     >
       {src && !hasError ? (
-        // eslint-disable-next-line @next/next/no-img-element
         <img
           src={src}
           alt={alt}
@@ -70,10 +69,8 @@ export function Avatar({
           onError={() => setHasError(true)}
         />
       ) : initials ? (
-        // 2. Fallback con Iniciales del Usuario
         <span>{initials}</span>
       ) : (
-        // 3. Fallback genérico con Icono si no hay datos
         <User className="h-1/2 w-1/2 text-muted-foreground" />
       )}
     </div>

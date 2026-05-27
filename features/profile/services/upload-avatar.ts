@@ -1,9 +1,5 @@
 import { createClient } from '@/lib/supabase/client';
 
-/**
- * * @param file Archivo binario obtenido del input file
- * @param userId ID único del usuario autenticado (uid)
- */
 export async function uploadAvatar(
   file: File,
   userId: string,
@@ -24,6 +20,7 @@ export async function uploadAvatar(
     throw new Error(`Error al subir la imagen: ${uploadError.message}`);
   }
 
+  // Obtenemos la URL pública del archivo recién subido
   const { data } = supabase.storage.from('avatars').getPublicUrl(filePath);
 
   if (!data?.publicUrl) {

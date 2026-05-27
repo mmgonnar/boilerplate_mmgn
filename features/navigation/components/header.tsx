@@ -9,6 +9,7 @@ import { Logo } from '@/components';
 import { Avatar, Button, LanguageToggle, ThemeToggle } from '@/components/ui';
 import { usePathname } from '@/i18n/navigation';
 import { cn } from '@/lib/utils';
+import { useAuth } from '@/providers/auth-provider';
 import { LogOut, Menu, User, X } from 'lucide-react';
 
 import type { NavLink } from '@/features/navigation/types/types';
@@ -19,13 +20,6 @@ interface HeaderProps {
   isAuthenticated?: boolean;
   customActions?: React.ReactNode;
 }
-
-interface HeaderDashboardProps {
-  userEmail?: string;
-  onLogout: () => Promise<void>;
-  isLoggingOut: boolean;
-}
-
 interface NavLinksProps {
   links: NavLink[];
   pathname: string;
@@ -71,13 +65,22 @@ function NavLinks({ links, pathname, t, mobile = false }: NavLinksProps) {
   );
 }
 
-function HeaderActions({ isAuthenticated, t }: HeaderActionsProps) {
-  if (isAuthenticated) {
+function HeaderActions({ isAuthenticated, t }) {
+  const { user } = useAuth();
+  if (isAuthenticated && user) {
     return (
-      <Button variant="ghost" size="icon" aria-label={t('profile')}>
-        <div className="h-7 w-7 rounded-full bg-primary/20 flex items-center justify-center">
-          <span className="text-xs font-medium text-primary">U</span>
-        </div>
+      <Button
+        variant="ghost"
+        size="icon"
+        className="rounded-full"
+        aria-label={t('profile')}
+      >
+        {/* Tu Avatar dinámico acoplado al Header */}
+        <Avatar
+          src={user.user_metadata?.avatar_url}
+          fallbackText={user.email}
+          size="sm"
+        />
       </Button>
     );
   }
@@ -223,7 +226,7 @@ export function HeaderDashboard({
 }: HeaderDashboardProps) {
   return (
     <header className="flex justify-between items-center p-4 border-b border-border bg-card">
-      {/* 🚀 Mensaje de Bienvenida Dinámico y Personalizado */}
+      {/* Lado Izquierdo: Identificador de la sección */}
       <div className="flex flex-col">
         <span className="text-xs text-muted-foreground font-medium uppercase tracking-wider">
           Dashboard
@@ -231,17 +234,19 @@ export function HeaderDashboard({
       </div>
 
       <div className="flex gap-4 items-center">
-        <Avatar src={userSrc} fallbackText={userEmail} size="sm" />
-        {/* Info del Usuario */}
-        {userEmail && (
-          <div className="flex items-center gap-2 max-w-[200px]">
-            <User className="h-4 w-4 text-muted-foreground shrink-0" />
-            <span className="text-sm truncate font-mono">{userEmail}</span>
-          </div>
-        )}
+        <div className="flex items-center gap-2 max-w-[240px] select-none">
+          <Avatar src={userSrc} fallbackText={userEmail} size="sm" />
+          {userEmail && (
+            <span className="text-sm truncate font-mono text-muted-foreground hidden sm:inline">
+              {userEmail}
+            </span>
+          )}
+        </div>
 
+        {/* Separador Visual */}
         <div className="h-4 w-px bg-border" />
 
+        {/* Botón de Salida Controlado */}
         <Button
           variant="ghost"
           size="sm"

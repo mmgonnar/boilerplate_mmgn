@@ -55,13 +55,20 @@ export function Sidebar({ userEmail, userSrc }: SidebarProps) {
         <Logo />
 
         <div className="flex-1 mt-6">{/* nav del dashboard aqui*/}</div>
-        <div className="flex gap-2 cursor-pointer">
-          <Avatar src={userSrc} fallbackText={userEmail} size="sm" />
-          {userEmail && (
-            <div className="flex items-center gap-2 max-w-[200px]">
-              <span className="text-sm truncate font-mono">{userEmail}</span>
-            </div>
-          )}
+        <div className="flex items-center gap-2 max-w-[200px] cursor-pointer">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="rounded-full"
+            aria-label={t('profile')}
+          >
+            <Avatar
+              src={user.user_metadata?.avatar_url}
+              fallbackText={user.email}
+              size="sm"
+            />
+          </Button>
+          <span className="text-sm truncate font-mono">{userEmail}</span>
         </div>
         <Button
           variant="ghost"
