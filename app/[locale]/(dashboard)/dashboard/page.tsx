@@ -4,6 +4,8 @@ import type { Metadata } from 'next';
 
 import { AvatarUpload } from '@/components/ui';
 
+import { UpdateAvatar } from '@/features/profile/components/update-avatar';
+
 export const metadata: Metadata = {
   title: 'Dashboard',
 };
@@ -31,6 +33,7 @@ export default function DashboardPage({ createdAt, lastSignInAt }) {
           <span>¡Qué bueno verte de nuevo! 👋 </span>
         )}
       </h1>
+      <UpdateAvatar />
     </div>
   );
 }
