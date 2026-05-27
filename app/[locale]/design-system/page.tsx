@@ -50,6 +50,8 @@ import {
   Zap,
 } from 'lucide-react';
 
+import { FooterAuth } from '@/features/navigation';
+
 export default function DesignSystemPage() {
   const [loading, setLoading] = useState(false);
 
@@ -549,7 +551,7 @@ export default function DesignSystemPage() {
             >
               <div className="p-1 border-2 border-dashed border-border rounded-3xl mt-4">
                 <div className="p-2">
-                  <ProfileFormExample />
+                  <ProfileFormExample onSuccess={() => setShowModal(false)} />
                 </div>
               </div>
             </Dialog>
@@ -557,16 +559,7 @@ export default function DesignSystemPage() {
         </SectionWrapper>
       </main>
 
-      <footer className="py-20 border-t border-border mt-20">
-        <div className="container mx-auto text-center space-y-2">
-          <p className="text-sm font-mono text-muted-foreground uppercase tracking-widest">
-            mmgonnar Boilerplate v1.0
-          </p>
-          <p className="text-[10px] text-muted-foreground/60 italic">
-            Taxco, Guerrero — 2026
-          </p>
-        </div>
-      </footer>
+      <FooterAuth />
     </div>
   );
 }

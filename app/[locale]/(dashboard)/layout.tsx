@@ -54,8 +54,7 @@ export default function DashboardLayout({
         {/* Header */}
         <HeaderDashboard
           userEmail={user.email}
-          createdAt={user.created_at}
-          lastSignInAt={user.last_sign_in_at}
+          userSrc={user.user_metadata?.avatar_url}
           onLogout={handleLogout}
           isLoggingOut={isLoggingOut}
         />

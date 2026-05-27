@@ -237,7 +237,7 @@ export function HeaderDashboard({
         <div className="flex items-center gap-2 max-w-[240px] select-none">
           <Avatar src={userSrc} fallbackText={userEmail} size="sm" />
           {userEmail && (
-            <span className="text-sm truncate font-mono text-muted-foreground hidden sm:inline">
+            <span className="text-sm truncate text-muted-foreground hidden sm:inline">
               {userEmail}
             </span>
           )}

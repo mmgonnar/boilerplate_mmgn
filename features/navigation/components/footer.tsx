@@ -138,17 +138,19 @@ function FooterBottom({
 function FooterBottomAuth({
   company,
   project,
-  githubUrl,
+  children,
   t,
 }: {
   company?: string;
   project?: string;
   githubUrl?: string;
+  children?: React.ReactNode;
   t: ReturnType<typeof useTranslations>;
 }) {
   return (
     <div className="container mx-auto px-4 py-12 flex flex-col items-center justify-between gap-4 pt-8 border-t border-border">
       <Copyright company={company} project={project} t={t} />
+      {children}
     </div>
   );
 }

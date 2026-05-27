@@ -68,7 +68,7 @@ export function Sidebar({ userEmail, userSrc }: SidebarProps) {
               size="sm"
             />
           </Button>
-          <span className="text-sm truncate font-mono">{userEmail}</span>
+          <span className="text-sm truncate">{userEmail}</span>
         </div>
         <Button
           variant="ghost"

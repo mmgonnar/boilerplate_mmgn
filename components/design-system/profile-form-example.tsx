@@ -2,6 +2,7 @@
 
 import type { ReactNode } from 'react';
 import { useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
 
 import { Button, Input } from '@/components/ui';
 import { Form, FormField } from '@/components/ui/form';
@@ -13,14 +14,19 @@ import { z } from 'zod';
 const profileSchema = z.object({
   name: z.string().min(1, 'El nombre es requerido'),
   email: z.string().min(1, 'El correo es requerido').email('Correo inválido'),
-  phone: z.string().min(10, 'Teléfono inválido').optional(),
+  phone: z.string().optional(),
   company: z.string().optional(),
 });
 
 type ProfileFormValues = z.infer<typeof profileSchema>;
 
+// ─── Interfaces de Props ──────────────────────────────────────────────────────
+// 🚀 Agregamos la prop opcional para que el catálogo de componentes no proteste
+interface ProfileFormExampleProps {
+  onSuccess?: () => void;
+}
+
 // ─── Configuración de campos ──────────────────────────────────────────────────
-// ✅ Los campos como dato — agregar uno nuevo es solo añadir un objeto al array
 type FieldConfig = {
   name: keyof ProfileFormValues;
   label: string;
@@ -61,19 +67,34 @@ const PROFILE_FIELDS: FieldConfig[] = [
 ];
 
 // ─── Componente ───────────────────────────────────────────────────────────────
-export function ProfileFormExample() {
+export function ProfileFormExample({ onSuccess }: ProfileFormExampleProps) {
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileSchema),
     defaultValues: { name: '', email: '', phone: '', company: '' },
   });
 
-  function onSubmit(values: ProfileFormValues) {
-    console.log(values);
+  // Simulamos una petición asíncrona al servidor antes de ejecutar el callback
+  async function onSubmit(values: ProfileFormValues) {
+    const toastId = toast.loading('Guardando cambios...');
+
+    try {
+      console.log('Datos enviados:', values);
+      await new Promise((resolve) => setTimeout(resolve, 1500)); // Simulación de red
+
+      toast.success('¡Perfil actualizado correctamente! ✨', { id: toastId });
+
+      // 🚀 Si nos pasaron la función desde el Dialog, la disparamos para cerrarlo solo
+      if (onSuccess) {
+        onSuccess();
+      }
+    } catch (error) {
+      toast.error('Hubo un problema al guardar los datos.', { id: toastId });
+    }
   }
 
   return (
-    <Form form={form} onSubmit={onSubmit} className="space-y-4 max-w-md">
-      {/* ✅ mapeo limpio — un FormField por cada config */}
+    <Form form={form} onSubmit={onSubmit} className="space-y-4 max-w-md w-full">
+      {/* ✅ Mapeo limpio — un FormField por cada config */}
       {PROFILE_FIELDS.map((fieldConfig) => (
         <FormField
           key={fieldConfig.name}
@@ -93,7 +114,7 @@ export function ProfileFormExample() {
         />
       ))}
 
-      <Button type="submit" className="w-full">
+      <Button type="submit" className="w-full mt-2">
         Guardar perfil
       </Button>
     </Form>
