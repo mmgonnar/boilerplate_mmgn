@@ -18,7 +18,7 @@ export interface ApiCallToastOptions {
 }
 
 export function apiCallToast<T>(
-  fetch: Promise<T>,
+  promise: Promise<unknown>,
   {
     loading,
     redirectTo,
@@ -27,7 +27,7 @@ export function apiCallToast<T>(
     router,
   }: ApiCallToastOptions,
 ) {
-  return toast.promise(fetch, {
+  return toast.promise(promise, {
     loading: loading,
     success: (response: any) => {
       if (response && response.success === false) {

@@ -5,10 +5,10 @@ import { useForm } from 'react-hook-form';
 
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 
 import { Button, Input } from '@/components/ui';
 import { Form, FormField } from '@/components/ui/form';
+import { useRouter } from '@/i18n/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { apiCallToast } from '@/lib/utils';
 import { zodResolver } from '@hookform/resolvers/zod';

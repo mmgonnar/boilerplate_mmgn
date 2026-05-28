@@ -1,3 +1,4 @@
+// src/lib/supabase/server.ts
 import { cookies } from 'next/headers';
 
 import { createServerClient } from '@supabase/ssr';
@@ -7,7 +8,7 @@ export async function createClient() {
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
   if (!supabaseUrl || !supabaseAnonKey) {
-    return new Proxy({} as any, {
+    return new Proxy({} as unknown as ReturnType<typeof createServerClient>, {
       get() {
         return () => {
           throw new Error(
