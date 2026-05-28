@@ -3,8 +3,7 @@
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 
-import { useRouter } from 'next/navigation';
-
+import { useRouter } from '@/i18n/navigation';
 import { useAuth } from '@/providers/auth-provider';
 
 import { Sidebar } from '@/features/dashboard';

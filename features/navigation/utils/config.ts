@@ -5,6 +5,10 @@ interface FooterColumnType {
   links: { label: string; href: string }[];
 }
 
+export const APP_MODE = {
+  variant: 'full' as 'landing' | 'full',
+};
+
 export const NAV_CONFIG: NavConfig = {
   public: [
     { label: 'home', href: '/' },
