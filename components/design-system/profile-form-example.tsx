@@ -21,7 +21,6 @@ const profileSchema = z.object({
 type ProfileFormValues = z.infer<typeof profileSchema>;
 
 // ─── Interfaces de Props ──────────────────────────────────────────────────────
-// 🚀 Agregamos la prop opcional para que el catálogo de componentes no proteste
 interface ProfileFormExampleProps {
   onSuccess?: () => void;
 }
@@ -73,17 +72,14 @@ export function ProfileFormExample({ onSuccess }: ProfileFormExampleProps) {
     defaultValues: { name: '', email: '', phone: '', company: '' },
   });
 
-  // Simulamos una petición asíncrona al servidor antes de ejecutar el callback
   async function onSubmit(values: ProfileFormValues) {
     const toastId = toast.loading('Guardando cambios...');
 
     try {
-      console.log('Datos enviados:', values);
       await new Promise((resolve) => setTimeout(resolve, 1500)); // Simulación de red
 
       toast.success('¡Perfil actualizado correctamente! ✨', { id: toastId });
 
-      // 🚀 Si nos pasaron la función desde el Dialog, la disparamos para cerrarlo solo
       if (onSuccess) {
         onSuccess();
       }
