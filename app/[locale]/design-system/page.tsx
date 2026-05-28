@@ -30,23 +30,16 @@ import {
 } from '@/components/ui';
 import {
   Book,
-  Building,
-  Check,
   ChevronLeft,
   ChevronRight,
-  Clock,
   ExternalLink,
   Home,
-  Lock,
   Mail,
-  Phone,
   Plus,
   Save,
   Search,
-  ShieldCheck,
   Star,
   Trash2,
-  User,
   Zap,
 } from 'lucide-react';
 
