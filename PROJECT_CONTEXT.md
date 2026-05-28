@@ -1,7 +1,7 @@
 # PROJECT_CONTEXT.md
 
 > **Source of Truth** for AI agents and developers working on this repository.
-> Last updated: May 27, 2026.
+> Last updated: May 2026.
 
 ---
 
@@ -153,7 +153,7 @@
 │   │   ├── types/
 │   │   │   └── types.ts
 │   │   ├── utils/
-│   │   │   └── config.ts            # Holds NAV_CONFIG toggles
+│   │   │   └── config.ts            # Holds APP_MODE and NAV_CONFIG toggles
 │   │   └── index.ts
 │   └── profile/                     # Profile feature (Removed in Landing mode)
 │       ├── components/
@@ -180,6 +180,8 @@
 
 ---
 
+---
+
 ## 3. Scripts & Workflow
 
 ```bash
@@ -189,8 +191,6 @@ bun run start              # Production server
 bun run lint               # Runs ESLint configurations
 bunx prisma generate       # Regenerate Prisma client after schema changes
 bunx prisma db push        # Push schema changes upstream to Supabase
-```
-
 ---
 
 ## 4. Environment Variables
@@ -215,58 +215,75 @@ bunx prisma db push        # Push schema changes upstream to Supabase
 | `(auth)`      | `/login`, `/register`, `/forgot-password` | Minimal centered           | Authentication pages |
 | `(dashboard)` | `/dashboard`, `/profile`                  | Sidebar + dashboard header | Authenticated app    |
 
-### Polymorphic CLI Support (Landing vs Full Mode)
-
-The repository acts as a fluid, modular system. When configured as a Landing Page (by omitting database/supabase env vars), core library utilities (`prisma.ts`, `supabase/client.ts`) initialize lightweight **Proxy objects** that safely absorb calls and isolate environment configurations seamlessly.
+Polymorphic CLI Support (Landing vs Full Mode)
+The repository acts as a fluid, modular system. When configured as a Landing Page, the CLI purifies the codebase by stripping database models, server configurations, and dashboard view groups. Core library utilities (prisma.ts, supabase/client.ts) initialize lightweight Proxy objects that safely absorb calls and isolate environment configurations seamlessly.
 
 ### Feature-First Pattern
 
-All feature code lives under `features/[name]/` with co-located files. Features are imported via `@/features/[name]`.
+All feature code lives under `features/[name]/` with co-located files:
 
 ```
+
 features/[name]/
-├── components/      # React components
-├── messages/        # en.json, es.json (i18n)
-├── schemas/         # zod schemas (optional)
-├── services/        # API/DB calls (optional)
-├── types/           # TypeScript types (optional)
-├── utils/           # helpers/constants (optional)
-└── index.ts         # Barrel export (named exports only)
+├── components/ # React components
+├── messages/ # en.json, es.json (i18n)
+├── schemas/ # zod schemas (optional)
+├── services/ # API/DB calls (optional)
+├── types/ # TypeScript types (optional)
+├── utils/ # helpers/constants (optional)
+└── index.ts # Barrel export (named exports only)
+
 ```
 
----
+Features are imported via `@/features/[name]`.
 
-## 6. Coding Standards
+### Component Patterns
 
-### Naming Conventions
+1. **CVA Pattern** — all variant components use `cva()` + `VariantProps` + named export of both component and variants
+2. **Polymorphic Button** — renders `<button>` or `<Link>` based on presence of `href` prop
+3. **Subcomponent Pattern** — private helper components defined in same file (e.g., `NavLinks`, `HeaderActions` inside `header.tsx`)
+4. **Barrel Exports** — `components/ui/index.ts` and every `features/[name]/index.ts` re-exports all public members
+5. **No default exports** — named exports only (except Next.js page/layout files)
 
-- **Components**: PascalCase (e.g., `Button.tsx`).
-- **Hooks**: camelCase with `use` prefix (e.g., `useAuth.ts`).
-- **Services/Utils**: camelCase (e.g., `apiCallToast.ts`).
-- **Folders**: kebab-case (e.g., `design-system`).
+### Import Order (Prettier)
 
-### Component Declaration
+```
 
-- **Named Exports**: Strictly use named exports. NO default exports except for Next.js pages/layouts.
-- **ForwardRef**: Always use `React.forwardRef` for UI primitives to allow parent ref access.
-- **CVA Pattern**: Use `class-variance-authority` for variant-heavy components.
-- **Co-location**: Define private sub-components in the same file as the main component to keep features focused.
+^react → ^next → <THIRD_PARTY_MODULES> → ^@/features/ → ^@/components/ → ^@/lib/ → ^[./]
 
-### Styling (Tailwind v4)
-
-- **Semantic Tokens**: Use `bg-background`, `text-foreground`, `border-border`, etc.
-- **No `dark:` Variants**: Tailwind v4 `dark:` variants are avoided. Use `isDark` from `useTheme()` combined with `cn()` for conditional dark styles.
-- **CSS-First**: Configuration lives in `@theme` block in `app/globals.css`.
+````
 
 ---
 
-## 7. Internationalization (next-intl 3.26.5)
+## 6. Internationalization (next-intl 3.26.5)
 
 ### Config
 
-- **Pinned version**: 3.26.5 (v4 breaks with Next.js 15).
-- **Static Imports**: Only static imports in `i18n/request.ts`.
-- **Navigation**: Use hooks and components from `@/i18n/navigation`.
+```ts
+// i18n/routing.ts
+export const routing = defineRouting({
+  locales: ['es', 'en'],
+  defaultLocale: 'es',
+  localeDetection: true,
+  localePrefix: 'as-needed',
+});
+````
+
+### Locale Detection Priority
+
+1. URL path (`/en/about`)
+2. Cookie
+3. Accept-Language header
+4. Default (`es`)
+
+### Translation Files
+
+| Location                                     | Scope                    |
+| -------------------------------------------- | ------------------------ |
+| `messages/{locale}.json`                     | Root/common translations |
+| `features/auth/messages/{locale}.json`       | Auth feature             |
+| `features/navigation/messages/{locale}.json` | Navigation               |
+| `features/dashboard/messages/{locale}.json`  | Dashboard                |
 
 ### Import Rules
 
@@ -276,54 +293,150 @@ features/[name]/
 | Client Component | `useTranslations` from `'next-intl'`                                    |
 | Navigation       | `Link`, `useRouter`, `redirect`, `usePathname` from `@/i18n/navigation` |
 
----
+### Important Gotchas
 
-## 8. Database (Prisma 7 + Supabase PostgreSQL)
-
-- **Schema**: `prisma/schema.prisma` (datasource configured in `prisma.config.ts`).
-- **Client**: Singleton in `lib/prisma.ts` using `@prisma/adapter-pg`.
-- **Workflow**: `bunx prisma generate` → `bunx prisma db push`.
+- **next-intl pinned to 3.26.5** — v4 crashes with Next.js 15
+- **Static imports only** in `i18n/request.ts` — dynamic imports broken in Next.js 15
+- `middleware.ts` shows deprecation warning (Next.js 15 prefers `proxy.ts`) — non-blocking, blocked by next-intl
 
 ---
 
-## 9. Authentication (Supabase Auth)
+## 7. Database (Prisma 7 + Supabase PostgreSQL)
 
-- **Provider**: `AuthProvider` in `providers/auth-provider.tsx`.
-- **Middleware**: Handles route protection and localized redirects in `middleware.ts`.
-- **Clients**: `lib/supabase/client.ts` (browser), `server.ts` (RSC), `middleware.ts` (Middleware).
+### Configuration
+
+- **Schema**: `prisma/schema.prisma` — no `url`/`directUrl` (moved to `prisma.config.ts`)
+- **Config**: `prisma.config.ts` — reads `DIRECT_URL` from env
+- **Client**: `lib/prisma.ts` — singleton using `@prisma/adapter-pg` with `Pool` (Equipped with Proxy safeguards for Landing environments)
+
+### Models
+
+```prisma
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  passwordHash  String
+  name          String?
+  avatarUrl     String?
+  mfaEnabled    Boolean   @default(false)
+  mfaSecret     String?
+  emailVerified Boolean   @default(false)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  sessions      Session[]
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+```
+
+### Workflow
+
+```bash
+bunx prisma generate   # After schema changes
+bunx prisma db push    # Push to Supabase
+```
+
+---
+
+## 8. Authentication (Supabase Auth)
+
+### Architecture
+
+- **Supabase Auth** manages credentials (email/password, OAuth)
+- **Three client contexts**:
+  - `lib/supabase/client.ts` — browser (`createBrowserClient`)
+  - `lib/supabase/server.ts` — server components (`createServerClient` + `cookies()`)
+  - `lib/supabase/middleware.ts` — middleware (`createServerClient` with request/response cookie handling)
+- **Auth Provider** (`providers/auth-provider.tsx`) — React context providing `user`, `session`, `signOut`, `refreshUser`, `isLoading`, `mfaVerified`
+
+### Middleware Flow (`middleware.ts`)
+
+```
+Request → intlMiddleware (locale detection)
+       → supabase.getUser()
+       → protected route (/dashboard, /profile, /settings) + no user? → redirect /login
+       → auth route (/login, /register) + has user? → redirect /dashboard
+       → else → pass through
+```
+
+### Auth Forms
+
+All use react-hook-form + zod + apiCallToast:
+
+- `LoginForm` — email + password → redirect to `/dashboard`
+- `RegisterForm` — email + password + confirmation
+- `ForgotPasswordForm` — email → sends reset via Supabase
+- `ResetPasswordForm` — new password + confirmation
+
+### Example CRUD (Supabase)
+
+`features/(items)/services/` demonstrates Supabase CRUD against `public.items` table with RLS. Run `supabase_setup.sql` to create the table.
+
+### Auth Callback
+
+`app/auth/callback/route.ts` handles OAuth and password reset code exchange via `supabase.auth.exchangeCodeForSession(code)`.
+
+---
+
+## 9. Theming & Dark Mode
+
+### CSS Variables (`app/globals.css`)
+
+Colors defined as HSL variables in `@theme` block:
+
+```css
+@theme {
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  /* ... */
+}
+```
+
+Light values in `:root {}`, dark values in `.dark {}`.
+
+### Dark Mode Rules
+
+- **NEVER use `dark:` Tailwind variants** — unreliable in Tailwind v4
+- Always use semantic tokens: `bg-background`, `text-foreground`, `border-border`
+- Conditional dark styles via `isDark` from `useTheme()` + `cn()`:
+
+```tsx
+className={cn("bg-white", isDark && "bg-neutral-900")}
+```
 
 ---
 
 ## 10. UI Components
 
-| Component      | File                             | Key Features                                                                   |
-| -------------- | -------------------------------- | ------------------------------------------------------------------------------ |
-| Button         | `components/ui/button.tsx`       | Polymorphic (button/Link), loading state, icons, variants.                     |
-| Input          | `components/ui/input.tsx`        | Label, error/hint feedback, icons, ARIA support.                               |
-| Card           | `components/ui/card.tsx`         | Sub-components (Header, Title, etc.), variants, hoverable.                     |
-| LanguageToggle | `components/ui/language-toggle.tsx` | Desktop dropdown + Mobile full-width switcher.                                 |
-| ThemeToggle    | `components/ui/theme-toggle.tsx` | Dark/light/system switcher.                                                    |
-| Form           | `components/ui/form.tsx`         | Type-safe wrappers for `react-hook-form`.                                      |
+| Component      | File                                | Key Features                                                                                                    |
+| -------------- | ----------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| Button         | `components/ui/button.tsx`          | Polymorphic (button/Link), loading spinner, left/right icons, 5 variants, 4 sizes                               |
+| Input          | `components/ui/input.tsx`           | Label, error/hint, left/right icons, ARIA                                                                       |
+| Card           | `components/ui/card.tsx`            | Sub-components (Header, Title, Description, Content, Footer, Separator), 4 variants, 4 padding sizes, hoverable |
+| Badge          | `components/ui/badge.tsx`           | 7 variants, 3 sizes, dot indicator, left/right icons                                                            |
+| Form           | `components/ui/form.tsx`            | react-hook-form Form/FormField wrappers                                                                         |
+| Dialog         | `components/ui/dialog.tsx`          | Modal dialog                                                                                                    |
+| Skeleton       | `components/ui/skeleton.tsx`        | Loading placeholder                                                                                             |
+| Breadcrumb     | `components/ui/breadcrumb.tsx`      | Navigation breadcrumb                                                                                           |
+| ThemeToggle    | `components/ui/theme-toggle.tsx`    | Dark/light toggle                                                                                               |
+| LanguageToggle | `components/ui/language-toggle.tsx` | Locale switcher                                                                                                 |
+| Avatar         | `components/ui/avatar.tsx`          | User avatar                                                                                                     |
+| AvatarUpload   | `components/ui/avatar-upload.tsx`   | Avatar upload with preview                                                                                      |
 
 ---
 
-## 11. Deployment & Environments
-
-### Vercel (Frontend)
-
-- **Build Command**: `next build`
-- **Install Command**: `bun install`
-- **Env Vars**: Must match those in `.env.example`.
-
-### Supabase (Backend)
-
-- **Database**: PostgreSQL with Prisma.
-- **Auth**: Configured for Email/Password and OAuth.
-- **Storage**: `avatars` bucket required for profile pictures (see `supabase_setup.sql`).
-
----
-
-## 12. Known Gotchas
+## 11. Known Gotchas
 
 | Issue                               | Cause                            | Workaround                         |
 | ----------------------------------- | -------------------------------- | ---------------------------------- |
@@ -331,24 +444,35 @@ features/[name]/
 | next-intl v4 crashes                | Next.js 15 incompatible          | Pinned to 3.26.5                   |
 | Dynamic locale imports fail         | Next.js 15 bundler               | Static imports in `request.ts`     |
 | `middleware.ts` deprecation warning | Next.js 15 prefers `proxy.ts`    | Blocked by next-intl, non-blocking |
+| next-intl navigation hooks          | Requires `createNavigation()`    | Import from `@/i18n/navigation`    |
+| Prisma schema `url` error           | Prisma 7 removed url from schema | Use `prisma.config.ts`             |
+| PrismaClient import error           | IDE cache                        | Restart TS Server (Cmd+Shift+P)    |
 
 ---
 
-## 13. Current Status
+## 12. Current Status
 
 ### Completed
 
 - ✅ Next.js 15 App Router + Turbopack
-- ✅ Tailwind CSS 4 with custom theme
-- ✅ UI Components (Button, Input, Card, Badge, Dialog, Skeleton, ThemeToggle, LanguageToggle, Form, Avatar)
+- ✅ Tailwind CSS 4 with custom theme (CSS variables)
+- ✅ Feature-based architecture
+- ✅ UI Components (Button, Input, Card, Badge, Dialog, Skeleton, Breadcrumb, Form, Avatar, AvatarUpload, ThemeToggle, LanguageToggle)
+- ✅ Dark/Light mode theming (next-themes, CSS custom properties)
+- ✅ Logo with auto dark/light switching
 - ✅ next-intl 3.26.5 i18n setup
-- ✅ Prisma 7 + Supabase Auth
-- ✅ Middleware route protection
+- ✅ Locale routing (`/es/`, `/en/`)
+- ✅ Feature-scoped translations (navigation, auth, dashboard)
+- ✅ CVA pattern for all variant components
+- ✅ Prisma 7 + Supabase PostgreSQL connection
+- ✅ Supabase Auth (login, register, session management)
+- ✅ Middleware route protection (i18n + auth)
+- ✅ Auth callback route
 - ✅ SEO (robots.ts, sitemap.ts, generateMetadata)
 
 ### Pending
 
-- [ ] Dashboard sidebar (nav implementation)
+- [ ] Dashboard sidebar (stub exists, needs implementation)
 - [ ] Radix UI primitives (Tooltip, Dropdown, Select, Tabs)
 - [ ] Table with sorting
 - [ ] Error pages (404, 500)
