@@ -1,10 +1,22 @@
 // lib/prisma.ts
-import { PrismaClient } from '@prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
+import { PrismaClient } from '@prisma/client';
 import { Pool } from 'pg';
 
 const createPrismaClient = () => {
-  const connectionString = process.env.DATABASE_URL!;
+  if (!process.env.DATABASE_URL) {
+    return new Proxy({} as any, {
+      get() {
+        return () => {
+          throw new Error(
+            'Prisma no está configurado ni disponible en el modo de Solo Landing.',
+          );
+        };
+      },
+    });
+  }
+
+  const connectionString = process.env.DATABASE_URL;
 
   const pool = new Pool({ connectionString });
   const adapter = new PrismaPg(pool);
