@@ -36,12 +36,17 @@ export default function DashboardLayout({
       await signOut();
       toast.success('Sesión cerrada correctamente', { id: toastId });
       router.push('/login');
-    } catch (error: any) {
+    } catch (error) {
+      // 🚀 Eliminamos el ": any" aquí, dejando que TypeScript use su comportamiento nativo
       setIsLoggingOut(false);
-      toast.error(
-        error.message || 'No se pudo cerrar la sesión. Inténtalo de nuevo.',
-        { id: toastId },
-      );
+
+      // ✅ Evaluamos de forma segura si el error tiene un mensaje de texto
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : 'No se pudo cerrar la sesión. Inténtalo de nuevo.';
+
+      toast.error(errorMessage, { id: toastId });
     }
   };
 
