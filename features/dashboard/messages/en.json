@@ -1,6 +1,7 @@
 {
   "dashboard": {
     "profile": "Profile",
+    "settings": "Settings",
     "title": "Dashboard",
 
     "logout": {

@@ -1,6 +1,7 @@
 {
   "dashboard": {
     "profile": "Perfil",
+    "settings": "Configuracion",
     "title": "Dashboard",
     "logout": {
       "sign_out": "Cerrar sesión",
