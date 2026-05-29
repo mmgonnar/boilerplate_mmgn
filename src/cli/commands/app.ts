@@ -101,7 +101,14 @@ export default getRequestConfig(async ({ requestLocale }) => {
 `;
 
 export async function runApp() {
-  intro(pc.bgBlack(pc.white(' 🏛️ MMGN BOILERPLATE CLI (2026) ')));
+  const pkg = await fs.readJson(
+    path.resolve(__dirname, '../../../package.json'),
+  );
+  intro(
+    pc.bgBlack(
+      pc.white(` 🏛️ MMGN BOILERPLATE CLI v${pkg.version} `),
+    ),
+  );
 
   const projectName = await text({
     message: '¿Cómo se llamará tu nuevo proyecto?',
