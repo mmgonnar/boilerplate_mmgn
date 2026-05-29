@@ -1,11 +1,11 @@
 import {
+  cancel,
   intro,
+  isCancel,
   outro,
-  text,
   select,
   spinner,
-  isCancel,
-  cancel,
+  text,
 } from '@clack/prompts';
 import * as fs from 'fs-extra';
 import * as path from 'path';
@@ -18,7 +18,8 @@ async function main() {
     message: '¿Cómo se llamará tu nuevo proyecto?',
     placeholder: 'my-awesome-app',
     validate(value) {
-      if (value.trim().length === 0) return 'El nombre del proyecto es requerido';
+      if (value.trim().length === 0)
+        return 'El nombre del proyecto es requerido';
     },
   });
 
@@ -57,7 +58,7 @@ async function main() {
 
   try {
     // Copiar el template completo (omitiendo la propia carpeta destino, node_modules, etc)
-    const filterFunc = (src: string, dest: string) => {
+    const filterFunc = (src: string, _dest: string) => {
       const isTargetDir = src.startsWith(targetDir);
       const isNodeModules = src.includes('node_modules');
       const isGit = src.includes('.git');
@@ -113,9 +114,9 @@ async function main() {
       // 3. Reemplazo de Configuración de Navegación
       const navConfigPath = path.join(
         targetDir,
-        'src/features/navigation/utils/config.ts'
+        'src/features/navigation/utils/config.ts',
       );
-      
+
       const navConfigContent = `export const APP_MODE = { variant: 'landing' };
 export const NAV_CONFIG = {
   public: [
@@ -140,9 +141,9 @@ export const NAV_CONFIG = {
 
     outro(
       `${pc.green('Siguientes pasos:')}\n` +
-      `${pc.gray('cd')} ${pc.white(projectName as string)}\n` +
-      `${pc.gray('bun install')}\n` +
-      `${pc.gray('bun run dev')}`
+        `${pc.gray('cd')} ${pc.white(projectName as string)}\n` +
+        `${pc.gray('bun install')}\n` +
+        `${pc.gray('bun run dev')}`,
     );
   } catch (error) {
     s.stop('Ocurrió un error durante la configuración.');

@@ -72,7 +72,7 @@ export function ProfileFormExample({ onSuccess }: ProfileFormExampleProps) {
     defaultValues: { name: '', email: '', phone: '', company: '' },
   });
 
-  async function onSubmit(values: ProfileFormValues) {
+  async function onSubmit() {
     const toastId = toast.loading('Guardando cambios...');
 
     try {

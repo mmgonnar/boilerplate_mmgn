@@ -61,6 +61,7 @@ export function Avatar({
       )}
       {...props}
     >
+      {/* eslint-disable-next-line @next/next/no-img-element */}
       {src && !hasError ? (
         <img
           src={src}

@@ -32,7 +32,7 @@ export function LoginFormExample() {
     defaultValues: { email: '', password: '' },
   });
 
-  async function onSubmit(values: LoginFormValues) {
+  async function onSubmit() {
     setIsLoading(true);
     try {
       await new Promise((r) => setTimeout(r, 1500));
