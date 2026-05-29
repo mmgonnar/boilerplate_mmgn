@@ -10,7 +10,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const sitemapEntries: MetadataRoute.Sitemap = [];
 
-  // Generamos las entradas combinando rutas e idiomas de forma automática
   routes.forEach((route) => {
     locales.forEach((locale) => {
       const isDefault = locale === 'es'; // Tu idioma principal por defecto

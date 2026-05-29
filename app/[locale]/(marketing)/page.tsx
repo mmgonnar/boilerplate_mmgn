@@ -9,7 +9,7 @@ export default function HomePage() {
         Production-ready. Listo para personalizar.
       </p>
       <Button
-        href="http://localhost:3000/design-system"
+        href="/design-system"
         variant="outline"
         rightIcon={<ExternalLink size={18} />}
         target="_blank"
