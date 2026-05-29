@@ -4,24 +4,24 @@
 
 ## Tech Stack
 
-| Layer | Tech | Version |
-|---|---|---|
-| **Framework** | Next.js (App Router) | ^15 (turbopack) |
-| **Runtime** | React | 19.2.4 |
-| **Language** | TypeScript | ^5 (strict) |
-| **Styling** | Tailwind CSS | ^4 (CSS-first, `@theme` block) |
-| **ORM** | Prisma | ^7.8 with `@prisma/adapter-pg` |
-| **Database** | PostgreSQL (Supabase) | — |
-| **Auth** | Supabase Auth + `@supabase/ssr` | ^0.10 |
-| **i18n** | next-intl | 3.26.5 (pinned) |
-| **Forms** | react-hook-form + zod | ^7.73 + ^4 |
-| **Theming** | next-themes | ^0.4 |
-| **Components** | class-variance-authority (CVA) | ^0.7 |
-| **Notifications** | react-hot-toast | ^2.6 |
-| **Icons** | lucide-react | ^1.8 |
-| **Package Manager** | Bun | latest |
-| **Linting** | ESLint | ^9 |
-| **Formatting** | Prettier + import sorting | — |
+| Layer               | Tech                            | Version                        |
+| ------------------- | ------------------------------- | ------------------------------ |
+| **Framework**       | Next.js (App Router)            | ^15 (turbopack)                |
+| **Runtime**         | React                           | 19.2.4                         |
+| **Language**        | TypeScript                      | ^5 (strict)                    |
+| **Styling**         | Tailwind CSS                    | ^4 (CSS-first, `@theme` block) |
+| **ORM**             | Prisma                          | ^7.8 with `@prisma/adapter-pg` |
+| **Database**        | PostgreSQL (Supabase)           | —                              |
+| **Auth**            | Supabase Auth + `@supabase/ssr` | ^0.10                          |
+| **i18n**            | next-intl                       | 3.26.5 (pinned)                |
+| **Forms**           | react-hook-form + zod           | ^7.73 + ^4                     |
+| **Theming**         | next-themes                     | ^0.4                           |
+| **Components**      | class-variance-authority (CVA)  | ^0.7                           |
+| **Notifications**   | react-hot-toast                 | ^2.6                           |
+| **Icons**           | lucide-react                    | ^1.8                           |
+| **Package Manager** | Bun                             | latest                         |
+| **Linting**         | ESLint                          | ^9                             |
+| **Formatting**      | Prettier + import sorting       | —                              |
 
 ## Prerequisites
 
@@ -36,13 +36,14 @@ bunx mmgn@latest app
 ```
 
 You'll be prompted for:
+
 - **Project name**
 - **Variant** — choose between:
 
-| Variant | Description |
-|---|---|
-| **Dashboard Completo** | Full boilerplate: Auth + i18n + Dashboard + CRUD + Prisma |
-| **Solo Landing Page** | Landing-only: public pages only, no Auth, no Dashboard, no database |
+| Variant                | Description                                                         |
+| ---------------------- | ------------------------------------------------------------------- |
+| **Dashboard Completo** | Full boilerplate: Auth + i18n + Dashboard + CRUD + Prisma           |
+| **Solo Landing Page**  | Landing-only: public pages only, no Auth, no Dashboard, no database |
 
 ### Dashboard Completo
 
@@ -71,22 +72,22 @@ bun run dev
 
 ### Available Commands
 
-| Command | Description |
-|---|---|
-| `bunx mmgn@latest app` | Scaffold a new project |
-| `bunx mmgn env` | Copy `.env` from boilerplate to current project (local use) |
-| `bunx mmgn --version` | Show version |
-| `bunx mmgn --help` | Show help |
+| Command                | Description                                                 |
+| ---------------------- | ----------------------------------------------------------- |
+| `bunx mmgn@latest app` | Scaffold a new project                                      |
+| `bunx mmgn env`        | Copy `.env` from boilerplate to current project (local use) |
+| `bunx mmgn --version`  | Show version                                                |
+| `bunx mmgn --help`     | Show help                                                   |
 
 ## Environment Variables
 
-| Variable | Required | Description |
-|---|---|---|
-| `DATABASE_URL` | Yes | Supabase pooled connection (`:6543`, `pgbouncer=true`) |
-| `DIRECT_URL` | Yes | Supabase direct connection (`:5432`) — used for migrations |
-| `NEXT_PUBLIC_SUPABASE_URL` | Yes | Supabase project URL |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Yes | Supabase anonymous key |
-| `NEXT_PUBLIC_BASE_URL` | No | Production URL (defaults to `http://localhost:3000`) |
+| Variable                        | Required | Description                                                |
+| ------------------------------- | -------- | ---------------------------------------------------------- |
+| `DATABASE_URL`                  | Yes      | Supabase pooled connection (`:6543`, `pgbouncer=true`)     |
+| `DIRECT_URL`                    | Yes      | Supabase direct connection (`:5432`) — used for migrations |
+| `NEXT_PUBLIC_SUPABASE_URL`      | Yes      | Supabase project URL                                       |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Yes      | Supabase anonymous key                                     |
+| `NEXT_PUBLIC_BASE_URL`          | No       | Production URL (defaults to `http://localhost:3000`)       |
 
 > **Security**: The `.env` file is gitignored by default. Never commit secrets.
 
@@ -158,10 +159,10 @@ bun run dev
 
 ### Route Groups
 
-| Group | Purpose | Layout |
-|---|---|---|
-| `(marketing)` | Public pages | Header + Footer |
-| `(auth)` | Login/Register | Minimal centered |
+| Group         | Purpose           | Layout                     |
+| ------------- | ----------------- | -------------------------- |
+| `(marketing)` | Public pages      | Header + Footer            |
+| `(auth)`      | Login/Register    | Minimal centered           |
 | `(dashboard)` | Authenticated app | Sidebar + Dashboard header |
 
 ### Feature-First Pattern
@@ -240,7 +241,7 @@ The `features/(items)/services/` directory provides an example of Supabase-based
 /login → LoginForm → supabase.auth.signInWithPassword()
                     → apiCallToast → redirect to /dashboard
                     → AuthProvider updates context
-                    
+
 Middleware: request → intlMiddleware → supabase.getUser()
                     → protected? no user? → redirect /login
                     → auth route? has user? → redirect /dashboard
@@ -249,6 +250,7 @@ Middleware: request → intlMiddleware → supabase.getUser()
 ### Forms
 
 All auth forms use react-hook-form + zod for validation:
+
 - `LoginForm` — email + password
 - `RegisterForm` — email + password + confirmation
 - `ForgotPasswordForm` — email
@@ -277,20 +279,20 @@ export const routing = defineRouting({
 
 ### Translation Files
 
-| Location | Scope |
-|---|---|
-| `messages/{locale}.json` | Root translations (common, SEO) |
-| `features/auth/messages/{locale}.json` | Auth feature |
-| `features/navigation/messages/{locale}.json` | Navigation |
-| `features/dashboard/messages/{locale}.json` | Dashboard |
+| Location                                     | Scope                           |
+| -------------------------------------------- | ------------------------------- |
+| `messages/{locale}.json`                     | Root translations (common, SEO) |
+| `features/auth/messages/{locale}.json`       | Auth feature                    |
+| `features/navigation/messages/{locale}.json` | Navigation                      |
+| `features/dashboard/messages/{locale}.json`  | Dashboard                       |
 
 ### Import Rules
 
-| Context | Import from |
-|---|---|
-| Server Component | `getTranslations` from `'next-intl/server'` |
-| Client Component | `useTranslations` from `'next-intl'` |
-| Navigation | `Link`, `useRouter` from `@/i18n/navigation` |
+| Context          | Import from                                  |
+| ---------------- | -------------------------------------------- |
+| Server Component | `getTranslations` from `'next-intl/server'`  |
+| Client Component | `useTranslations` from `'next-intl'`         |
+| Navigation       | `Link`, `useRouter` from `@/i18n/navigation` |
 
 > **Important**: next-intl is pinned to 3.26.5 — do not upgrade. v4 crashes with Next.js 16.
 
@@ -307,8 +309,12 @@ Colors are defined as HSL variables in `app/globals.css`:
   /* ... */
 }
 
-:root { /* light */ }
-.dark { /* dark */ }
+:root {
+  /* light */
+}
+.dark {
+  /* dark */
+}
 ```
 
 ### Dark Mode Rules
@@ -323,16 +329,18 @@ Colors are defined as HSL variables in `app/globals.css`:
 
 ## Available Scripts
 
-| Command | Description |
-|---|---|
-| `bun run dev` | Start dev server (auto-kills port 3000 first via `predev`) |
-| `bun run build` | Production build |
-| `bun run start` | Production server |
-| `bun run lint` | ESLint |
-| `bunx prisma generate` | Regenerate Prisma client after schema changes |
-| `bunx prisma db push` | Push schema to database |
+| Command                | Description                                                |
+| ---------------------- | ---------------------------------------------------------- |
+| `bun run dev`          | Start dev server (auto-kills port 3000 first via `predev`) |
+| `bun run build`        | Production build                                           |
+| `bun run start`        | Production server                                          |
+| `bun run lint`         | ESLint                                                     |
+| `bunx prisma generate` | Regenerate Prisma client after schema changes              |
+| `bunx prisma db push`  | Push schema to database                                    |
 
 ## Deployment
+
+> ⚠️ **Prisma 7 Deployment Note**: To ensure the Prisma client is successfully generated during Vercel's isolated build phase, the production build command must explicitly target the schema file before running the Next.js compiler. This is fully automated in `package.json` via the script: `"build": "prisma generate --schema=./prisma/schema.prisma && next build"`.
 
 ### Vercel
 
@@ -342,6 +350,7 @@ bun run start  # Start command
 ```
 
 Set environment variables in Vercel dashboard:
+
 - `DATABASE_URL` (pooled)
 - `DIRECT_URL` (direct — used only via prisma.config.ts locally)
 - `NEXT_PUBLIC_SUPABASE_URL`
@@ -352,15 +361,16 @@ Set environment variables in Vercel dashboard:
 
 ## Known Gotchas
 
-| Issue | Cause | Workaround |
-|---|---|---|
-| `dark:` variants don't work | Tailwind v4 CSS-first | Use `isDark` + `cn()` |
-| next-intl v4 crashes | Next.js 16 incompatible | Pinned to 3.26.5 |
-| Dynamic locale imports fail | Next.js 16 bundler | Static imports in `request.ts` |
-| `middleware.ts` deprecation warning | Next.js 16 prefers `proxy.ts` | Blocked by next-intl, non-blocking |
-| next-intl navigation hooks | Requires `createNavigation()` | Import from `@/i18n/navigation` |
-| Prisma schema `url` error | Prisma 7 removed url from schema | Use `prisma.config.ts` |
-| PrismaClient import error | IDE cache | Restart TS Server (Cmd+Shift+P) |
+| Issue                                       | Cause                                                                       | Workaround / Fix                                                                                                                                                            |
+| ------------------------------------------- | --------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Dynamic locale imports fail                 | Next.js bundler optimization issues with nested structures                  | **Fixed**: Resolved by migrating to clean static imports mapped via a TypeScript record in `src/i18n/request.ts`.                                                           |
+| `middleware.ts` overwrites next-intl locale | Supabase `NextResponse.next()` wipes internal request rewrites/headers      | **Fixed**: Pass next-intl's `response` as the `baseResponse` parameter into Supabase's `createClient(request, response)` to successfully merge headers and session cookies. |
+| React Hook `useId` called conditionally     | Using `id ?? React.useId()` triggers an implicit conditional hook execution | **Fixed**: Always call `const generatedId = React.useId();` unconditionally at the very top of atomic UI components, then assign `id ?? generatedId`.                       |
+| `dark:` variants don't work                 | Tailwind v4 CSS-first architecture                                          | Use `isDark` from `useTheme()` + `cn()` for conditional styles.                                                                                                             |
+| `middleware.ts` deprecation warning         | Next.js prefers `proxy.ts`                                                  | Blocked by next-intl, non-blocking.                                                                                                                                         |
+| next-intl navigation hooks                  | Requires `createNavigation()`                                               | Import from `@/i18n/navigation`.                                                                                                                                            |
+| Prisma schema `url` error                   | Prisma 7 removed url from schema                                            | Use `prisma.config.ts`.                                                                                                                                                     |
+| PrismaClient import error                   | IDE cache                                                                   | Restart TS Server (Cmd+Shift+P).                                                                                                                                            |
 
 ## Pending Implementation
 
@@ -369,7 +379,7 @@ Set environment variables in Vercel dashboard:
 - [ ] Radix UI primitives (Tooltip, Dropdown, Select, Tabs)
 - [ ] Table with sorting
 - [ ] Error pages (404, 500)
-- [ ] User profile page
+- [x] User profile page
 - [ ] Test framework (Vitest/Jest + Playwright)
 
 ## Noteworthy
@@ -382,4 +392,13 @@ Set environment variables in Vercel dashboard:
 
 ---
 
-_Generated from boilerplate_mmgn — a production-ready Next.js starter._
+## Contact
+
+For questions or suggestions:
+
+- **GitHub:** [github.com/mmgonnar](https://github.com/mmgonnar)
+- **LinkedIn:** [linkedin.com/in/mmgonnar](https://www.linkedin.com/in/mmgonnar/)
+- **Email:** [mmgonnar@gmail.com](mailto:mmg.onnar@gmail.com)
+- **Twitter:** [@mmgonnar](https://x.com/mmgonnar)
+
+Your feedback and contributions are welcome! This project aims to make teaching more efficient and enjoyable.
