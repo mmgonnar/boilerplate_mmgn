@@ -1,4 +1,4 @@
-# Boilerplate — Next.js 15 + Supabase + Prisma 7
+# Boilerplate — Next.js + Supabase + Prisma 7
 
 > Production-ready boilerplate with internationalization, authentication, and a feature-based architecture.
 
@@ -26,33 +26,57 @@
 ## Prerequisites
 
 - [Bun](https://bun.sh) >= 1.2
-- A [Supabase](https://supabase.com) project (free tier works)
-- PostgreSQL connection string from Supabase (pooled + direct)
 
-## Quick Start
+## CLI — `bunx mmgn`
+
+Scaffold a new project from the boilerplate with a single command:
 
 ```bash
-# 1. Clone and install
-git clone <repo-url> my-project
-cd my-project
-bun install
+bunx mmgn@latest app
+```
 
-# 2. Set up environment variables
+You'll be prompted for:
+- **Project name**
+- **Variant** — choose between:
+
+| Variant | Description |
+|---|---|
+| **Dashboard Completo** | Full boilerplate: Auth + i18n + Dashboard + CRUD + Prisma |
+| **Solo Landing Page** | Landing-only: public pages only, no Auth, no Dashboard, no database |
+
+### Dashboard Completo
+
+After scaffolding, complete the setup:
+
+```bash
+cd your-project
 cp .env.example .env
 # Edit .env with your Supabase credentials (see Environment Variables below)
-
-# 3. Set up the database
+bun install
 bunx prisma generate
 bunx prisma db push
-
-# 4. (Optional) Create Supabase storage bucket for avatars
-# Run the SQL in supabase_setup.sql via Supabase SQL Editor
-
-# 5. Start the dev server
+# (Optional) Run supabase_setup.sql via Supabase SQL Editor for example tables
 bun run dev
 ```
 
-The app runs at [http://localhost:3000](http://localhost:3000).
+### Solo Landing Page
+
+```bash
+cd your-project
+bun install
+bun run dev
+```
+
+> No `.env` editing, no database setup needed.
+
+### Available Commands
+
+| Command | Description |
+|---|---|
+| `bunx mmgn@latest app` | Scaffold a new project |
+| `bunx mmgn env` | Copy `.env` from boilerplate to current project (local use) |
+| `bunx mmgn --version` | Show version |
+| `bunx mmgn --help` | Show help |
 
 ## Environment Variables
 
