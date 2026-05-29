@@ -158,8 +158,17 @@ export async function runApp() {
       if (basename === '.git') return false;
       if (basename === '.next') return false;
       if (basename === '.agents') return false;
+      if (basename === '.vscode') return false;
       if (basename === '.DS_Store') return false;
       if (basename === '.env' && src !== path.join(templateDir, '.env.example')) return false;
+      if (basename === 'bun.lock') return false;
+      if (basename === 'package-lock.json') return false;
+      if (basename === 'next-env.d.ts') return false;
+      if (basename === 'tsconfig.tsbuildinfo') return false;
+      if (basename === 'AGENTS.md') return false;
+      if (basename === 'PROJECT_CONTEXT.md') return false;
+      if (basename === 'instructions.md') return false;
+      if (basename === 'skills-lock.json') return false;
 
       return true;
     };
