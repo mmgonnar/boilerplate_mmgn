@@ -1,98 +1,62 @@
 import createMiddleware from 'next-intl/middleware';
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 
 import { createClient } from '@/lib/supabase/middleware';
 
-import { routing } from './i18n/routing';
-
-const intlMiddleware = createMiddleware(routing);
-
 const PROTECTED_ROUTES = ['/dashboard', '/profile', '/settings'];
-const AUTH_ROUTES = ['/login', '/register'];
-const LOCALES = ['es', 'en'];
 
-function stripLocale(pathname: string): string {
-  for (const locale of LOCALES) {
-    if (pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`) {
-      return pathname.slice(locale.length + 1) || '/';
-    }
-  }
-  return pathname;
-}
-
-function matchesRoute(pathname: string, routes: string[]): boolean {
-  return routes.some(
-    (route) => pathname === route || pathname.startsWith(`${route}/`),
-  );
-}
+const intlMiddleware = createMiddleware({
+  locales: ['es', 'en'],
+  defaultLocale: 'es',
+  localePrefix: 'as-needed',
+});
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
+
+  if (
+    pathname.startsWith('/_next') ||
+    pathname.startsWith('/api') ||
+    pathname.includes('.')
+  ) {
+    return NextResponse.next();
+  }
+
   let response = intlMiddleware(request);
 
   const hasSupabase =
     process.env.NEXT_PUBLIC_SUPABASE_URL &&
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-
   if (!hasSupabase) {
     return response;
   }
 
-  const cleanPath = stripLocale(pathname);
-  const isProtectedRoute = matchesRoute(cleanPath, PROTECTED_ROUTES);
-  const isAuthRoute = matchesRoute(cleanPath, AUTH_ROUTES);
-
-  if (!isProtectedRoute && !isAuthRoute) {
-    return response;
-  }
-
-  const { client: supabase, supabaseResponse: updatedResponse } =
-    createClient(request);
+  const { client: supabase, supabaseResponse: updatedResponse } = createClient(
+    request,
+    response,
+  );
 
   if (updatedResponse) {
-    response = updatedResponse;
+    response = updatedResponse; // Contiene locale AND cookies de Supabase mutadas
   }
 
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (user && isAuthRoute) {
-    const locale = pathname.split('/')[1];
-    const localizedTarget = LOCALES.includes(locale)
-      ? `/${locale}/dashboard`
-      : '/dashboard';
+  const cleanPath = pathname.replace(/^\/(es|en)/, '') || '/';
+  const isProtected = PROTECTED_ROUTES.some(
+    (route) => cleanPath === route || cleanPath.startsWith(route + '/'),
+  );
 
-    const redirectRes = NextResponse.redirect(
-      new URL(localizedTarget, request.url),
-    );
+  if (isProtected && !user) {
+    const locale = request.cookies.get('NEXT_LOCALE')?.value || 'es';
+    const loginUrl = new URL(`/${locale}/login`, request.url);
+    const redirectRes = NextResponse.redirect(loginUrl);
 
-    response.cookies
-      .getAll()
-      .forEach((cookie) => redirectRes.cookies.set(cookie.name, cookie.value));
-
-    return redirectRes;
-  }
-
-  if (!user && isProtectedRoute) {
-    const locale = pathname.split('/')[1];
-    const localizedLogin = LOCALES.includes(locale)
-      ? `/${locale}/login`
-      : '/login';
-    const redirectUrl = new URL(localizedLogin, request.url);
-
-    const isSafeRedirect =
-      cleanPath.startsWith('/') && !cleanPath.startsWith('//');
-    if (isSafeRedirect) {
-      redirectUrl.searchParams.set('redirect', pathname);
-    }
-
-    const redirectRes = NextResponse.redirect(redirectUrl);
-
-    response.cookies
-      .getAll()
-      .forEach((cookie) => redirectRes.cookies.set(cookie.name, cookie.value));
+    response.cookies.getAll().forEach((cookie) => {
+      redirectRes.cookies.set(cookie.name, cookie.value);
+    });
 
     return redirectRes;
   }

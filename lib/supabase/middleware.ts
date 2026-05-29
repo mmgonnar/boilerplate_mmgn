@@ -3,10 +3,15 @@ import { type NextRequest, NextResponse } from 'next/server';
 
 import { createServerClient } from '@supabase/ssr';
 
-export function createClient(request: NextRequest) {
-  let supabaseResponse = NextResponse.next({
-    request,
-  });
+export function createClient(
+  request: NextRequest,
+  baseResponse?: NextResponse,
+) {
+  let supabaseResponse =
+    baseResponse ??
+    NextResponse.next({
+      request,
+    });
 
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
@@ -36,9 +41,9 @@ export function createClient(request: NextRequest) {
         cookiesToSet.forEach(({ name, value }) => {
           request.cookies.set(name, value);
         });
-        supabaseResponse = NextResponse.next({
-          request,
-        });
+
+        supabaseResponse = baseResponse ?? NextResponse.next({ request });
+
         cookiesToSet.forEach(({ name, value, options }) => {
           supabaseResponse.cookies.set(name, value, options);
         });
