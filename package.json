@@ -1,7 +1,46 @@
 {
   "name": "mmgn",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
+  "description": "mmgonar Next.js boilerplate — scaffolding CLI with Auth + i18n + Dashboard + Landing variants",
+  "license": "MIT",
+  "author": "mmgonnar",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mmgonnar/boilerplate_mmgn.git"
+  },
+  "homepage": "https://github.com/mmgonnar/boilerplate_mmgn#readme",
+  "bugs": {
+    "url": "https://github.com/mmgonnar/boilerplate_mmgn/issues"
+  },
+  "keywords": [
+    "nextjs",
+    "boilerplate",
+    "scaffold",
+    "cli",
+    "next-intl",
+    "supabase",
+    "prisma"
+  ],
+  "files": [
+    "src/cli/",
+    "app/",
+    "features/",
+    "components/",
+    "lib/",
+    "providers/",
+    "messages/",
+    "i18n/",
+    "prisma/",
+    ".env.example",
+    "middleware.ts",
+    "next.config.ts",
+    "tsconfig.json",
+    "eslint.config.mjs",
+    "postcss.config.mjs",
+    "prisma.config.ts",
+    "supabase_setup.sql"
+  ],
   "bin": {
     "mmgn": "./src/cli/index.ts"
   },
@@ -40,7 +79,6 @@
     "tailwind-merge": "^3.5.0",
     "zod": "^4.3.6"
   },
-
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
     "@trivago/prettier-plugin-sort-imports": "^6.0.2",
