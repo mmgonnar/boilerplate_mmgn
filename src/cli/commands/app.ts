@@ -28,7 +28,15 @@ const LANDING_DELETIONS = [
   'supabase_setup.sql',
 ];
 
-const LANDING_NAV_CONFIG = `export const APP_MODE = { variant: 'landing' };
+const LANDING_NAV_CONFIG = `interface FooterColumnType {
+  title: string;
+  links: { label: string; href: string }[];
+}
+
+export const APP_MODE = {
+  variant: 'landing',
+};
+
 export const NAV_CONFIG = {
   public: [
     { label: 'home', href: '/' },
@@ -36,6 +44,32 @@ export const NAV_CONFIG = {
   ],
   authenticated: []
 };
+
+export const FOOTER_LINKS: FooterColumnType[] = [
+  {
+    title: 'product',
+    links: [
+      { label: 'features', href: '/features' },
+      { label: 'pricing', href: '/pricing' },
+      { label: 'changelog', href: '/changelog' },
+    ],
+  },
+  {
+    title: 'company',
+    links: [
+      { label: 'about', href: '/about' },
+      { label: 'blog', href: '/blog' },
+      { label: 'careers', href: '/careers' },
+    ],
+  },
+  {
+    title: 'legal',
+    links: [
+      { label: 'privacy', href: '/privacy' },
+      { label: 'terms', href: '/terms' },
+    ],
+  },
+];
 `;
 
 const LANDING_I18N_REQUEST = `import { getRequestConfig } from 'next-intl/server';
