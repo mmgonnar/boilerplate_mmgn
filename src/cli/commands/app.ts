@@ -38,6 +38,34 @@ export const NAV_CONFIG = {
 };
 `;
 
+const LANDING_I18N_REQUEST = `import { getRequestConfig } from 'next-intl/server';
+
+import commonEn from '@/messages/en.json';
+import commonEs from '@/messages/es.json';
+import navigationEn from '@/features/navigation/messages/en.json';
+import navigationEs from '@/features/navigation/messages/es.json';
+
+import { routing } from './routing';
+
+const messages: Record<string, Record<string, any>> = {
+  en: { ...commonEn, ...navigationEn },
+  es: { ...commonEs, ...navigationEs },
+};
+
+export default getRequestConfig(async ({ requestLocale }) => {
+  let locale = await requestLocale;
+
+  if (!locale || !routing.locales.includes(locale as 'es' | 'en')) {
+    locale = routing.defaultLocale;
+  }
+
+  return {
+    locale,
+    messages: messages[locale] || messages[routing.defaultLocale],
+  };
+});
+`;
+
 export async function runApp() {
   intro(pc.bgBlack(pc.white(' 🏛️ MMGN BOILERPLATE CLI (2026) ')));
 
@@ -130,6 +158,9 @@ export async function runApp() {
         'features/navigation/utils/config.ts',
       );
       await fs.outputFile(navConfigPath, LANDING_NAV_CONFIG);
+
+      const i18nPath = path.join(targetDir, 'i18n/request.ts');
+      await fs.outputFile(i18nPath, LANDING_I18N_REQUEST);
     } else {
       const pkgPath = path.join(targetDir, 'package.json');
       if (await fs.pathExists(pkgPath)) {
