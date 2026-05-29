@@ -26,7 +26,9 @@
       "submit_loading": "Signing in...",
       "no_account": "Don't have an account?",
       "sign_up": "Sign up",
-      "forgot_password": "Forgot your password?"
+      "forgot_password": "Forgot your password?",
+      "welcome": "Welcome!",
+      "welcome_back": "Welcome back!"
     },
 
     "forgot_password": {

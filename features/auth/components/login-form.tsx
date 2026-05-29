@@ -36,7 +36,6 @@ export function LoginForm({ onSuccess, redirectTo }: LoginFormProps) {
   async function onSubmit(values: LoginFormValues) {
     setIsLoading(true);
 
-    // 1. Creamos la promesa para el Toast
     const signInPromise = (async () => {
       const { data, error: signInError } =
         await supabase.auth.signInWithPassword({
@@ -53,7 +52,7 @@ export function LoginForm({ onSuccess, redirectTo }: LoginFormProps) {
 
     apiCallToast(signInPromise, {
       loading: t('login.submit_loading'),
-      successMessage: t('login.success_message') || 'Welcome back!',
+      successMessage: t('login.welcome') || t('login.welcome_back'),
       errorMessage: t('errors.invalid_credentials'),
       router,
       redirectTo: redirectTo ?? '/dashboard',
