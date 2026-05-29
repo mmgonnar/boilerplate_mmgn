@@ -46,9 +46,10 @@
   },
   "scripts": {
     "mmgn": "bun src/cli/index.ts",
+    "postinstall": "prisma generate --schema=./prisma/schema.prisma",
     "predev": "kill -9 $(lsof -ti tcp:3000) || true",
     "dev": "next dev",
-    "build": "next build",
+    "build": "prisma generate --schema=./prisma/schema.prisma && next build",
     "start": "next start",
     "lint": "eslint",
     "db:generate": "prisma generate",
