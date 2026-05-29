@@ -1,5 +1,11 @@
+import { Metadata } from 'next';
+
 import { Button } from '@/components/ui';
 import { ExternalLink } from 'lucide-react';
+
+export const metadata: Metadata = {
+  title: 'Home',
+};
 
 export default function HomePage() {
   return (

@@ -1,7 +1,7 @@
 import { ProfileForm } from '@/features/profile';
 
 export const metadata = {
-  title: 'Mi Perfil',
+  title: 'Profile',
 };
 
 export default function ProfilePage() {

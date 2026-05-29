@@ -1,5 +1,4 @@
 import { FlatCompat } from '@eslint/eslintrc';
-import importX from 'eslint-plugin-import-x';
 import { defineConfig, globalIgnores } from 'eslint/config';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -12,19 +11,15 @@ const compat = new FlatCompat({
 });
 
 const eslintConfig = defineConfig([
-  // Base configuration layers
+  // Base configuration layers from Next.js and TS
   ...compat.extends('next/core-web-vitals', 'next/typescript'),
 
   // Global project ignores
   globalIgnores(['.next/**', 'out/**', 'build/**', 'next-env.d.ts']),
 
-  // 📦 Architecture & Import Order Validation
+  // 📦 1. Global Architecture Guardrails (Strict Barrel Exports)
   {
-    plugins: {
-      'import-x': importX,
-    },
     rules: {
-      // Enforce strict feature-driven encapsulation and UI barrel exports
       'no-restricted-imports': [
         'error',
         {
@@ -35,7 +30,7 @@ const eslintConfig = defineConfig([
                 'Forbidden deep import. Please consume this member through the public feature entry point: import { ... } from "@/features/feature-name".',
             },
             {
-              group: ['@/components/ui/*'],
+              group: ['@/components/ui/**'],
               message:
                 'Forbidden atomic UI import. Please use the unified barrel export instead: import { ... } from "@/components/ui".',
             },
@@ -43,40 +38,103 @@ const eslintConfig = defineConfig([
         },
       ],
 
-      // Automate precise import ordering sequence
-      'import-x/order': [
+      // Named Exports Enforcement
+      'import/no-default-export': 'error',
+
+      // React 19 Hook Safety
+      'react-hooks/rules-of-hooks': 'error',
+      'react-hooks/exhaustive-deps': 'warn',
+
+      // TypeScript Consistency Guardrails
+      '@typescript-eslint/consistent-type-definitions': ['error', 'type'],
+      '@typescript-eslint/no-explicit-any': 'error',
+      '@typescript-eslint/no-unused-vars': [
+        'warn',
+        { argsIgnorePattern: '^_' },
+      ],
+    },
+  },
+
+  // 🔍 2. Exclusive Server-Side Guardrails (App Router Routing & Message Constraints)
+  {
+    // 🚀 OJO AQUÍ: Solo aplica a archivos .ts y .tsx dentro de tu routing de servidor
+    files: ['**/app/**/*.ts', '**/app/**/*.tsx'],
+    rules: {
+      'no-restricted-imports': [
         'error',
         {
-          groups: [
-            'builtin',
-            'external',
-            'internal',
-            ['parent', 'sibling', 'index'],
-          ],
-          pathGroups: [
-            { pattern: 'react', group: 'external', position: 'before' },
-            { pattern: 'next/**', group: 'external', position: 'before' },
-            { pattern: '@/features/**', group: 'internal', position: 'before' },
+          patterns: [
             {
-              pattern: '@/components/**',
-              group: 'internal',
-              position: 'after',
+              group: ['@/features/*/**'],
+              message:
+                'Forbidden deep import. Please consume this member through the public feature entry point: import { ... } from "@/features/feature-name".',
             },
-            { pattern: '@/lib/**', group: 'internal', position: 'after' },
+            {
+              group: ['@/components/ui/**'],
+              message:
+                'Forbidden atomic UI import. Please use the unified barrel export instead: import { ... } from "@/components/ui".',
+            },
           ],
-          pathGroupsExcludedImportTypes: ['react', 'next'],
-          'newlines-between': 'always',
-          alphabetize: { order: 'asc', caseInsensitive: true },
+          paths: [
+            {
+              name: 'next-intl',
+              importNames: ['useTranslations', 'useLocale', 'useTimeZone'],
+              message:
+                '🚨 Server-side context validation: "useTranslations" can only be used inside Client Components ("use client"). For Server Components, import "getTranslations" from "next-intl/server" instead.',
+            },
+          ],
         },
       ],
     },
   },
 
-  // 🔍 SEO Metadata Validation Layer (App Router Pages Only)
+  // 🔓 3. Client-Side Bypass Overrides (Allows hooks safely in Client Components)
+  {
+    // 🚀 Buscamos específicamente componentes que pertenezcan a tus features o UI que son clientes nativos
+    files: ['**/components/ui/**/*.tsx', '**/features/**/components/**/*.tsx'],
+    rules: {
+      // Re-declaramos no-restricted-imports sin el bloqueo de paths de next-intl
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: ['@/features/*/**'],
+              message:
+                'Forbidden deep import. Please consume this member through the public feature entry point: import { ... } from "@/features/feature-name".',
+            },
+            {
+              group: ['@/components/ui/**'],
+              message:
+                'Forbidden atomic UI import. Please use the unified barrel export instead: import { ... } from "@/components/ui".',
+            },
+          ],
+        },
+      ],
+    },
+  },
+
+  // 🎯 4. Custom Exception: Allow default exports ONLY for Next.js routing/config files
+  {
+    files: [
+      '**/app/**/page.tsx',
+      '**/app/**/layout.tsx',
+      '**/app/**/route.ts',
+      '**/middleware.ts',
+      '**/next.config.ts',
+      'eslint.config.mjs',
+      '**/sitemap.ts',
+      '**/robots.ts',
+    ],
+    rules: {
+      'import/no-default-export': 'off',
+    },
+  },
+
+  // 🔍 5. SEO Metadata Validation Layer (App Router Pages Only)
   {
     files: ['**/app/**/page.tsx', '**/app/**/page.ts'],
     rules: {
-      // Enforce mandatory export of 'metadata' or 'generateMetadata' in router pages
       'no-restricted-syntax': [
         'error',
         {

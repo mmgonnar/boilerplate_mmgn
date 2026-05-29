@@ -2,6 +2,8 @@
 
 import React, { useState } from 'react';
 
+import { Metadata } from 'next';
+
 import {
   LoginFormExample,
   ProfileFormExample,
@@ -44,6 +46,10 @@ import {
 } from 'lucide-react';
 
 import { FooterAuth } from '@/features/navigation';
+
+export const metadata: Metadata = {
+  title: 'Design System',
+};
 
 export default function DesignSystemPage() {
   const [loading, setLoading] = useState(false);

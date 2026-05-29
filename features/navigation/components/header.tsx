@@ -10,35 +10,38 @@ import { Avatar, Button, LanguageToggle, ThemeToggle } from '@/components/ui';
 import { usePathname } from '@/i18n/navigation';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/providers/auth-provider';
-import { LogOut, Menu, User, X } from 'lucide-react';
+import { LogOut, Menu, X } from 'lucide-react';
 
-import type { NavLink } from '@/features/navigation/types/types';
-import { NAV_CONFIG } from '@/features/navigation/utils/config';
+import { NavLink } from '../types/types';
+import { NAV_CONFIG } from '../utils/config';
 
-// ─── Interfaces de Props ──────────────────────────────────────────────────────
-interface HeaderProps {
+// ─── Interfaces de Props (Estandarizadas con Type) ───────────────────────────
+type HeaderProps = {
   isAuthenticated?: boolean;
   customActions?: React.ReactNode;
-}
-interface NavLinksProps {
+};
+
+type NavLinksProps = {
   links: NavLink[];
   pathname: string;
-  t: ReturnType<typeof useTranslations>;
+  t: (key: string) => string;
   mobile?: boolean;
-}
+};
 
-interface HeaderActionsProps {
+type HeaderActionsProps = {
   isAuthenticated: boolean;
-  t: ReturnType<typeof useTranslations>;
-}
-interface HeaderDashboardProps {
+  t: (key: string) => string;
+};
+
+type HeaderDashboardProps = {
   userEmail?: string;
   userSrc?: string;
   createdAt?: string;
   lastSignInAt?: string;
   onLogout: () => Promise<void>;
   isLoggingOut: boolean;
-}
+};
+
 // ─── Subcomponentes Compartidos ───────────────────────────────────────────────
 function NavLinks({ links, pathname, t, mobile = false }: NavLinksProps) {
   return (
@@ -65,8 +68,9 @@ function NavLinks({ links, pathname, t, mobile = false }: NavLinksProps) {
   );
 }
 
-function HeaderActions({ isAuthenticated, t }) {
+function HeaderActions({ isAuthenticated, t }: HeaderActionsProps) {
   const { user } = useAuth();
+
   if (isAuthenticated && user) {
     return (
       <Button
@@ -75,7 +79,6 @@ function HeaderActions({ isAuthenticated, t }) {
         className="rounded-full"
         aria-label={t('profile')}
       >
-        {/* Tu Avatar dinámico acoplado al Header */}
         <Avatar
           src={user.user_metadata?.avatar_url}
           fallbackText={user.email}
@@ -148,7 +151,6 @@ export function Header({
       role="navigation"
       aria-label="Primary"
     >
-      {/* Desktop Bar */}
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         <Logo />
 
@@ -163,7 +165,6 @@ export function Header({
           <LanguageToggle />
           <ThemeToggle />
 
-          {/* Si se inyectan acciones personalizadas se muestran aquí; si no, hereda las básicas */}
           {customActions ? (
             customActions
           ) : (
@@ -171,7 +172,6 @@ export function Header({
           )}
         </div>
 
-        {/* Hamburger Mobile */}
         <div className="flex md:hidden items-center gap-2">
           <ThemeToggle />
           <Button
@@ -226,7 +226,6 @@ export function HeaderDashboard({
 }: HeaderDashboardProps) {
   return (
     <header className="flex justify-between items-center p-4 border-b border-border bg-card">
-      {/* Lado Izquierdo: Identificador de la sección */}
       <div className="flex flex-col">
         <span className="text-xs text-muted-foreground font-medium uppercase tracking-wider">
           Dashboard
@@ -243,10 +242,8 @@ export function HeaderDashboard({
           )}
         </div>
 
-        {/* Separador Visual */}
         <div className="h-4 w-px bg-border" />
 
-        {/* Botón de Salida Controlado */}
         <Button
           variant="ghost"
           size="sm"

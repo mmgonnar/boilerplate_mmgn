@@ -1,5 +1,3 @@
-// 🚀 Importamos los estilos globales desde tu archivo principal
-// Ajusta la ruta si tus estilos globales están en otro lado (ej: '@/app/globals.css')
 import '@/app/globals.css';
 
 export default function AuthLayout({

@@ -1,3 +1,4 @@
+'use client';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 
@@ -8,10 +9,10 @@ import { cn } from '@/lib/utils';
 import { FOOTER_LINKS } from '../utils/config';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
-interface FooterColumnType {
+type FooterColumnType = {
   title: string;
   links: { label: string; href: string }[];
-}
+};
 
 // ─── Subcomponents ────────────────────────────────────────────────────────────
 

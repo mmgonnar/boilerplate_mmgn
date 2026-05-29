@@ -1,5 +1,4 @@
-import { HeaderAuth } from '@/features/navigation';
-import { FooterAuth } from '@/features/navigation/components/footer';
+import { FooterAuth, HeaderAuth } from '@/features/navigation';
 
 export const metadata = {
   robots: { index: false, follow: false },
