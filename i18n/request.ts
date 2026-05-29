@@ -1,6 +1,21 @@
 import { getRequestConfig } from 'next-intl/server';
 
+import commonEn from '@/messages/en.json';
+import commonEs from '@/messages/es.json';
+
+import authEn from '@/features/auth/messages/en.json';
+import authEs from '@/features/auth/messages/es.json';
+import dashboardEn from '@/features/dashboard/messages/en.json';
+import dashboardEs from '@/features/dashboard/messages/es.json';
+import navigationEn from '@/features/navigation/messages/en.json';
+import navigationEs from '@/features/navigation/messages/es.json';
+
 import { routing } from './routing';
+
+const messages: Record<string, Record<string, any>> = {
+  en: { ...commonEn, ...authEn, ...navigationEn, ...dashboardEn },
+  es: { ...commonEs, ...authEs, ...navigationEs, ...dashboardEs },
+};
 
 export default getRequestConfig(async ({ requestLocale }) => {
   let locale = await requestLocale;
@@ -9,20 +24,8 @@ export default getRequestConfig(async ({ requestLocale }) => {
     locale = routing.defaultLocale;
   }
 
-  const [navigation, auth, dashboard, common] = await Promise.all([
-    import(`../features/navigation/messages/${locale}.json`),
-    import(`../features/auth/messages/${locale}.json`),
-    import(`../features/dashboard/messages/${locale}.json`),
-    import(`../messages/${locale}.json`),
-  ]);
-
   return {
     locale,
-    messages: {
-      ...common.default,
-      ...auth.default,
-      ...navigation.default,
-      ...dashboard.default,
-    },
+    messages: messages[locale] || messages[routing.defaultLocale],
   };
 });
