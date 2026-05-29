@@ -2,8 +2,11 @@ import { NextIntlClientProvider } from 'next-intl';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
-import { ResetPasswordForm } from '@/features/auth/components/reset-password-form';
 import { createClient } from '@/lib/supabase/server';
+
+import { ResetPasswordForm } from '@/features/auth/components/reset-password-form';
+
+export const dynamic = 'force-dynamic';
 
 export default async function ResetPasswordPage() {
   const supabase = await createClient();
