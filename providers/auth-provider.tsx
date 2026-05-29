@@ -1,15 +1,8 @@
 'use client';
 
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useState,
-} from 'react';
-
+import { createContext, useContext, useState, useEffect } from 'react';
+import { type User, type Session } from '@supabase/supabase-js';
 import { createClient } from '@/lib/supabase/client';
-import type { Session, User } from '@supabase/supabase-js';
 
 interface AuthContextType {
   user: User | null;
@@ -22,11 +15,7 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-interface AuthProviderProps {
-  children: React.ReactNode;
-}
-
-export function AuthProvider({ children }: AuthProviderProps) {
+export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -34,74 +23,69 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const supabase = createClient();
 
-  const refreshUser = useCallback(async () => {
-    const {
-      data: { session: currentSession },
-    } = await supabase.auth.getSession();
-    setSession(currentSession);
-    setUser(currentSession?.user ?? null);
-    setIsLoading(false);
-  }, [supabase.auth]);
+  const refreshUser = async () => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      setUser(user);
+    } catch (error) {
+      console.warn('Supabase Auth no disponible en modo Landing:', error);
+      setUser(null);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const initAuth = async () => {
-      await refreshUser();
+    refreshUser();
+    const mfaVerifiedStorage = sessionStorage.getItem('mfa_verified');
+    if (mfaVerifiedStorage === 'true') {
+      setMfaVerified(true);
+    }
+  }, []);
 
-      const mfaVerifiedStorage = sessionStorage.getItem('mfa_verified');
-      if (mfaVerifiedStorage === 'true') {
-        setMfaVerified(true);
-      }
-    };
+  useEffect(() => {
+    try {
+      const {
+        data: { subscription },
+      } = supabase.auth.onAuthStateChange((_event, session) => {
+        setSession(session);
+        setUser(session?.user ?? null);
 
-    initAuth();
+        if (_event === 'SIGNED_OUT') {
+          setMfaVerified(false);
+          sessionStorage.removeItem('mfa_verified');
+        }
+      });
 
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (_event, session) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-
-      if (_event === 'SIGNED_OUT') {
-        setMfaVerified(false);
-        sessionStorage.removeItem('mfa_verified');
-      }
-    });
-
-    return () => subscription.unsubscribe();
-  }, [supabase.auth, refreshUser]);
+      return () => subscription.unsubscribe();
+    } catch (error) {
+      console.warn('Escucha de Auth deshabilitada:', error);
+    }
+  }, []);
 
   const signOut = async () => {
     try {
       setUser(null);
-
+      setSession(null);
       const { error } = await supabase.auth.signOut();
       if (error) throw error;
     } catch (error) {
-      console.error('Sign out error in provider :', error);
+      console.error('Sign out error in provider:', error);
       throw error;
     }
   };
 
   return (
     <AuthContext.Provider
-      value={{
-        user,
-        session,
-        isLoading,
-        mfaVerified,
-        signOut,
-        refreshUser,
-      }}
+      value={{ user, session, isLoading, mfaVerified, signOut, refreshUser }}
     >
       {children}
     </AuthContext.Provider>
   );
 }
 
-export function useAuth() {
+export const useAuth = () => {
   const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth must be used within AuthProvider');
-  }
+  if (!context) throw new Error('useAuth debe usarse dentro de un AuthProvider');
   return context;
-}
+};
