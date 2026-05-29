@@ -17,8 +17,8 @@ export interface ApiCallToastOptions {
   router?: AppRouterInstance;
 }
 
-export function apiCallToast<T>(
-  promise: Promise<unknown>,
+export function apiCallToast(
+  fetch: Promise<unknown>,
   {
     loading,
     redirectTo,
@@ -27,11 +27,13 @@ export function apiCallToast<T>(
     router,
   }: ApiCallToastOptions,
 ) {
-  return toast.promise(promise, {
+  return toast.promise(fetch, {
     loading: loading,
-    success: (response: any) => {
-      if (response && response.success === false) {
-        throw new Error(response.message || errorMessage);
+    success: (response: unknown) => {
+      const res = response as { success?: boolean; message?: string } | null;
+
+      if (res && res.success === false) {
+        throw new Error(res.message || errorMessage);
       }
       if (redirectTo && router) {
         setTimeout(() => {

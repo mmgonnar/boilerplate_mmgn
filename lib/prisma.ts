@@ -1,11 +1,10 @@
-// lib/prisma.ts
 import { PrismaPg } from '@prisma/adapter-pg';
 import { PrismaClient } from '@prisma/client';
 import { Pool } from 'pg';
 
 const createPrismaClient = () => {
   if (!process.env.DATABASE_URL) {
-    return new Proxy({} as any, {
+    return new Proxy({} as unknown as PrismaClient, {
       get() {
         return () => {
           throw new Error(
@@ -17,7 +16,6 @@ const createPrismaClient = () => {
   }
 
   const connectionString = process.env.DATABASE_URL;
-
   const pool = new Pool({ connectionString });
   const adapter = new PrismaPg(pool);
 
@@ -30,11 +28,10 @@ const createPrismaClient = () => {
   });
 };
 
-declare global {
-  // eslint-disable-next-line no-var
-  var prisma: undefined | ReturnType<typeof createPrismaClient>;
-}
+const globalForPrisma = globalThis as unknown as {
+  prisma: ReturnType<typeof createPrismaClient> | undefined;
+};
 
-export const prisma = globalThis.prisma ?? createPrismaClient();
+export const prisma = globalForPrisma.prisma ?? createPrismaClient();
 
-if (process.env.NODE_ENV !== 'production') globalThis.prisma = prisma;
+if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;

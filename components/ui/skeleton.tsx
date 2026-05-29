@@ -28,7 +28,7 @@ function Skeleton({ className, variant, ...props }: SkeletonProps) {
   return (
     <div
       className={cn(skeletonVariants({ variant, className }))}
-      aria-hidden="true" // ✅ invisible para screen readers — no es contenido real
+      aria-hidden="true"
       {...props}
     />
   );
@@ -36,10 +36,10 @@ function Skeleton({ className, variant, ...props }: SkeletonProps) {
 Skeleton.displayName = 'Skeleton';
 
 // ─── SkeletonText ─────────────────────────────────────────────────────────────
-// Simula líneas de texto con ancho variable para verse natural
+
 interface SkeletonTextProps extends SkeletonProps {
-  lines?: number; // cantidad de líneas
-  lastLineWidth?: 'full' | '3/4' | '1/2' | '1/3'; // última línea más corta = natural
+  lines?: number;
+  lastLineWidth?: 'full' | '3/4' | '1/2' | '1/3';
 }
 
 function SkeletonText({
@@ -126,7 +126,7 @@ function SkeletonButton({
       variant={variant}
       className={cn(
         sizeMap[size],
-        size !== 'icon' && (width ?? 'w-24'), // ancho default si no es icon
+        size !== 'icon' && (width ?? 'w-24'),
         'rounded-md',
         className,
       )}
@@ -137,7 +137,7 @@ function SkeletonButton({
 SkeletonButton.displayName = 'SkeletonButton';
 
 // ─── SkeletonInput ────────────────────────────────────────────────────────────
-function SkeletonInput({ className, variant, ...props }: SkeletonProps) {
+function SkeletonInput({ className, variant }: SkeletonProps) {
   return (
     <div className={cn('flex flex-col gap-1.5', className)} aria-hidden="true">
       <Skeleton variant={variant} className="h-4 w-1/4" /> {/* label */}
@@ -153,7 +153,7 @@ SkeletonInput.displayName = 'SkeletonInput';
 interface SkeletonCardProps extends SkeletonProps {
   showFooter?: boolean;
   showImage?: boolean;
-  imageHeight?: string; // ej: 'h-40'
+  imageHeight?: string;
 }
 
 function SkeletonCard({
