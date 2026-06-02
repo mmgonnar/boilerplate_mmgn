@@ -6,17 +6,17 @@ import { cn } from '@/lib/utils';
 import { ChevronRight, MoreHorizontal } from 'lucide-react';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
-export interface BreadcrumbItem {
+export type BreadcrumbItem = {
   label: string;
   href?: string; // si no tiene href, se renderiza como texto (item activo)
   icon?: React.ReactNode;
 }
 
-export interface BreadcrumbProps extends React.HTMLAttributes<HTMLElement> {
+export type BreadcrumbProps = {
   items: BreadcrumbItem[];
   separator?: React.ReactNode; // separador custom
   maxItems?: number; // ✅ colapsa items intermedios si hay muchos
-}
+} & React.HTMLAttributes<HTMLElement>
 
 // ─── Componente ───────────────────────────────────────────────────────────────
 function Breadcrumb({

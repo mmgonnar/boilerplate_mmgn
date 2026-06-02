@@ -3,16 +3,17 @@
 import * as React from 'react';
 import toast from 'react-hot-toast';
 
-import { Avatar } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
 import { Camera, Loader2 } from 'lucide-react';
 
-interface AvatarUploadProps {
+import { Avatar } from './avatar';
+
+type AvatarUploadProps = {
   src?: string | null;
   fallbackText?: string;
   isUploading?: boolean;
   onFileSelect: (file: File) => void;
-}
+};
 
 export function AvatarUpload({
   src,

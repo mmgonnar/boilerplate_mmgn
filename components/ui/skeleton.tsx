@@ -17,10 +17,7 @@ const skeletonVariants = cva('animate-pulse bg-muted rounded-md shrink-0', {
 });
 
 // ─── Types ────────────────────────────────────────────────────────────────────
-interface SkeletonProps
-  extends
-    React.HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof skeletonVariants> {}
+type SkeletonProps = {} & React.HTMLAttributes<HTMLDivElement> & VariantProps<typeof skeletonVariants>
 
 // ─── Skeleton base ────────────────────────────────────────────────────────────
 // Bloque genérico — base de todos los demás
@@ -37,10 +34,10 @@ Skeleton.displayName = 'Skeleton';
 
 // ─── SkeletonText ─────────────────────────────────────────────────────────────
 
-interface SkeletonTextProps extends SkeletonProps {
+type SkeletonTextProps = {
   lines?: number;
   lastLineWidth?: 'full' | '3/4' | '1/2' | '1/3';
-}
+} & SkeletonProps
 
 function SkeletonText({
   lines = 3,
@@ -75,9 +72,9 @@ function SkeletonText({
 SkeletonText.displayName = 'SkeletonText';
 
 // ─── SkeletonAvatar ───────────────────────────────────────────────────────────
-interface SkeletonAvatarProps extends SkeletonProps {
+type SkeletonAvatarProps = {
   size?: 'sm' | 'default' | 'lg';
-}
+} & SkeletonProps
 
 function SkeletonAvatar({
   size = 'default',
@@ -102,10 +99,10 @@ function SkeletonAvatar({
 SkeletonAvatar.displayName = 'SkeletonAvatar';
 
 // ─── SkeletonButton ───────────────────────────────────────────────────────────
-interface SkeletonButtonProps extends SkeletonProps {
+type SkeletonButtonProps = {
   size?: 'sm' | 'default' | 'lg' | 'icon';
   width?: string; // ancho custom ej: 'w-32'
-}
+} & SkeletonProps
 
 function SkeletonButton({
   size = 'default',
@@ -150,11 +147,11 @@ SkeletonInput.displayName = 'SkeletonInput';
 
 // ─── SkeletonCard ─────────────────────────────────────────────────────────────
 // Simula una card completa con header, contenido y footer
-interface SkeletonCardProps extends SkeletonProps {
+type SkeletonCardProps = {
   showFooter?: boolean;
   showImage?: boolean;
   imageHeight?: string;
-}
+} & SkeletonProps
 
 function SkeletonCard({
   showFooter = true,
@@ -210,10 +207,10 @@ function SkeletonCard({
 SkeletonCard.displayName = 'SkeletonCard';
 
 // ─── SkeletonTable ────────────────────────────────────────────────────────────
-interface SkeletonTableProps extends SkeletonProps {
+type SkeletonTableProps = {
   rows?: number;
   columns?: number;
-}
+} & SkeletonProps
 
 function SkeletonTable({
   rows = 5,

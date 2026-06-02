@@ -10,7 +10,7 @@ import type {
 } from 'react-hook-form';
 
 // ─── Form ─────────────────────────────────────────────────────────────────────
-interface FormProps<TFieldValues extends FieldValues> {
+type FormProps<TFieldValues extends FieldValues> = {
   form: UseFormReturn<TFieldValues>;
   onSubmit: SubmitHandler<TFieldValues>;
   className?: string;

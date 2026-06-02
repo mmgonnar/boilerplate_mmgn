@@ -1,19 +1,19 @@
 import React from 'react';
 import type { FC } from 'react';
 
-export interface NavLink {
+export type NavLink = {
   label: string;
   href: string;
   icon?: React.ReactNode;
   external?: boolean;
 }
 
-export interface NavConfig {
+export type NavConfig = {
   public: NavLink[];
   authenticated: NavLink[];
   isFooter?: boolean;
 }
-export interface SocialMediaItem {
+export type SocialMediaItem = {
   icon: FC<{ className?: string }>;
   href: string;
   label: string;

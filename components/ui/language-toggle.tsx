@@ -18,7 +18,7 @@ const LOCALES = [
 
 type LocaleCode = (typeof LOCALES)[number]['code'];
 
-interface LanguageToggleProps {
+type LanguageToggleProps = {
   mobile?: boolean;
 }
 

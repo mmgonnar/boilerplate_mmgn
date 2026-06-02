@@ -11,7 +11,7 @@ import LogoDarkSVG from '@/components/assets/logo_dark.svg';
 import LogoLightSVG from '@/components/assets/logo_light.svg';
 import { Skeleton } from '@/components/ui';
 
-interface LogoProps {
+type LogoProps = {
   size?: 'sm' | 'default' | 'lg';
 }
 

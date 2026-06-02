@@ -1,6 +1,6 @@
 import type { NavConfig } from '../types/types';
 
-interface FooterColumnType {
+type FooterColumnType = {
   title: string;
   links: { label: string; href: string }[];
 }

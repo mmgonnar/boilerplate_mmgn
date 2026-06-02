@@ -9,7 +9,7 @@ import { X } from 'lucide-react';
 import { Button } from './button';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
-export interface DialogProps {
+export type DialogProps = {
   isOpen: boolean;
   onClose: () => void;
   title?: string;

@@ -52,13 +52,13 @@ const buttonVariants = cva(
 // ─── Types ────────────────────────────────────────────────────────────────────
 type ButtonVariant = VariantProps<typeof buttonVariants>;
 
-interface BaseButtonProps extends ButtonVariant {
+type BaseButtonProps = {
   className?: string;
   isLoading?: boolean;
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
   children?: React.ReactNode;
-}
+} & ButtonVariant
 
 type ButtonOnlyProps = BaseButtonProps &
   Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, keyof BaseButtonProps>;

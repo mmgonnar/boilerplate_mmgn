@@ -9,13 +9,13 @@ import { Skeleton } from './skeleton';
 
 type AvatarSize = 'sm' | 'md' | 'lg' | 'xl';
 
-interface AvatarProps extends React.HTMLAttributes<HTMLDivElement> {
+type AvatarProps = {
   src?: string | null;
   alt?: string;
   fallbackText?: string;
   size?: AvatarSize;
   isLoading?: boolean;
-}
+} & React.HTMLAttributes<HTMLDivElement>
 
 const sizeClasses: Record<AvatarSize, string> = {
   sm: 'h-8 w-8 text-xs',
@@ -61,7 +61,7 @@ export function Avatar({
       )}
       {...props}
     >
-      {/* eslint-disable-next-line @next/next/no-img-element */}
+      { }
       {src && !hasError ? (
         <img
           src={src}

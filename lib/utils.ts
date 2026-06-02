@@ -9,7 +9,7 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export interface ApiCallToastOptions {
+export type ApiCallToastOptions = {
   loading: string;
   successMessage: string;
   errorMessage: string;

@@ -5,16 +5,16 @@ import * as React from 'react';
 import { cn } from '@/lib/utils';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
-export interface InputProps extends Omit<
-  React.InputHTMLAttributes<HTMLInputElement>,
-  'size'
-> {
+export type InputProps = {
   label?: string;
   error?: string;
   hint?: string;
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
-}
+} & Omit<
+  React.InputHTMLAttributes<HTMLInputElement>,
+  'size'
+>
 
 // ─── Componente ───────────────────────────────────────────────────────────────
 const Input = React.forwardRef<HTMLInputElement, InputProps>(

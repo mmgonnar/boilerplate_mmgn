@@ -3,9 +3,9 @@ import { useId } from 'react';
 
 type IconVariant = 'brand' | 'white';
 
-interface IconProps extends React.SVGProps<SVGSVGElement> {
+type IconProps = {
   variant?: IconVariant;
-}
+} & React.SVGProps<SVGSVGElement>
 
 // ─── GitHub ───────────────────────────────────────────────────────────────────
 // Brand: #24292e (dark charcoal) / White: #ffffff

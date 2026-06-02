@@ -18,7 +18,7 @@ import {
 // ─── Types ────────────────────────────────────────────────────────────────────
 type IconVariant = 'brand' | 'white';
 
-interface SocialItem {
+type SocialItem = {
   name: string;
   href: string;
   Icon: React.FC<{ className?: string; variant?: IconVariant }>;
@@ -59,7 +59,7 @@ function SocialIcon({ item, isDark }: { item: SocialItem; isDark: boolean }) {
 }
 
 // ─── Main Component ───────────────────────────────────────────────────────────
-interface SocialMediaProps {
+type SocialMediaProps = {
   className?: string;
 }
 

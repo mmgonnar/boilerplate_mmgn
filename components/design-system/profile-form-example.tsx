@@ -21,7 +21,7 @@ const profileSchema = z.object({
 type ProfileFormValues = z.infer<typeof profileSchema>;
 
 // ─── Interfaces de Props ──────────────────────────────────────────────────────
-interface ProfileFormExampleProps {
+type ProfileFormExampleProps = {
   onSuccess?: () => void;
 }
 

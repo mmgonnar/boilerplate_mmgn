@@ -3,8 +3,7 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
-import { Button, Input } from '@/components/ui';
-import { Form, FormField } from '@/components/ui/form';
+import { Button, Form, FormField, Input } from '@/components/ui';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Lock, Mail } from 'lucide-react';
 import { z } from 'zod';

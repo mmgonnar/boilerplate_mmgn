@@ -125,6 +125,9 @@ const eslintConfig = defineConfig([
       'eslint.config.mjs',
       '**/sitemap.ts',
       '**/robots.ts',
+      '**/postcss.config.mjs',
+      '**/prisma.config.ts',
+      '**/i18n/request.ts',
     ],
     rules: {
       'import/no-default-export': 'off',
@@ -144,6 +147,12 @@ const eslintConfig = defineConfig([
             '🚨 SEO Enforcement Error: Every page.tsx within the App Router must explicitly export a "metadata" object or a "generateMetadata" function.',
         },
       ],
+    },
+  },
+  {
+    files: ['**/i18n/request.ts'],
+    rules: {
+      'no-restricted-imports': 'off',
     },
   },
 ]);

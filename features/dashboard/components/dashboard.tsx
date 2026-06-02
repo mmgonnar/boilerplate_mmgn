@@ -4,7 +4,7 @@ import React from 'react';
 
 import { useAuth } from '@/providers/auth-provider';
 
-import { UpdateAvatar } from '@/features/profile/components/update-avatar';
+import { UpdateAvatar } from '@/features/profile';
 
 export function Dashboard() {
   const { user } = useAuth();

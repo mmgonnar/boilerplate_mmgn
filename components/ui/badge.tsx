@@ -39,14 +39,11 @@ const badgeVariants = cva(
 );
 
 // ─── Types ────────────────────────────────────────────────────────────────────
-export interface BadgeProps
-  extends
-    React.HTMLAttributes<HTMLSpanElement>,
-    VariantProps<typeof badgeVariants> {
+export type BadgeProps = {
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
   dot?: boolean; // ✅ indicador de estado tipo •
-}
+} & React.HTMLAttributes<HTMLSpanElement> & VariantProps<typeof badgeVariants>
 
 // ─── Componente ───────────────────────────────────────────────────────────────
 function Badge({
