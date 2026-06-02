@@ -12,56 +12,59 @@ const intlMiddleware = createMiddleware({
 });
 
 export async function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl;
+  const pathname = request.nextUrl.pathname;
 
+  // 1. Filtrar de inmediato archivos estáticos y recursos del navegador
   if (
     pathname.startsWith('/_next') ||
     pathname.startsWith('/api') ||
-    pathname.includes('.')
+    pathname.includes('.') ||
+    pathname.endsWith('.ico') ||
+    pathname.includes('favicon')
   ) {
     return NextResponse.next();
   }
 
-  let response = intlMiddleware(request);
+  // 2. Ejecutar primero el middleware de idiomas para obtener la respuesta base estructurada
+  const response = intlMiddleware(request);
 
-  const hasSupabase =
-    process.env.NEXT_PUBLIC_SUPABASE_URL &&
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-  if (!hasSupabase) {
-    return response;
-  }
-
-  const { client: supabase, supabaseResponse: updatedResponse } = createClient(
+  // 3. Inicializar el cliente de Supabase inyectándole la respuesta de idiomas
+  // Esto permite que Supabase altere directamente los headers y cookies de la respuesta que sí va al navegador
+  const { client: supabase, supabaseResponse } = createClient(
     request,
     response,
   );
 
-  if (updatedResponse) {
-    response = updatedResponse; // Contiene locale AND cookies de Supabase mutadas
-  }
-
+  // 4. Leer el usuario autenticado usando el cliente del middleware
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const cleanPath = pathname.replace(/^\/(es|en)/, '') || '/';
+  // 5. Limpiar el pathname del idioma para validar las rutas protegidas
+  const cleanPath =
+    pathname.replace(/^\/(es|en)/, '').replace(/\/$/, '') || '/';
+
   const isProtected = PROTECTED_ROUTES.some(
     (route) => cleanPath === route || cleanPath.startsWith(route + '/'),
   );
 
+  // 6. Si la ruta es protegida y el usuario no existe, redirigir al login
   if (isProtected && !user) {
     const locale = request.cookies.get('NEXT_LOCALE')?.value || 'es';
     const loginUrl = new URL(`/${locale}/login`, request.url);
     const redirectRes = NextResponse.redirect(loginUrl);
 
-    response.cookies.getAll().forEach((cookie) => {
-      redirectRes.cookies.set(cookie.name, cookie.value);
+    // Copiar las cookies acumuladas hasta ahora a la respuesta de redirección
+    supabaseResponse.cookies.getAll().forEach((cookie) => {
+      const { name, value, ...options } = cookie;
+      redirectRes.cookies.set(name, value, options);
     });
 
     return redirectRes;
   }
 
-  return response;
+  // 7. Si todo está correcto (es pública o está autenticado), retornar la respuesta mutada por Supabase
+  return supabaseResponse;
 }
 
 export const config = {

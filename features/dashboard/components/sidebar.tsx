@@ -17,18 +17,18 @@ type SidebarProps = {
 };
 
 export function Sidebar({ userEmail, userSrc }: SidebarProps) {
-  const { user, signOut } = useAuth();
+  const { user, signOut, isLoading } = useAuth();
   const router = useRouter();
   const t = useTranslations('dashboard');
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   useEffect(() => {
-    if (!user && !isLoggingOut) {
+    if (!isLoading && !user && !isLoggingOut) {
       router.push('/login');
     }
-  }, [user, router, isLoggingOut]);
+  }, [user, router, isLoggingOut, isLoading]);
 
-  if (!user) return null;
+  if (isLoading) return null;
 
   const handleLogout = () => {
     if (isLoggingOut) return;

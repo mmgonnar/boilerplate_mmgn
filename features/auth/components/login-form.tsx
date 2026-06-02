@@ -13,14 +13,22 @@ import { apiCallToast } from '@/lib/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import { type LoginFormValues, loginSchema } from '../schemas/login-schema';
+import { signInWithOAuth } from '../services/oauth-service';
 import { LOGIN_FIELDS } from '../utils/constants';
 
 type LoginFormProps = {
   onSuccess?: () => void;
   redirectTo?: string;
+  showRegisterLink?: boolean;
+  theme?: 'light' | 'dark';
 };
 
-export function LoginForm({ onSuccess, redirectTo }: LoginFormProps) {
+export function LoginForm({
+  onSuccess: _onSuccess,
+  redirectTo,
+  showRegisterLink = true,
+  theme,
+}: LoginFormProps) {
   const t = useTranslations('auth');
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
@@ -31,6 +39,20 @@ export function LoginForm({ onSuccess, redirectTo }: LoginFormProps) {
     mode: 'onTouched',
     defaultValues: { email: '', password: '' },
   });
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
+  const handleGoogleLogin = async () => {
+    if (isGoogleLoading) return;
+
+    setIsGoogleLoading(true);
+
+    apiCallToast(signInWithOAuth('google'), {
+      loading: 'Redirigiendo a Google...',
+      successMessage: 'Conexión con Google exitosa',
+      errorMessage: 'No se pudo conectar con Google. Inténtalo de nuevo.',
+    }).finally(() => {
+      setIsGoogleLoading(false);
+    });
+  };
 
   async function onSubmit(values: LoginFormValues) {
     setIsLoading(true);
@@ -106,15 +128,36 @@ export function LoginForm({ onSuccess, redirectTo }: LoginFormProps) {
         </Button>
       </Form>
 
-      <p className="text-sm text-muted-foreground text-center">
-        {t('login.no_account')}{' '}
-        <Link
-          href="/register"
-          className="font-medium text-foreground hover:underline"
-        >
-          {t('login.sign_up')}
-        </Link>
-      </p>
+      {showRegisterLink && (
+        <p className="text-sm text-muted-foreground text-center">
+          {t('login.no_account')}{' '}
+          <Link
+            href="/register"
+            className="font-medium text-foreground hover:underline"
+          >
+            {t('login.sign_up')}
+          </Link>
+        </p>
+      )}
+
+      <div className="relative my-4 flex items-center justify-center">
+        <div className="absolute inset-0 flex items-center">
+          <div className="w-full border-t border-border"></div>
+        </div>
+        <span className="relative bg-card px-2 text-xs text-muted-foreground uppercase">
+          O continuar con
+        </span>
+      </div>
+
+      <Button
+        type="button"
+        variant="outline"
+        className="w-full"
+        onClick={handleGoogleLogin}
+        disabled={isGoogleLoading}
+      >
+        {isGoogleLoading ? 'Cargando...' : 'Continuar con Google'}
+      </Button>
     </div>
   );
 }
