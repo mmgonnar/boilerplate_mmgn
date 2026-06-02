@@ -67,7 +67,7 @@ export function Avatar({
       {src && !hasError ? (
         <Image
           src={src}
-          alt={fallbackText || 'User avatar'}
+          alt={alt || fallbackText || 'User avatar'}
           fill
           sizes="(max-width: 768px) 100vw, 40px"
           className="rounded-full object-cover"
