@@ -1,7 +1,8 @@
-import { Badge } from '@/components/ui/badge';
 import { Check, Clock, ShieldCheck, Zap } from 'lucide-react';
 
-export default function BadgeDesignSection() {
+import { Badge } from '../ui';
+
+export function BadgeDesignSection() {
   return (
     <section className="space-y-8">
       <header>

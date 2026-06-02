@@ -2,10 +2,8 @@
 
 import type { ReactNode } from 'react';
 import { useForm } from 'react-hook-form';
-import toast from 'react-hot-toast';
 
-import { Button, Input } from '@/components/ui';
-import { Form, FormField } from '@/components/ui/form';
+import { Button, Form, FormField, Input } from '@/components/ui';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Building, Mail, Phone, User } from 'lucide-react';
 import { z } from 'zod';
@@ -23,7 +21,7 @@ type ProfileFormValues = z.infer<typeof profileSchema>;
 // ─── Interfaces de Props ──────────────────────────────────────────────────────
 type ProfileFormExampleProps = {
   onSuccess?: () => void;
-}
+};
 
 // ─── Configuración de campos ──────────────────────────────────────────────────
 type FieldConfig = {
@@ -73,24 +71,11 @@ export function ProfileFormExample({ onSuccess }: ProfileFormExampleProps) {
   });
 
   async function onSubmit() {
-    const toastId = toast.loading('Guardando cambios...');
-
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 1500)); // Simulación de red
-
-      toast.success('¡Perfil actualizado correctamente! ✨', { id: toastId });
-
-      if (onSuccess) {
-        onSuccess();
-      }
-    } catch (error) {
-      toast.error('Hubo un problema al guardar los datos.', { id: toastId });
-    }
+    console.log('onSubmit');
   }
 
   return (
     <Form form={form} onSubmit={onSubmit} className="space-y-4 max-w-md w-full">
-      {/* ✅ Mapeo limpio — un FormField por cada config */}
       {PROFILE_FIELDS.map((fieldConfig) => (
         <FormField
           key={fieldConfig.name}

@@ -2,6 +2,8 @@
 
 import * as React from 'react';
 
+import Image from 'next/image';
+
 import { cn } from '@/lib/utils';
 import { User } from 'lucide-react';
 
@@ -15,7 +17,7 @@ type AvatarProps = {
   fallbackText?: string;
   size?: AvatarSize;
   isLoading?: boolean;
-} & React.HTMLAttributes<HTMLDivElement>
+} & React.HTMLAttributes<HTMLDivElement>;
 
 const sizeClasses: Record<AvatarSize, string> = {
   sm: 'h-8 w-8 text-xs',
@@ -58,15 +60,17 @@ export function Avatar({
         'relative flex shrink-0 overflow-hidden rounded-full border border-border bg-accent text-accent-foreground items-center justify-center font-mono font-bold select-none',
         sizeClasses[size],
         className,
+        'relative',
       )}
       {...props}
     >
-      { }
       {src && !hasError ? (
-        <img
+        <Image
           src={src}
-          alt={alt}
-          className="h-full w-full object-cover aspect-square"
+          alt={fallbackText || 'User avatar'}
+          fill
+          sizes="(max-width: 768px) 100vw, 40px"
+          className="rounded-full object-cover"
           onError={() => setHasError(true)}
         />
       ) : initials ? (

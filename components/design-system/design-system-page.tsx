@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 
 import {
+  BadgeDesignSection,
   LoginFormExample,
   ProfileFormExample,
 } from '@/components/design-system';
@@ -254,6 +255,7 @@ export function DesignSystemPage() {
 
         {/* --- BADGES --- */}
         <SectionWrapper title="Badges & Labels">
+          <BadgeDesignSection />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
             <div className="space-y-6">
               <div className="space-y-3">
