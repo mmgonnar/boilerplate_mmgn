@@ -13,11 +13,11 @@ export async function runEnv() {
   const envTarget = path.join(process.cwd(), '.env');
 
   if (!(await fs.pathExists(envSource))) {
-    console.error(pc.red('❌ .env no encontrado en el template.'));
-    console.error(pc.dim('Este comando solo funciona localmente (el .env no se publica en npm).'));
+    console.error(pc.red('❌ .env not found in the template.'));
+    console.error(pc.dim('This command only works locally (the .env is not published to npm).'));
     process.exit(1);
   }
 
   await fs.copy(envSource, envTarget);
-  console.log(pc.green('✅ .env copiado al proyecto actual'));
+  console.log(pc.green('✅ .env copied to current project'));
 }

@@ -111,41 +111,41 @@ export async function runApp() {
   );
 
   const projectName = await text({
-    message: '¿Cómo se llamará tu nuevo proyecto?',
+    message: 'What will your new project be called?',
     placeholder: 'my-awesome-app',
     validate(value) {
-      if (value.trim().length === 0) return 'El nombre del proyecto es requerido';
+      if (value.trim().length === 0) return 'Project name is required';
     },
   });
 
   if (isCancel(projectName)) {
-    cancel('Operación cancelada.');
+    cancel('Operation cancelled.');
     process.exit(0);
   }
 
   const variant = await select({
-    message: 'Selecciona la variante que necesitas:',
+    message: 'Select the variant you need:',
     options: [
       {
         value: 'dashboard',
-        label: '🚀 Dashboard Completo',
+        label: '🚀 Full Dashboard',
         hint: 'Auth + i18n + Storage + CRUD',
       },
       {
         value: 'landing',
-        label: '🎨 Solo Landing Page',
-        hint: 'Remueve Supabase, Auth y rutas privadas',
+        label: '🎨 Landing Page Only',
+        hint: 'Removes Supabase, Auth and private routes',
       },
     ],
   });
 
   if (isCancel(variant)) {
-    cancel('Operación cancelada.');
+    cancel('Operation cancelled.');
     process.exit(0);
   }
 
   const s = spinner();
-  s.start('Clonando y configurando tu boilerplate...');
+  s.start('Cloning and configuring your boilerplate...');
 
   const targetDir = path.join(process.cwd(), projectName as string);
 
@@ -181,7 +181,7 @@ export async function runApp() {
     );
 
     if (variant === 'landing') {
-      s.message('Purificando plantilla (Solo Landing Page)...');
+      s.message('Cleaning template (Landing Page Only)...');
 
       for (const file of LANDING_DELETIONS) {
         await fs.remove(path.join(targetDir, file));
@@ -220,16 +220,16 @@ export async function runApp() {
       }
     }
 
-    s.stop('¡Proyecto configurado con éxito!');
+    s.stop('Project configured successfully!');
 
     outro(
-      `${pc.green('Siguientes pasos:')}\n` +
+      `${pc.green('Next steps:')}\n` +
       `${pc.gray('cd')} ${pc.white(projectName as string)}\n` +
       `${pc.gray('bun install')}\n` +
       `${pc.gray('bun run dev')}`,
     );
   } catch (error) {
-    s.stop('Ocurrió un error durante la configuración.');
+    s.stop('An error occurred during configuration.');
     console.error(pc.red(String(error)));
     process.exit(1);
   }

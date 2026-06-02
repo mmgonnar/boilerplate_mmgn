@@ -12,11 +12,11 @@ async function showHelp() {
   console.log(`
   ${pc.bold('mmgn')} — Boilerplate scaffolding CLI
 
-  ${pc.dim('Uso:')}
-    mmgn app        ${pc.dim('Scaffoldear un nuevo proyecto')}
-    mmgn env        ${pc.dim('Copiar .env real al proyecto actual')}
-    mmgn --help     ${pc.dim('Mostrar esta ayuda')}
-    mmgn --version  ${pc.dim('Mostrar versión')}
+  ${pc.dim('Usage:')}
+    mmgn app        ${pc.dim('Scaffold a new project')}
+    mmgn env        ${pc.dim('Copy .env to current project')}
+    mmgn --help     ${pc.dim('Show this help')}
+    mmgn --version  ${pc.dim('Show version')}
   `);
 }
 
@@ -49,7 +49,7 @@ async function main() {
       await showHelp();
       break;
     default:
-      console.error(pc.red(`Comando desconocido: ${command}`));
+      console.error(pc.red(`Unknown command: ${command}`));
       await showHelp();
       process.exit(1);
   }
