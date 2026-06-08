@@ -21,7 +21,10 @@ type RegisterFormProps = {
   redirectTo?: string;
 };
 
-export function RegisterForm({ onSuccess, redirectTo }: RegisterFormProps) {
+export function RegisterForm({
+  onSuccess: _onSuccess,
+  redirectTo,
+}: RegisterFormProps) {
   const t = useTranslations('auth');
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
