@@ -158,6 +158,7 @@ export async function runApp() {
       if (basename === '.git') return false;
       if (basename === '.next') return false;
       if (basename === '.agents') return false;
+      if (basename === '.github') return false;
       if (basename === '.vscode') return false;
       if (basename === '.DS_Store') return false;
       if (basename === '.env' && src !== path.join(templateDir, '.env.example')) return false;

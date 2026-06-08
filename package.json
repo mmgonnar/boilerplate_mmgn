@@ -99,8 +99,8 @@
     "sharp",
     "unrs-resolver"
   ],
-  "trustedDependencies": [
-    "sharp",
-    "unrs-resolver"
-  ]
+    "trustedDependencies": [
+        "sharp",
+        "unrs-resolver"
+    ]
 }

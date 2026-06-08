@@ -1,0 +1,16 @@
+name: Keep Supabase Database Alive
+
+on:
+  schedule:
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+
+jobs:
+  ping-db:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Hacer petición al endpoint Keep Alive
+        run: |
+          curl -X GET "${{ secrets.PROJECT_URL }}/api/cron/keep-alive" \
+          -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+          -f # -f hace que el workflow falle visualmente en GitHub si la API devuelve un error (como un 500)
