@@ -58,6 +58,19 @@
       "success_message": "¡Contraseña actualizada! Redirigiendo al login..."
     },
 
+    "oauth": {
+      "divider": "O continuar con",
+      "google": "Continuar con Google",
+      "github": "Continuar con GitHub",
+      "apple": "Continuar con Apple",
+      "google_loading": "Redirigiendo a Google...",
+      "google_error": "No se pudo conectar con Google",
+      "github_loading": "Redirigiendo a GitHub...",
+      "github_error": "No se pudo conectar con GitHub",
+      "apple_loading": "Redirigiendo a Apple...",
+      "apple_error": "No se pudo conectar con Apple"
+    },
+
     "errors": {
       "invalid_credentials": "Correo o contraseña inválidos",
       "email_taken": "Este correo ya está registrado",

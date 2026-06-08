@@ -11,26 +11,35 @@ import { useRouter } from '@/i18n/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { apiCallToast } from '@/lib/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { type Provider } from '@supabase/supabase-js';
 
 import { type LoginFormValues, loginSchema } from '../schemas/login-schema';
 import { signInWithOAuth } from '../services/oauth-service';
 import { LOGIN_FIELDS } from '../utils/constants';
+import { AppleIcon, GithubIcon, GoogleIcon } from './auth-icons';
 
 type LoginFormProps = {
   onSuccess?: () => void;
   redirectTo?: string;
   showRegisterLink?: boolean;
-  theme?: 'light' | 'dark';
 };
 
+const OAUTH_ICONS: Record<string, typeof GoogleIcon> = {
+  google: GoogleIcon,
+  github: GithubIcon,
+  apple: AppleIcon,
+};
+
+const OAUTH_PROVIDERS = ['google', 'github', 'apple'] as const;
+
 export function LoginForm({
-  onSuccess: _onSuccess,
+  onSuccess,
   redirectTo,
   showRegisterLink = true,
-  theme,
 }: LoginFormProps) {
   const t = useTranslations('auth');
   const [isLoading, setIsLoading] = useState(false);
+  const [loadingProvider, setLoadingProvider] = useState<string | null>(null);
   const router = useRouter();
   const supabase = createClient();
 
@@ -39,19 +48,16 @@ export function LoginForm({
     mode: 'onTouched',
     defaultValues: { email: '', password: '' },
   });
-  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
-  const handleGoogleLogin = async () => {
-    if (isGoogleLoading) return;
 
-    setIsGoogleLoading(true);
+  const handleOAuthLogin = (provider: Provider) => {
+    if (loadingProvider) return;
+    setLoadingProvider(provider);
 
-    apiCallToast(signInWithOAuth('google'), {
-      loading: 'Redirigiendo a Google...',
-      successMessage: 'Conexión con Google exitosa',
-      errorMessage: 'No se pudo conectar con Google. Inténtalo de nuevo.',
-    }).finally(() => {
-      setIsGoogleLoading(false);
-    });
+    apiCallToast(signInWithOAuth(provider), {
+      loading: t(`oauth.${provider}_loading`),
+      successMessage: t('login.welcome'),
+      errorMessage: t(`oauth.${provider}_error`),
+    }).finally(() => setLoadingProvider(null));
   };
 
   async function onSubmit(values: LoginFormValues) {
@@ -79,7 +85,7 @@ export function LoginForm({
       redirectTo: redirectTo ?? '/dashboard',
     });
 
-    signInPromise.finally(() => setIsLoading(false));
+    signInPromise.then(() => onSuccess?.()).finally(() => setIsLoading(false));
   }
 
   return (
@@ -128,6 +134,35 @@ export function LoginForm({
         </Button>
       </Form>
 
+      <div className="relative flex items-center justify-center">
+        <div className="absolute inset-0 flex items-center">
+          <div className="w-full border-t border-border" />
+        </div>
+        <span className="relative bg-card px-2 text-xs text-muted-foreground uppercase">
+          {t('oauth.divider')}
+        </span>
+      </div>
+
+      <div className="space-y-3 md:flex md:flex-row md:gap-3 md:space-y-0 md:justify-center">
+        {OAUTH_PROVIDERS.map((provider) => {
+          const Icon = OAUTH_ICONS[provider];
+          return (
+            <Button
+              key={provider}
+              type="button"
+              variant="outline"
+              className="w-full md:w-auto md:px-3"
+              onClick={() => handleOAuthLogin(provider as Provider)}
+              disabled={loadingProvider !== null}
+              isLoading={loadingProvider === provider}
+              leftIcon={<Icon className="h-5 w-5" />}
+            >
+              <span className="md:sr-only">{t(`oauth.${provider}`)}</span>
+            </Button>
+          );
+        })}
+      </div>
+
       {showRegisterLink && (
         <p className="text-sm text-muted-foreground text-center">
           {t('login.no_account')}{' '}
@@ -139,25 +174,6 @@ export function LoginForm({
           </Link>
         </p>
       )}
-
-      <div className="relative my-4 flex items-center justify-center">
-        <div className="absolute inset-0 flex items-center">
-          <div className="w-full border-t border-border"></div>
-        </div>
-        <span className="relative bg-card px-2 text-xs text-muted-foreground uppercase">
-          O continuar con
-        </span>
-      </div>
-
-      <Button
-        type="button"
-        variant="outline"
-        className="w-full"
-        onClick={handleGoogleLogin}
-        disabled={isGoogleLoading}
-      >
-        {isGoogleLoading ? 'Cargando...' : 'Continuar con Google'}
-      </Button>
     </div>
   );
 }
