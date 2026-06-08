@@ -12,30 +12,18 @@ import { createClient } from '@/lib/supabase/client';
 import { apiCallToast } from '@/lib/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { type Provider } from '@supabase/supabase-js';
-
 import { RegisterFormValues, registerSchema } from '../schemas/register-schema';
-import { signInWithOAuth } from '../services/oauth-service';
 import { REGISTER_FIELDS } from '../utils/constants';
-import { AppleIcon, GithubIcon, GoogleIcon } from './auth-icons';
+import { OAuthProviders } from './oauth-providers';
 
 type RegisterFormProps = {
   onSuccess?: () => void;
   redirectTo?: string;
 };
 
-const OAUTH_ICONS: Record<string, typeof GoogleIcon> = {
-  google: GoogleIcon,
-  github: GithubIcon,
-  apple: AppleIcon,
-};
-
-const OAUTH_PROVIDERS = ['google', 'github', 'apple'] as const;
-
 export function RegisterForm({ onSuccess, redirectTo }: RegisterFormProps) {
   const t = useTranslations('auth');
   const [isLoading, setIsLoading] = useState(false);
-  const [loadingProvider, setLoadingProvider] = useState<string | null>(null);
   const router = useRouter();
   const supabase = createClient();
 
@@ -49,17 +37,6 @@ export function RegisterForm({ onSuccess, redirectTo }: RegisterFormProps) {
       confirmPassword: '',
     },
   });
-
-  const handleOAuthLogin = (provider: Provider) => {
-    if (loadingProvider) return;
-    setLoadingProvider(provider);
-
-    apiCallToast(signInWithOAuth(provider), {
-      loading: t(`oauth.${provider}_loading`),
-      successMessage: t('register.success_message'),
-      errorMessage: t(`oauth.${provider}_error`),
-    }).finally(() => setLoadingProvider(null));
-  };
 
   async function onSubmit(values: RegisterFormValues) {
     setIsLoading(true);
@@ -154,25 +131,7 @@ export function RegisterForm({ onSuccess, redirectTo }: RegisterFormProps) {
         </span>
       </div>
 
-      <div className="space-y-3 md:flex md:flex-row md:gap-3 md:space-y-0 md:justify-center">
-        {OAUTH_PROVIDERS.map((provider) => {
-          const Icon = OAUTH_ICONS[provider];
-          return (
-            <Button
-              key={provider}
-              type="button"
-              variant="outline"
-              className="w-full md:w-auto md:px-3"
-              onClick={() => handleOAuthLogin(provider as Provider)}
-              disabled={loadingProvider !== null}
-              isLoading={loadingProvider === provider}
-              leftIcon={<Icon className="h-5 w-5" />}
-            >
-              <span className="md:sr-only">{t(`oauth.${provider}`)}</span>
-            </Button>
-          );
-        })}
-      </div>
+      <OAuthProviders mode="register" />
 
       <p className="text-sm text-muted-foreground text-center">
         {t('register.has_account')}{' '}

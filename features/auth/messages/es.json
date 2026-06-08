@@ -16,7 +16,10 @@
       "submit_loading": "Creando cuenta...",
       "has_account": "¿Ya tienes cuenta?",
       "sign_in": "Inicia sesión",
-      "success_message": "¡Registro exitoso! Bienvenido"
+      "success_message": "¡Registro exitoso! Bienvenido",
+      "oauth_google": "Registrarse con Google",
+      "oauth_github": "Registrarse con GitHub",
+      "oauth_apple": "Registrarse con Apple"
     },
 
     "login": {
@@ -28,7 +31,10 @@
       "sign_up": "Regístrate",
       "forgot_password": "¿Olvidaste tu contraseña?",
       "welcome": "¡Bienvenido!",
-      "welcome_back": "¡Bienvenido de nuevo!"
+      "welcome_back": "¡Bienvenido de nuevo!",
+      "oauth_google": "Iniciar sesión con Google",
+      "oauth_github": "Iniciar sesión con GitHub",
+      "oauth_apple": "Iniciar sesión con Apple"
     },
 
     "forgot_password": {
@@ -60,14 +66,14 @@
 
     "oauth": {
       "divider": "O continuar con",
-      "google": "Continuar con Google",
-      "github": "Continuar con GitHub",
-      "apple": "Continuar con Apple",
       "google_loading": "Redirigiendo a Google...",
+      "google_success": "Redirigiendo a Google...",
       "google_error": "No se pudo conectar con Google",
       "github_loading": "Redirigiendo a GitHub...",
+      "github_success": "Redirigiendo a GitHub...",
       "github_error": "No se pudo conectar con GitHub",
       "apple_loading": "Redirigiendo a Apple...",
+      "apple_success": "Redirigiendo a Apple...",
       "apple_error": "No se pudo conectar con Apple"
     },
 
