@@ -197,6 +197,7 @@ export async function runApp() {
         if (pkg.dependencies) delete pkg.dependencies['@prisma/client'];
         if (pkg.devDependencies) delete pkg.devDependencies['prisma'];
         if (pkg.scripts) {
+          delete pkg.scripts['postinstall'];
           delete pkg.scripts['db:generate'];
           delete pkg.scripts['db:push'];
         }
