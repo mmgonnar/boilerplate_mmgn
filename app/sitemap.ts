@@ -1,10 +1,10 @@
 import { MetadataRoute } from 'next';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  // 💡 BOILERPLATE NOTE: Configura la URL de producción en tu .env
+  // 💡 BOILERPLATE NOTE: Set the production URL in your .env file
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
 
-  // 💡 BOILERPLATE NOTE: Añade aquí las rutas estáticas públicas de tu app
+  // 💡 BOILERPLATE NOTE: Add your app's public static routes here
   const routes = ['', '/login', '/register', '/about', '/contact'];
   const locales = ['es', 'en'];
 

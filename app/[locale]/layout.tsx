@@ -17,17 +17,15 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
 
-  // 💡 BOILERPLATE NOTE: Cambia el namespace si tus textos base de SEO
-  // (site_title, site_description) viven en un archivo o sección que no sea 'common'
+  // 💡 BOILERPLATE NOTE: Change this namespace if your SEO texts live in a file other than 'common'
   const t = await getTranslations({ locale, namespace: 'common' });
 
-  // 💡 BOILERPLATE NOTE: Configura la URL base de tu nuevo proyecto en el archivo .env
+  // 💡 BOILERPLATE NOTE: Set the production URL in your .env file
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
   const headersList = await headers();
   const pathname = headersList.get('x-pathname') ?? '/';
 
-  // 💡 BOILERPLATE NOTE: Si tu nuevo proyecto soporta más idiomas o diferentes
-  // (ej. ['es', 'en', 'fr']), actualiza este arreglo para que la limpieza del path funcione.
+  // 💡 BOILERPLATE NOTE: Update this array if your project supports more locales (e.g. ['es', 'en', 'fr'])
   const locales = ['es', 'en'];
   let pathWithoutLocale = pathname;
 
@@ -55,9 +53,8 @@ export async function generateMetadata({
     alternates: {
       canonical,
       languages: {
-        // 💡 BOILERPLATE NOTE: Mapea aquí las URLs alternas de indexación (hreflang).
-        // Si tu next-intl NO usa prefijos para el idioma por defecto (ej. localePrefix: 'as-needed'),
-        // ajusta las rutas para que coincidan exactamente con la estructura de tus URLs.
+        // 💡 BOILERPLATE NOTE: Map hreflang alternate URLs here.
+        // If your default locale uses localePrefix: 'as-needed', adjust paths to match your URL structure.
         en: `${baseUrl}/en${cleanPath}`,
         es: `${baseUrl}/es${cleanPath}`,
         'x-default': `${baseUrl}${cleanPath}`,
@@ -65,7 +62,7 @@ export async function generateMetadata({
     },
     openGraph: {
       type: 'website',
-      // 💡 BOILERPLATE NOTE: Ajusta las regiones geográficas por defecto de tu target
+      // 💡 BOILERPLATE NOTE: Set the default geographic regions for your target audience
       locale: locale === 'es' ? 'es_MX' : 'en_US',
       siteName: t('site_title'),
       title: t('site_title'),
@@ -77,8 +74,7 @@ export async function generateMetadata({
       description: t('site_description'),
     },
     robots: {
-      // 💡 BOILERPLATE NOTE: Cambia a false si es un proyecto privado, dashboard interno
-      // o staging que no quieres que Google indexe bajo ninguna circunstancia.
+      // 💡 BOILERPLATE NOTE: Set to false for private projects, internal dashboards, or staging environments
       index: true,
       follow: true,
     },
@@ -101,8 +97,7 @@ export default async function LocaleLayout({
         <NextIntlClientProvider messages={messages}>
           <ThemeProvider
             attribute="class"
-            // 💡 BOILERPLATE NOTE: Cambia el tema por defecto si tu nuevo proyecto
-            // debe arrancar obligatoriamente en 'dark' o 'light' en lugar de heredar el del sistema.
+            // 💡 BOILERPLATE NOTE: Change defaultTheme to 'dark' or 'light' if your project should not inherit system preference
             defaultTheme="system"
             enableSystem
             disableTransitionOnChange
