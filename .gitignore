@@ -39,6 +39,7 @@ yarn-error.log*
 
 # scaffold test output
 test_landing/
+landing_test/
 
 # typescript
 *.tsbuildinfo
