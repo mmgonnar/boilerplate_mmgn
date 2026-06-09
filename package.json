@@ -46,6 +46,7 @@
   },
   "scripts": {
     "mmgn": "bun src/cli/index.ts",
+    "clone": "bash scripts/clone.sh",
     "postinstall": "prisma generate --schema=./prisma/schema.prisma",
     "predev": "kill -9 $(lsof -ti tcp:3000) || true",
     "dev": "next dev",

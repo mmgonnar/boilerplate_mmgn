@@ -74,10 +74,11 @@ bun run dev
 
 | Command                | Description                                                 |
 | ---------------------- | ----------------------------------------------------------- |
-| `bunx mmgn@latest app` | Scaffold a new project                                      |
+| `bunx mmgn@latest app` | Scaffold a new project (sanitized)                          |
 | `bunx mmgn env`        | Copy `.env` from boilerplate to current project (local use) |
 | `bunx mmgn --version`  | Show version                                                |
 | `bunx mmgn --help`     | Show help                                                   |
+| `bun run clone <name>` | Full clone with all files (`.github/`, docs, etc.)          |
 
 ## Environment Variables
 
@@ -247,12 +248,21 @@ Middleware: request → intlMiddleware → supabase.getUser()
                     → auth route? has user? → redirect /dashboard
 ```
 
+### OAuth Providers
+
+Google and GitHub sign-in buttons are handled by a shared `OAuthProviders` component:
+
+- **Responsive layout**: icon only (desktop), icon + text (mobile)
+- **Contextual text**: button copy adapts per mode (`Sign in with Google` vs `Sign up with Google`)
+- **Toast feedback**: loading/success/error messages via `apiCallToast`
+- **Shared logic**: single component used in both `LoginForm` and `RegisterForm`
+
 ### Forms
 
 All auth forms use react-hook-form + zod for validation:
 
-- `LoginForm` — email + password
-- `RegisterForm` — email + password + confirmation
+- `LoginForm` — email + password + OAuth
+- `RegisterForm` — email + password + confirmation + OAuth
 - `ForgotPasswordForm` — email
 - `ResetPasswordForm` — new password + confirmation
 
@@ -331,10 +341,11 @@ Colors are defined as HSL variables in `app/globals.css`:
 
 | Command                | Description                                                |
 | ---------------------- | ---------------------------------------------------------- |
-| `bun run dev`          | Start dev server (auto-kills port 3000 first via `predev`) |
+| `bun run dev`          | Start dev server (auto-kills port 3000 via `predev`)       |
 | `bun run build`        | Production build                                           |
 | `bun run start`        | Production server                                          |
 | `bun run lint`         | ESLint                                                     |
+| `bun run clone <name>` | Full clone (`.github/`, docs, everything)                  |
 | `bunx prisma generate` | Regenerate Prisma client after schema changes              |
 | `bunx prisma db push`  | Push schema to database                                    |
 
@@ -359,6 +370,29 @@ Set environment variables in Vercel dashboard:
 
 > Prisma migrations must be run manually or via a migration script. `prisma db push` is not run during build.
 
+## Keep Database Alive (Supabase Free Tier)
+
+Supabase free tier **hibernates** databases after 7 days of inactivity. A GitHub Actions workflow pings the database daily to prevent this.
+
+### How it works
+
+```
+GitHub Actions (daily 06:00 UTC) → curl → Supabase REST API (profiles table)
+```
+
+### Setup
+
+1. Add these **secrets** in your repo: Settings → Secrets and variables → Actions:
+
+   | Secret              | Value                                                 |
+   | ------------------- | ----------------------------------------------------- |
+   | `SUPABASE_URL`      | Your `NEXT_PUBLIC_SUPABASE_URL`                       |
+   | `SUPABASE_ANON_KEY` | Your `NEXT_PUBLIC_SUPABASE_ANON_KEY`                  |
+
+2. Trigger manually: Actions → "Supabase Keep Alive" → "Run workflow"
+
+> **Note**: The workflow is available only in the boilerplate repository. It is **excluded** from scaffolded projects by the CLI's `filterFunc`.
+
 ## Known Gotchas
 
 | Issue                                       | Cause                                                                       | Workaround / Fix                                                                                                                                                            |
@@ -380,6 +414,7 @@ Set environment variables in Vercel dashboard:
 - [ ] Table with sorting
 - [ ] Error pages (404, 500)
 - [x] User profile page
+- [x] OAuth (Google, GitHub sign-in)
 - [ ] Test framework (Vitest/Jest + Playwright)
 
 ## Noteworthy

@@ -9,14 +9,14 @@ import { apiCallToast } from '@/lib/utils';
 import { type Provider } from '@supabase/supabase-js';
 
 import { signInWithOAuth } from '../services/oauth-service';
-import { AppleIcon, GithubIcon, GoogleIcon } from './auth-icons';
+import { GithubIcon, GoogleIcon } from './auth-icons';
 
 const OAUTH_ICONS = {
   google: GoogleIcon,
   github: GithubIcon,
-  apple: AppleIcon,
+  //   apple: AppleIcon,
 };
-const OAUTH_PROVIDERS = ['google', 'github', 'apple'] as const;
+const OAUTH_PROVIDERS = ['google', 'github'] as const;
 
 type OAuthProvidersProps = {
   mode: 'login' | 'register';
