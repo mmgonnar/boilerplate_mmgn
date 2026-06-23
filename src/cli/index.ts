@@ -7,6 +7,7 @@ import * as pc from 'picocolors';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+const projectRoot = path.resolve(__dirname, '../..');
 
 async function showHelp() {
   console.log(`
@@ -31,11 +32,11 @@ async function main() {
   switch (command) {
     case 'app':
       const { runApp } = await import('./commands/app');
-      await runApp();
+      await runApp(projectRoot);
       break;
     case 'env':
       const { runEnv } = await import('./commands/env');
-      await runEnv();
+      await runEnv(projectRoot);
       break;
     case '--help':
     case '-h':

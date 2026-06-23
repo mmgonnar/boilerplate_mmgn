@@ -10,12 +10,6 @@ import {
 import * as fs from 'fs-extra';
 import * as path from 'path';
 import * as pc from 'picocolors';
-import { fileURLToPath } from 'url';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-const templateDir = path.resolve(__dirname, '../../..');
 
 const LANDING_DELETIONS = [
   'features/profile',
@@ -100,9 +94,9 @@ export default getRequestConfig(async ({ requestLocale }) => {
 });
 `;
 
-export async function runApp() {
+export async function runApp(templateDir: string) {
   const pkg = await fs.readJson(
-    path.resolve(__dirname, '../../../package.json'),
+    path.resolve(templateDir, 'package.json'),
   );
   intro(
     pc.bgBlack(

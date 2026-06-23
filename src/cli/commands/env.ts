@@ -1,14 +1,8 @@
 import * as fs from 'fs-extra';
 import * as path from 'path';
 import * as pc from 'picocolors';
-import { fileURLToPath } from 'url';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-const templateDir = path.resolve(__dirname, '../../..');
-
-export async function runEnv() {
+export async function runEnv(templateDir: string) {
   const envSource = path.join(templateDir, '.env');
   const envTarget = path.join(process.cwd(), '.env');
 

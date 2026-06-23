@@ -5,8 +5,7 @@ import { useForm } from 'react-hook-form';
 
 import { useTranslations } from 'next-intl';
 
-import { Button, Input } from '@/components/ui';
-import { Form, FormField } from '@/components/ui/form';
+import { Button, Form, FormField, Input } from '@/components/ui';
 import { useRouter } from '@/i18n/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { apiCallToast } from '@/lib/utils';

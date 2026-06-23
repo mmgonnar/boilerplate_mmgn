@@ -15,7 +15,7 @@ const eslintConfig = defineConfig([
   ...compat.extends('next/core-web-vitals', 'next/typescript'),
 
   // Global project ignores
-  globalIgnores(['.next/**', 'out/**', 'build/**', 'next-env.d.ts']),
+  globalIgnores(['.next/**', 'out/**', 'build/**', 'dist/**', 'landing_test/**', 'test_landing/**', 'next-env.d.ts']),
 
   // 📦 1. Global Architecture Guardrails (Strict Barrel Exports)
   {

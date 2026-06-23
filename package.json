@@ -23,6 +23,7 @@
     "prisma"
   ],
   "files": [
+    "dist/cli/",
     "src/cli/",
     "app/",
     "features/",
@@ -42,7 +43,7 @@
     "supabase_setup.sql"
   ],
   "bin": {
-    "mmgn": "./src/cli/index.ts"
+    "mmgn": "./dist/cli/index.js"
   },
   "scripts": {
     "mmgn": "bun src/cli/index.ts",
@@ -50,7 +51,8 @@
     "postinstall": "prisma generate --schema=./prisma/schema.prisma",
     "predev": "kill -9 $(lsof -ti tcp:3000) || true",
     "dev": "next dev",
-    "build": "prisma generate --schema=./prisma/schema.prisma && next build",
+    "build": "bun run build:cli && prisma generate --schema=./prisma/schema.prisma && next build",
+    "build:cli": "bun build ./src/cli/index.ts --outdir ./dist/cli --target node --format esm",
     "start": "next start",
     "lint": "eslint",
     "db:generate": "prisma generate",
@@ -63,17 +65,16 @@
     "@prisma/client": "^7.8.0",
     "@supabase/ssr": "^0.10.3",
     "@supabase/supabase-js": "^2.105.4",
-    "@types/fs-extra": "^11.0.4",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "fs-extra": "^11.3.5",
-    "install": "^0.13.0",
     "lucide-react": "^1.8.0",
     "next": "15",
     "next-intl": "3.26.5",
     "next-themes": "^0.4.6",
     "pg": "^8.20.0",
     "picocolors": "^1.1.1",
+    "prisma": "^7.8.0",
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "react-hook-form": "^7.73.1",
@@ -84,6 +85,7 @@
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
     "@trivago/prettier-plugin-sort-imports": "^6.0.2",
+    "@types/fs-extra": "^11.0.4",
     "@types/node": "^20",
     "@types/pg": "^8.20.0",
     "@types/react": "^19",
@@ -92,7 +94,6 @@
     "eslint": "^9",
     "eslint-config-next": "15",
     "prettier-plugin-tailwindcss": "^0.7.2",
-    "prisma": "^7.8.0",
     "tailwindcss": "^4",
     "typescript": "^5"
   },
