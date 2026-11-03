@@ -25,10 +25,10 @@ const LANDING_DELETIONS = [
   'supabase_setup.sql',
 ];
 
-const LANDING_NAV_CONFIG = `interface FooterColumnType {
+const LANDING_NAV_CONFIG = `type FooterColumnType = {
   title: string;
   links: { label: string; href: string }[];
-}
+};
 
 export const APP_MODE = {
   variant: 'landing',
@@ -69,7 +69,8 @@ export const FOOTER_LINKS: FooterColumnType[] = [
 ];
 `;
 
-const LANDING_I18N_REQUEST = `import { getRequestConfig } from 'next-intl/server';
+const LANDING_I18N_REQUEST = `import type { AbstractIntlMessages } from 'next-intl';
+import { getRequestConfig } from 'next-intl/server';
 
 import commonEn from '@/messages/en.json';
 import commonEs from '@/messages/es.json';
@@ -78,7 +79,7 @@ import navigationEs from '@/features/navigation/messages/es.json';
 
 import { routing } from './routing';
 
-const messages: Record<string, Record<string, any>> = {
+const messages: Record<string, AbstractIntlMessages> = {
   en: { ...commonEn, ...navigationEn },
   es: { ...commonEs, ...navigationEs },
 };
