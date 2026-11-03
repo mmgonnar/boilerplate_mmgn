@@ -34,6 +34,7 @@
     "i18n/",
     "prisma/",
     ".env.example",
+    "gitignore",
     "middleware.ts",
     "next.config.ts",
     "tsconfig.json",

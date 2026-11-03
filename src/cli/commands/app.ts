@@ -178,6 +178,15 @@ export async function runApp(templateDir: string) {
       path.join(targetDir, '.env'),
     );
 
+    // npm strips .gitignore from published tarballs, so the template ships
+    // as "gitignore" and gets its dot back here.
+    const gitignoreTemplate = path.join(targetDir, 'gitignore');
+    if (await fs.pathExists(gitignoreTemplate)) {
+      await fs.move(gitignoreTemplate, path.join(targetDir, '.gitignore'), {
+        overwrite: true,
+      });
+    }
+
     if (variant === 'landing') {
       s.message('Cleaning template (Landing Page Only)...');
 
