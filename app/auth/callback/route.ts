@@ -13,12 +13,20 @@ export async function GET(request: Request) {
   const type = searchParams.get('type');
   const defaultRedirect =
     type === 'recovery' ? '/auth/reset-password' : '/dashboard';
-  const next = searchParams.get('next') ?? defaultRedirect;
+
+  // Only allow same-origin paths: "/..." but not "//host" (open redirect).
+  const requestedNext = searchParams.get('next');
+  const next =
+    requestedNext &&
+    requestedNext.startsWith('/') &&
+    !requestedNext.startsWith('//')
+      ? requestedNext
+      : defaultRedirect;
 
   if (error) {
     console.error('Auth callback error:', error, errorDescription);
     return NextResponse.redirect(
-      `${origin}/login?error=${error}&description=${errorDescription}`,
+      `${origin}/login?error=${encodeURIComponent(error)}&description=${encodeURIComponent(errorDescription ?? '')}`,
     );
   }
 

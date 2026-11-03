@@ -12,5 +12,11 @@ type LoginPageProps = {
 export default async function LoginPage({ searchParams }: LoginPageProps) {
   const { redirect } = await searchParams;
 
-  return <LoginForm redirectTo={redirect || '/dashboard'} />;
+  // Only allow same-origin paths: "/..." but not "//host" (open redirect).
+  const safeRedirect =
+    redirect && redirect.startsWith('/') && !redirect.startsWith('//')
+      ? redirect
+      : '/dashboard';
+
+  return <LoginForm redirectTo={safeRedirect} />;
 }
