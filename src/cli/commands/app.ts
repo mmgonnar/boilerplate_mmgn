@@ -152,6 +152,9 @@ export async function runApp(templateDir: string) {
       const basename = path.basename(src);
 
       if (src.startsWith(targetDir)) return false;
+      // CLI sources and build output belong to the npm package, not to apps.
+      if (src === path.join(templateDir, 'src')) return false;
+      if (src === path.join(templateDir, 'dist')) return false;
       if (basename === 'node_modules') return false;
       if (basename === '.git') return false;
       if (basename === '.next') return false;
@@ -237,6 +240,38 @@ export async function runApp(templateDir: string) {
         pkg.name = projectName;
         await fs.writeJson(pkgPath, pkg, { spaces: 2 });
       }
+    }
+
+    // The generated app is a project, not a publishable copy of this CLI:
+    // drop the npm packaging fields and the CLI's own scripts.
+    const pkgPath = path.join(targetDir, 'package.json');
+    if (await fs.pathExists(pkgPath)) {
+      const pkg = await fs.readJson(pkgPath);
+
+      pkg.private = true;
+      pkg.version = '0.1.0';
+      delete pkg.bin;
+      delete pkg.files;
+      delete pkg.repository;
+      delete pkg.bugs;
+      delete pkg.homepage;
+      delete pkg.keywords;
+
+      if (pkg.scripts) {
+        delete pkg.scripts['build:cli'];
+        delete pkg.scripts['clone'];
+        delete pkg.scripts['predev'];
+        delete pkg.scripts['prepublishOnly'];
+        delete pkg.scripts['mmgn'];
+        if (typeof pkg.scripts['build'] === 'string') {
+          pkg.scripts['build'] = pkg.scripts['build'].replace(
+            /^bun run build:cli && /,
+            '',
+          );
+        }
+      }
+
+      await fs.writeJson(pkgPath, pkg, { spaces: 2 });
     }
 
     s.stop('Project configured successfully!');
