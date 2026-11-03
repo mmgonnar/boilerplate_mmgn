@@ -14,9 +14,12 @@ import * as pc from 'picocolors';
 const LANDING_DELETIONS = [
   'features/profile',
   'features/auth',
-  'features/(items)',
+  'features/feature-demo',
+  'features/dashboard',
   'app/[locale]/(auth)',
   'app/[locale]/(dashboard)',
+  'app/auth',
+  'lib/prisma.ts',
   'prisma',
   'prisma.config.ts',
   'supabase_setup.sql',
@@ -188,12 +191,22 @@ export async function runApp(templateDir: string) {
 
         pkg.name = projectName;
 
-        if (pkg.dependencies) delete pkg.dependencies['@prisma/client'];
-        if (pkg.devDependencies) delete pkg.devDependencies['prisma'];
+        if (pkg.dependencies) {
+          delete pkg.dependencies['@prisma/client'];
+          delete pkg.dependencies['@prisma/adapter-pg'];
+          delete pkg.dependencies['pg'];
+          delete pkg.dependencies['prisma'];
+        }
+        if (pkg.devDependencies) {
+          delete pkg.devDependencies['prisma'];
+          delete pkg.devDependencies['@types/pg'];
+        }
         if (pkg.scripts) {
           delete pkg.scripts['postinstall'];
           delete pkg.scripts['db:generate'];
           delete pkg.scripts['db:push'];
+          // The dashboard build runs prisma generate first; landing has no Prisma.
+          pkg.scripts['build'] = 'next build';
         }
 
         await fs.writeJson(pkgPath, pkg, { spaces: 2 });
