@@ -111,6 +111,22 @@ function isVariant(value: string): value is Variant {
   return (VARIANTS as readonly string[]).includes(value);
 }
 
+// The name becomes the "name" field of the generated package.json, so it has
+// to satisfy npm: lowercase, no spaces, no leading dot or underscore.
+const NPM_NAME_PATTERN = /^[a-z0-9][a-z0-9._-]*$/;
+
+function describeNameProblem(value: string): string | undefined {
+  if (value.length === 0) return 'Project name is required';
+  if (value.length > 214) {
+    return 'Project name must be 214 characters or fewer';
+  }
+  if (!NPM_NAME_PATTERN.test(value)) {
+    return 'Project name must be a valid npm package name: lowercase letters, digits, dots, hyphens and underscores, starting with a letter or a digit';
+  }
+
+  return undefined;
+}
+
 export async function runApp(templateDir: string, flags: AppFlags = {}) {
   // Checked before the intro so a bad flag fails plainly, with no half-drawn prompt.
   if (flags.variant !== undefined && !isVariant(flags.variant)) {
@@ -134,13 +150,21 @@ export async function runApp(templateDir: string, flags: AppFlags = {}) {
   let projectName: string;
 
   if (flags.name !== undefined) {
-    projectName = flags.name;
+    projectName = flags.name.trim();
+    const problem = describeNameProblem(projectName);
+
+    if (problem) {
+      // Flag mode has nobody to re-ask, so a bad --name is fatal.
+      console.error(pc.red(`Invalid --name "${flags.name}". ${problem}.`));
+      process.exit(1);
+    }
   } else {
     const answer = await text({
       message: 'What will your new project be called?',
       placeholder: 'my-awesome-app',
       validate(value) {
-        if (value.trim().length === 0) return 'Project name is required';
+        // Returning a string keeps the prompt open and shows the reason.
+        return describeNameProblem(value.trim());
       },
     });
 
@@ -149,7 +173,7 @@ export async function runApp(templateDir: string, flags: AppFlags = {}) {
       process.exit(0);
     }
 
-    projectName = answer as string;
+    projectName = (answer as string).trim();
   }
 
   let variant: Variant;
@@ -181,10 +205,24 @@ export async function runApp(templateDir: string, flags: AppFlags = {}) {
     variant = answer as Variant;
   }
 
+  const targetDir = path.join(process.cwd(), projectName);
+
+  // Refuse before the first write, so a second run cannot half-overwrite a project.
+  if (await fs.pathExists(targetDir)) {
+    const existingEntries = await fs.readdir(targetDir);
+
+    if (existingEntries.length > 0) {
+      console.error(
+        pc.red(
+          `Target directory "${projectName}" already exists and is not empty. Nothing was changed.`,
+        ),
+      );
+      process.exit(1);
+    }
+  }
+
   const s = spinner();
   s.start('Cloning and configuring your boilerplate...');
-
-  const targetDir = path.join(process.cwd(), projectName as string);
 
   try {
     const filterFunc = (src: string, _dest: string) => {
