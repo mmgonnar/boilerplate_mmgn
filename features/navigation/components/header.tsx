@@ -15,7 +15,7 @@ import { LogOut, Menu, X } from 'lucide-react';
 import { NavLink } from '../types/types';
 import { NAV_CONFIG } from '../utils/config';
 
-// ─── Interfaces de Props (Estandarizadas con Type) ───────────────────────────
+// ─── Props interfaces (standardised with type) ───────────────────────────────
 type HeaderProps = {
   isAuthenticated?: boolean;
   customActions?: React.ReactNode;
@@ -42,7 +42,7 @@ type HeaderDashboardProps = {
   isLoggingOut: boolean;
 };
 
-// ─── Subcomponentes Compartidos ───────────────────────────────────────────────
+// ─── Shared subcomponents ────────────────────────────────────────────────────
 function NavLinks({ links, pathname, t, mobile = false }: NavLinksProps) {
   return (
     <>
@@ -224,6 +224,8 @@ export function HeaderDashboard({
   onLogout,
   isLoggingOut,
 }: HeaderDashboardProps) {
+  const t = useTranslations('nav');
+
   return (
     <header className="flex justify-between items-center p-4 border-b border-border bg-card">
       <div className="flex flex-col">
@@ -253,7 +255,7 @@ export function HeaderDashboard({
           leftIcon={<LogOut className="h-4 w-4" />}
         >
           <span className="hidden sm:inline">
-            {isLoggingOut ? 'Leaving...' : 'Logout'}
+            {isLoggingOut ? t('logging_out') : t('logout')}
           </span>
         </Button>
       </div>

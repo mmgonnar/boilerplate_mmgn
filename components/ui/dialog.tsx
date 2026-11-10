@@ -8,7 +8,7 @@ import { X } from 'lucide-react';
 
 import { Button } from './button';
 
-// ─── Types ────────────────────────────────────────────────────────────────────
+// ─── Types ───────────────────────────────────────────────────────────────────
 export type DialogProps = {
   isOpen: boolean;
   onClose: () => void;
@@ -19,7 +19,7 @@ export type DialogProps = {
   className?: string;
 }
 
-// ─── Tamaños ──────────────────────────────────────────────────────────────────
+// ─── Sizes ───────────────────────────────────────────────────────────────────
 const sizeMap = {
   sm: 'max-w-sm',
   default: 'max-w-lg',
@@ -28,7 +28,7 @@ const sizeMap = {
 };
 
 // ─── Hook: focus trap ─────────────────────────────────────────────────────────
-// Atrapa el foco dentro del modal mientras está abierto
+// Traps focus inside the modal while it is open
 function useFocusTrap(
   ref: React.RefObject<HTMLElement | null>,
   isOpen: boolean,
@@ -38,7 +38,7 @@ function useFocusTrap(
 
     const container = ref.current;
 
-    // Elementos focusables dentro del modal
+    // Focusable elements inside the modal
     const focusableSelectors = [
       'a[href]',
       'button:not([disabled])',
@@ -60,7 +60,7 @@ function useFocusTrap(
       const first = focusable[0];
       const last = focusable[focusable.length - 1];
 
-      // ✅ Cicla el foco: shift+tab en el primero va al último y viceversa
+      // ✅ Cycles focus: shift+tab on the first goes to the last and back
       if (e.shiftKey) {
         if (document.activeElement === first) {
           e.preventDefault();
@@ -84,7 +84,7 @@ function useFocusTrap(
   }, [isOpen, ref]);
 }
 
-// ─── Componente ───────────────────────────────────────────────────────────────
+// ─── Component ───────────────────────────────────────────────────────────────
 export function Dialog({
   isOpen,
   onClose,
@@ -95,29 +95,29 @@ export function Dialog({
   className,
 }: DialogProps) {
   const [mounted, setMounted] = React.useState(false);
-  const [visible, setVisible] = React.useState(false); // ✅ controla animación
+  const [visible, setVisible] = React.useState(false); // ✅ drives the animation
   const dialogRef = React.useRef<HTMLDivElement>(null);
   const triggerRef = React.useRef<HTMLElement | null>(null);
 
-  // ── Montar solo en cliente ─────────────────────────────────────────────────
+  // ── Mount on the client only ───────────────────────────────────────────────
   React.useEffect(() => setMounted(true), []);
 
-  // ── Animación de entrada/salida ────────────────────────────────────────────
+  // ── Enter and exit animation ───────────────────────────────────────────────
   React.useEffect(() => {
     if (isOpen) {
-      // Guarda el elemento que tenía el foco antes de abrir
+      // Remember which element had focus before opening
       triggerRef.current = document.activeElement as HTMLElement;
-      // Pequeño delay para que la animación CSS funcione correctamente
+      // Small delay so the CSS animation runs properly
       requestAnimationFrame(() => setVisible(true));
       document.body.style.overflow = 'hidden';
     } else {
       setVisible(false);
-      // Regresa el foco al elemento que abrió el modal
+      // Return focus to the element that opened the modal
       triggerRef.current?.focus();
     }
 
     return () => {
-      // ✅ Cleanup seguro — siempre restaura el overflow
+      // ✅ Safe cleanup, always restores the overflow
       document.body.style.overflow = '';
     };
   }, [isOpen]);
@@ -144,7 +144,7 @@ export function Dialog({
       role="presentation"
       className={cn(
         'fixed inset-0 z-50 flex items-center justify-center p-4',
-        // ✅ pointer-events-none cuando está oculto para no bloquear clicks
+        // ✅ pointer-events-none while hidden so it does not swallow clicks
         !isOpen && 'pointer-events-none',
       )}
     >
@@ -163,7 +163,7 @@ export function Dialog({
       <div
         ref={dialogRef}
         role="dialog"
-        aria-modal="true" // ✅ screen readers saben que el resto está inerte
+        aria-modal="true" // ✅ tells screen readers the rest is inert
         aria-labelledby={title ? 'dialog-title' : undefined}
         aria-describedby={description ? 'dialog-description' : undefined}
         className={cn(
@@ -177,7 +177,7 @@ export function Dialog({
           className,
         )}
       >
-        {/* Botón cerrar — usa tu Button del design system */}
+        {/* Close button, uses the design system Button */}
         <Button
           variant="ghost"
           size="icon"

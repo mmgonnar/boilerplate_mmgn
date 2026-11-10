@@ -3,7 +3,7 @@ import { createClient } from '@/lib/supabase/client';
 export async function getItems() {
   const supabase = createClient();
 
-  // Trae los datos ordenados del más reciente al más viejo
+  // Returns the rows ordered newest first
   const { data, error } = await supabase
     .from('items')
     .select('*')

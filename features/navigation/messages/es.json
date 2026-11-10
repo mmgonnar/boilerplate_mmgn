@@ -23,6 +23,8 @@
     "copyright": "Todos los derechos reservados.",
     "made_by": "Hecho por",
     "locale_es": "Español",
-    "locale_en": "English"
+    "locale_en": "English",
+    "logout": "Cerrar sesión",
+    "logging_out": "Saliendo..."
   }
 }

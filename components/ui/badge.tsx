@@ -3,7 +3,7 @@ import * as React from 'react';
 import { cn } from '@/lib/utils';
 import { type VariantProps, cva } from 'class-variance-authority';
 
-// ─── Variantes ────────────────────────────────────────────────────────────────
+// ─── Variants ────────────────────────────────────────────────────────────────
 const badgeVariants = cva(
   [
     'inline-flex items-center gap-1.5',
@@ -38,14 +38,14 @@ const badgeVariants = cva(
   },
 );
 
-// ─── Types ────────────────────────────────────────────────────────────────────
+// ─── Types ───────────────────────────────────────────────────────────────────
 export type BadgeProps = {
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
-  dot?: boolean; // ✅ indicador de estado tipo •
+  dot?: boolean; // ✅ small status dot indicator
 } & React.HTMLAttributes<HTMLSpanElement> & VariantProps<typeof badgeVariants>
 
-// ─── Componente ───────────────────────────────────────────────────────────────
+// ─── Component ───────────────────────────────────────────────────────────────
 function Badge({
   className,
   variant,
@@ -66,7 +66,7 @@ function Badge({
         <span
           className={cn(
             'h-1.5 w-1.5 rounded-full shrink-0',
-            // hereda el color del texto del badge
+            // inherits the badge text color
             'bg-current',
           )}
           aria-hidden="true"

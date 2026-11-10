@@ -32,7 +32,7 @@ export function AvatarUpload({
     const file = event.target.files?.[0];
     if (!file) return;
 
-    // ── Validaciones básicas de cliente ────────────────────────────────────────
+    // ── Basic client-side validation ─────────────────────────────────────────
     if (!file.type.startsWith('image/')) {
       toast.error(
         'Por favor, selecciona un archivo de imagen válido (JPEG, PNG, WEBP).',
@@ -55,7 +55,7 @@ export function AvatarUpload({
 
   return (
     <div className="flex flex-col items-center gap-3">
-      {/* Contenedor del Avatar Interactivo */}
+      {/* Interactive avatar container */}
       <div
         onClick={handleContainerClick}
         className={cn(

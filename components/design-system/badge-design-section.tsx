@@ -12,7 +12,7 @@ export function BadgeDesignSection() {
       </header>
 
       <div className="space-y-6">
-        {/* Variantes por Propósito */}
+        {/* Variants by purpose */}
         <div className="space-y-3">
           <p className="text-xs text-muted-foreground font-medium">
             Variantes Semánticas
@@ -34,7 +34,7 @@ export function BadgeDesignSection() {
           </div>
         </div>
 
-        {/* Tamaños y Composición */}
+        {/* Sizes and composition */}
         <div className="space-y-3">
           <p className="text-xs text-muted-foreground font-medium">
             Tamaños e Iconos
@@ -60,17 +60,17 @@ export function BadgeDesignSection() {
           </div>
         </div>
 
-        {/* Casos de Uso Reales */}
+        {/* Real use cases */}
         <div className="space-y-3">
           <p className="text-xs text-muted-foreground font-medium">
             Ejemplos de Aplicación
           </p>
           <div className="flex flex-wrap gap-3 p-4 border border-border rounded-xl bg-card/20">
-            {/* Para ClassAid: Niveles */}
+            {/* Levels */}
             <Badge variant="default" className="rounded-md font-bold">
               Nivel A1
             </Badge>
-            {/* Para NEKTAR: Stock */}
+            {/* Stock */}
             <Badge
               variant="success"
               dot
@@ -78,7 +78,7 @@ export function BadgeDesignSection() {
             >
               In Stock
             </Badge>
-            {/* Para Dashboard: Performance */}
+            {/* Performance */}
             <Badge
               variant="warning"
               leftIcon={<Zap size={12} className="fill-current" />}

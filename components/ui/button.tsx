@@ -7,7 +7,7 @@ import { cn, isExternalHref } from '@/lib/utils';
 import { type VariantProps, cva } from 'class-variance-authority';
 import { Loader2 } from 'lucide-react';
 
-// ─── Variantes ────────────────────────────────────────────────────────────────
+// ─── Variants ────────────────────────────────────────────────────────────────
 const buttonVariants = cva(
   [
     'inline-flex items-center justify-center gap-2',
@@ -48,7 +48,7 @@ const buttonVariants = cva(
   },
 );
 
-// ─── Types ────────────────────────────────────────────────────────────────────
+// ─── Types ───────────────────────────────────────────────────────────────────
 type ButtonVariant = VariantProps<typeof buttonVariants>;
 
 type BaseButtonProps = {
@@ -70,7 +70,7 @@ type LinkOnlyProps = BaseButtonProps &
 
 export type ButtonProps = ButtonOnlyProps | LinkOnlyProps;
 
-// ─── Componente ────────────────────────────────────────────────────────────────
+// ─── Component ───────────────────────────────────────────────────────────────
 function Button(
   props: ButtonProps & { ref?: React.Ref<HTMLButtonElement | HTMLAnchorElement> },
 ) {

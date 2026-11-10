@@ -32,7 +32,7 @@ export function UpdateAvatar() {
         Perfil de Usuario
       </h2>
 
-      {/* ── Render del componente ────────────────────────────────────────────── */}
+      {/* ── Component render ────────────────────────────────────────────── */}
       <AvatarUpload
         src={avatarUrl}
         fallbackText="Mariela Gonzalez"

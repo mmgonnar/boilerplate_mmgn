@@ -18,12 +18,12 @@ const profileSchema = z.object({
 
 type ProfileFormValues = z.infer<typeof profileSchema>;
 
-// ─── Interfaces de Props ──────────────────────────────────────────────────────
+// ─── Props interfaces ────────────────────────────────────────────────────────
 type ProfileFormExampleProps = {
   onSuccess?: () => void;
 };
 
-// ─── Configuración de campos ──────────────────────────────────────────────────
+// ─── Field configuration ─────────────────────────────────────────────────────
 type FieldConfig = {
   name: keyof ProfileFormValues;
   label: string;
@@ -63,7 +63,7 @@ const PROFILE_FIELDS: FieldConfig[] = [
   },
 ];
 
-// ─── Componente ───────────────────────────────────────────────────────────────
+// ─── Component ───────────────────────────────────────────────────────────────
 export function ProfileFormExample({ onSuccess }: ProfileFormExampleProps) {
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileSchema),

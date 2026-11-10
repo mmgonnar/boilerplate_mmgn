@@ -36,9 +36,9 @@ export function Sidebar({ userEmail, userSrc }: SidebarProps) {
     setIsLoggingOut(true);
 
     apiCallToast(signOut(), {
-      loading: 'Cerrando sesión...',
-      successMessage: 'Sesión cerrada correctamente',
-      errorMessage: 'No se pudo cerrar la sesión. Inténtalo de nuevo.',
+      loading: t('logout.loading'),
+      successMessage: t('logout.success'),
+      errorMessage: t('logout.error'),
       redirectTo: '/login',
       router: router,
     }).finally(() => {
@@ -59,7 +59,7 @@ export function Sidebar({ userEmail, userSrc }: SidebarProps) {
         <span className="text-sm truncate">{userEmail || user.email}</span>
       </div>
 
-      <div className="flex-1 mt-6">{/* nav del dashboard aqui*/}</div>
+      <div className="flex-1 mt-6">{/* dashboard nav goes here */}</div>
 
       <div className="flex flex-col gap-1">
         <Button

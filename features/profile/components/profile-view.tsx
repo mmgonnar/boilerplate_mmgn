@@ -3,13 +3,20 @@
 import * as React from 'react';
 import toast from 'react-hot-toast';
 
+import { useTranslations } from 'next-intl';
+
 import { AvatarUpload } from '@/components/ui';
 import { useAuth } from '@/providers/auth-provider';
 
-import { updateAvatarMetadata, uploadAvatar } from '../services';
+import {
+  isAvatarErrorKey,
+  updateAvatarMetadata,
+  uploadAvatar,
+} from '../services';
 
 export function ProfileView() {
   const { user } = useAuth();
+  const t = useTranslations();
   const [isUploading, setIsUploading] = React.useState(false);
 
   const currentAvatarUrl = user?.user_metadata?.avatar_url || null;
@@ -35,8 +42,9 @@ export function ProfileView() {
       });
     } catch (error) {
       console.error(error);
-      const message =
-        error instanceof Error
+      const message = isAvatarErrorKey(error)
+        ? t(error.message)
+        : error instanceof Error
           ? error.message
           : 'No se pudo actualizar la imagen de perfil.';
       toast.error(message, { id: toastId });
@@ -47,7 +55,7 @@ export function ProfileView() {
 
   return (
     <div className="w-full max-w-xl mx-auto space-y-6">
-      {/* Encabezado de la Sección */}
+      {/* Section header */}
       <div className="flex flex-col border-b border-border pb-4">
         <h2 className="text-xl font-bold font-mono uppercase tracking-wide text-foreground">
           Ajustes de Cuenta
@@ -58,7 +66,7 @@ export function ProfileView() {
         </p>
       </div>
 
-      {/* Tarjeta de Gestión de Avatar */}
+      {/* Avatar management card */}
       <div className="rounded-md border border-border bg-card p-6 shadow-sm flex flex-col items-center md:items-start md:flex-row gap-6">
         <div className="shrink-0">
           <AvatarUpload

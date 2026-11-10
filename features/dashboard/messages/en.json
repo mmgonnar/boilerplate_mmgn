@@ -3,10 +3,12 @@
     "profile": "Profile",
     "settings": "Settings",
     "title": "Dashboard",
-
     "logout": {
       "sign_out": "Sign out",
-      "signing_out": "Signing out..."
+      "signing_out": "Signing out...",
+      "loading": "Signing out...",
+      "success": "Signed out successfully",
+      "error": "Could not sign out. Please try again."
     },
     "sidebar": {
       "profile": "Profile"

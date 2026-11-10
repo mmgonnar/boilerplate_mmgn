@@ -5,6 +5,9 @@
     "loading": "Cargando...",
     "back": "Regresar",
     "site_title": "Boilerplate",
-    "site_description": "Boilerplate listo para producción para impulsar tus proyectos."
+    "site_description": "Boilerplate listo para producción para impulsar tus proyectos.",
+    "theme_light": "Cambiar a modo claro",
+    "theme_dark": "Cambiar a modo oscuro",
+    "theme_toggle": "Cambiar tema"
   }
 }

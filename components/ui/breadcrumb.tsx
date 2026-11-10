@@ -5,20 +5,20 @@ import { Link } from '@/i18n/navigation';
 import { cn } from '@/lib/utils';
 import { ChevronRight, MoreHorizontal } from 'lucide-react';
 
-// ─── Types ────────────────────────────────────────────────────────────────────
+// ─── Types ───────────────────────────────────────────────────────────────────
 export type BreadcrumbItem = {
   label: string;
-  href?: string; // si no tiene href, se renderiza como texto (item activo)
+  href?: string; // without an href it renders as text (the active item)
   icon?: React.ReactNode;
 }
 
 export type BreadcrumbProps = {
   items: BreadcrumbItem[];
   separator?: React.ReactNode; // separador custom
-  maxItems?: number; // ✅ colapsa items intermedios si hay muchos
+  maxItems?: number; // ✅ collapses the middle items when there are many
 } & React.HTMLAttributes<HTMLElement>
 
-// ─── Componente ───────────────────────────────────────────────────────────────
+// ─── Component ───────────────────────────────────────────────────────────────
 function Breadcrumb({
   items,
   separator,
@@ -26,14 +26,14 @@ function Breadcrumb({
   className,
   ...props
 }: BreadcrumbProps) {
-  // ✅ Lógica de colapso — si hay más items que maxItems, oculta los intermedios
+  // ✅ Collapse logic, hides the middle items once there are more than maxItems
   const shouldCollapse = maxItems && items.length > maxItems;
 
   const visibleItems = shouldCollapse
     ? [
-        items[0], // siempre muestra el primero
-        null, // null = placeholder de "..."
-        ...items.slice(items.length - (maxItems - 1)), // muestra los últimos
+        items[0], // always show the first
+        null, // null = the "..." placeholder
+        ...items.slice(items.length - (maxItems - 1)), // show the last ones
       ]
     : items;
 
@@ -50,7 +50,7 @@ function Breadcrumb({
         {visibleItems.map((item, index) => {
           const isLast = index === visibleItems.length - 1;
 
-          // ── Placeholder de colapso ──────────────────────────────────────
+          // ── Collapse placeholder ───────────────────────────────────────────
           if (item === null) {
             return (
               <React.Fragment key="collapsed">
@@ -72,7 +72,7 @@ function Breadcrumb({
           return (
             <React.Fragment key={`${item.label}-${index}`}>
               <li className="flex items-center gap-1">
-                {/* Item activo — último de la lista, no es link */}
+                {/* Active item, last in the list, not a link */}
                 {isLast ? (
                   <span
                     className={cn(
@@ -83,7 +83,7 @@ function Breadcrumb({
                     {item.icon && <span aria-hidden="true">{item.icon}</span>}
                     {item.label}
                   </span>
-                ) : // Item navegable — tiene href
+                ) : // Navigable item, it has an href
                 item.href ? (
                   <Link
                     href={item.href}
@@ -99,7 +99,7 @@ function Breadcrumb({
                     {item.label}
                   </Link>
                 ) : (
-                  // Sin href pero tampoco es el último — texto plano
+                  // No href and not the last one either, so plain text
                   <span className="text-sm text-muted-foreground flex items-center gap-1.5">
                     {item.icon && <span aria-hidden="true">{item.icon}</span>}
                     {item.label}
@@ -107,7 +107,7 @@ function Breadcrumb({
                 )}
               </li>
 
-              {/* Separador — no se renderiza después del último item */}
+              {/* Separator, not rendered after the last item */}
               {!isLast && (
                 <li aria-hidden="true" className="flex items-center">
                   {separatorNode}

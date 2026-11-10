@@ -3,7 +3,7 @@ import * as React from 'react';
 import { cn } from '@/lib/utils';
 import { type VariantProps, cva } from 'class-variance-authority';
 
-// ─── Variantes ────────────────────────────────────────────────────────────────
+// ─── Variants ────────────────────────────────────────────────────────────────
 const skeletonVariants = cva('animate-pulse bg-muted rounded-md shrink-0', {
   variants: {
     variant: {
@@ -16,11 +16,11 @@ const skeletonVariants = cva('animate-pulse bg-muted rounded-md shrink-0', {
   },
 });
 
-// ─── Types ────────────────────────────────────────────────────────────────────
+// ─── Types ───────────────────────────────────────────────────────────────────
 type SkeletonProps = {} & React.HTMLAttributes<HTMLDivElement> & VariantProps<typeof skeletonVariants>
 
 // ─── Skeleton base ────────────────────────────────────────────────────────────
-// Bloque genérico — base de todos los demás
+// Generic block, the base for all the others
 function Skeleton({ className, variant, ...props }: SkeletonProps) {
   return (
     <div
@@ -146,7 +146,7 @@ function SkeletonInput({ className, variant }: SkeletonProps) {
 SkeletonInput.displayName = 'SkeletonInput';
 
 // ─── SkeletonCard ─────────────────────────────────────────────────────────────
-// Simula una card completa con header, contenido y footer
+// Mimics a full card with header, body and footer
 type SkeletonCardProps = {
   showFooter?: boolean;
   showImage?: boolean;
@@ -182,7 +182,7 @@ function SkeletonCard({
         />
       )}
 
-      {/* Header — avatar + título */}
+      {/* Header, avatar plus title */}
       <div className="flex items-center gap-3">
         <SkeletonAvatar variant={variant} />
         <div className="flex flex-col gap-2 flex-1">
@@ -246,7 +246,7 @@ function SkeletonTable({
             <Skeleton
               key={colIndex}
               variant={variant}
-              // ✅ anchos variados para verse más natural
+              // ✅ varied widths so it looks more natural
               className={cn('h-4', colIndex === 0 ? 'w-3/4' : 'w-full')}
             />
           ))}
