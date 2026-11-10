@@ -16,7 +16,7 @@ Component Reusability: Analyze my existing UI components (Buttons, Inputs, Cards
 
 Create a comprehensive PROJECT_CONTEXT.md file that serves as the definitive guide for any AI or developer working on this repo. Include:
 
-Technical Stack: Detailed list (Next.js 16, Tailwind CSS 4, next-intl, Supabase, Prisma).
+Technical Stack: Detailed list (Next.js 15, Tailwind CSS 4, next-intl, Supabase, Prisma).
 
 Architecture Overview: Explanation of the folder structure and where specific logic (hooks, services, components, i18n) resides.
 
@@ -40,12 +40,12 @@ STRICT RULE: Always reference PROJECT_CONTEXT.md before making any decisions or 
 
 ### Completed
 
-- ✅ Next.js 16 with App Router
+- ✅ Next.js 15 with App Router
 - ✅ Tailwind CSS 4 with custom theme
 - ✅ Feature-based architecture
 - ✅ UI Components (Button, Input, Card, Badge, etc.)
 - ✅ Dark/Light mode theming
-- ✅ next-intl v4 i18n setup
+- ✅ next-intl 3.26.5 i18n setup
 - ✅ Locale routing (/en/, /es/)
 - ✅ Feature translations (navigation, auth, dashboard)
 

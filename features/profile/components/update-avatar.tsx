@@ -19,7 +19,7 @@ export function UpdateAvatar() {
       await new Promise((resolve) => setTimeout(resolve, 2000));
 
       toast.success('¡Foto de perfil actualizada con éxito! ✨');
-    } catch (error) {
+    } catch {
       toast.error('Hubo un error al subir la imagen.');
     } finally {
       setIsUploading(false);
@@ -37,6 +37,7 @@ export function UpdateAvatar() {
         src={avatarUrl}
         fallbackText="Mariela Gonzalez"
         onFileSelect={handleAvatarChange}
+        isUploading={isUploading}
       />
     </div>
   );

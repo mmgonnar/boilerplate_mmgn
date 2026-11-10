@@ -111,7 +111,7 @@
 │   └── logo.tsx                     # Auto dark/light logo (inline SVG)
 │
 ├── features/                        # Feature-based modules
-│   ├── (items)/                     # Example Supabase CRUD (Removed in Landing mode)
+│   ├── feature-demo/                # Example Supabase CRUD (Removed in Landing mode)
 │   │   └── services/
 │   │       ├── create-item.ts
 │   │       ├── delete-item.ts
@@ -379,7 +379,7 @@ All use react-hook-form + zod + apiCallToast:
 
 ### Example CRUD (Supabase)
 
-`features/(items)/services/` demonstrates Supabase CRUD against `public.items` table with RLS. Run `supabase_setup.sql` to create the table.
+`features/feature-demo/services/` demonstrates Supabase CRUD against `public.items` table with RLS. Run `supabase_setup.sql` to create the table.
 
 ### Auth Callback
 

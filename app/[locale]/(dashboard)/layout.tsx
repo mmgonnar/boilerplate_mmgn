@@ -22,7 +22,7 @@ export default function DashboardLayout({
     if (!isLoading && !user && !isLoggingOut) {
       router.push('/login');
     }
-  }, [user, router, isLoggingOut]);
+  }, [user, router, isLoading, isLoggingOut]);
 
   if (!user) return null;
 

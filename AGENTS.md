@@ -11,11 +11,11 @@ bunx prisma db push   # Push schema to database
 
 ## Key Stack
 
-- Next.js 16.2.2 (App Router) — Turbopack enabled by default
+- Next.js 15.5.x (App Router) — Turbopack enabled by default in dev
 - React 19.2.4
-- TypeScript 5.x strict mode
+- TypeScript 5.x (`strict: false` in tsconfig — enabling it is pending)
 - Tailwind CSS v4 (no tailwind.config.js — configured via globals.css @theme)
-- next-intl 3.26.5 — pinned, incompatible with Next.js 16 at v4
+- next-intl 3.26.5 — pinned; the v4 migration is pending and unvalidated here
 - next-themes 0.4.6 — dark/light mode
 - react-hook-form + zod — forms and validation
 - class-variance-authority (CVA) — component variants
@@ -52,8 +52,8 @@ bunx prisma db push   # Push schema to database
 
 ## i18n Rules
 
-- next-intl pinned to 3.26.5 — do NOT upgrade (breaks with Next.js 16)
-- Static imports only in `i18n/request.ts` — dynamic imports broken in Next.js 16
+- next-intl pinned to 3.26.5 — do NOT upgrade without validating the v4 migration
+- Static imports only in `i18n/request.ts` — dynamic imports broke with the bundler
 - Client import: `useTranslations` from `'next-intl'` (not `'next-intl/client'`)
 - Server import: `getTranslations` from `'next-intl/server'`
 - Feature translations: `features/[name]/messages/en.json` + `es.json`
@@ -80,9 +80,9 @@ bunx prisma db push   # Push schema to database
 | Issue                               | Cause                         | Workaround                         |
 | ----------------------------------- | ----------------------------- | ---------------------------------- |
 | `dark:` variants don't work         | Tailwind v4 CSS-first         | Use `isDark` + `cn()`              |
-| next-intl v4 crashes                | Next.js 16 incompatible       | Pinned to 3.26.5                   |
-| Dynamic locale imports fail         | Next.js 16 bundler            | Static imports in `request.ts`     |
-| `middleware.ts` deprecation warning | Next.js 16 prefers `proxy.ts` | Blocked by next-intl, non-blocking |
+| next-intl v4 unvalidated            | Migration pending             | Pinned to 3.26.5                   |
+| Dynamic locale imports fail         | Next.js bundler               | Static imports in `request.ts`     |
+| `middleware.ts` deprecation warning | Next.js prefers `proxy.ts`    | Blocked by next-intl, non-blocking |
 | next-intl navigation hooks          | Requires createNavigation()   | Import from `@/i18n/navigation`    |
 | Prisma schema `url` error           | Prisma 7 removed url from schema | Use `prisma.config.ts` instead   |
 | PrismaClient import error          | IDE cache issue               | Restart TS Server (Cmd+Shift+P)   |

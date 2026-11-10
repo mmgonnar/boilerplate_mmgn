@@ -1,3 +1,4 @@
+import type { AbstractIntlMessages } from 'next-intl';
 import { getRequestConfig } from 'next-intl/server';
 
 import commonEn from '@/messages/en.json';
@@ -12,7 +13,7 @@ import navigationEs from '@/features/navigation/messages/es.json';
 
 import { routing } from './routing';
 
-const messages: Record<string, Record<string, any>> = {
+const messages: Record<string, AbstractIntlMessages> = {
   en: { ...commonEn, ...authEn, ...navigationEn, ...dashboardEn },
   es: { ...commonEs, ...authEs, ...navigationEs, ...dashboardEs },
 };

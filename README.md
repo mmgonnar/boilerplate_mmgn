@@ -8,7 +8,7 @@
 | ------------------- | ------------------------------- | ------------------------------ |
 | **Framework**       | Next.js (App Router)            | ^15 (turbopack)                |
 | **Runtime**         | React                           | 19.2.4                         |
-| **Language**        | TypeScript                      | ^5 (strict)                    |
+| **Language**        | TypeScript                      | ^5 (`strict: false` for now)   |
 | **Styling**         | Tailwind CSS                    | ^4 (CSS-first, `@theme` block) |
 | **ORM**             | Prisma                          | ^7.8 with `@prisma/adapter-pg` |
 | **Database**        | PostgreSQL (Supabase)           | —                              |
@@ -40,27 +40,25 @@ You'll be prompted for:
 - **Project name**
 - **Variant** — choose between:
 
-| Variant                | Description                                                         |
-| ---------------------- | ------------------------------------------------------------------- |
-| **Dashboard Completo** | Full boilerplate: Auth + i18n + Dashboard + CRUD + Prisma           |
-| **Solo Landing Page**  | Landing-only: public pages only, no Auth, no Dashboard, no database |
+| Variant               | Description                                                         |
+| --------------------- | ------------------------------------------------------------------- |
+| **Full Dashboard**    | Full boilerplate: Auth + i18n + Dashboard + CRUD + Prisma           |
+| **Landing Page Only** | Landing-only: public pages only, no Auth, no Dashboard, no database |
 
-### Dashboard Completo
+### Full Dashboard
 
-After scaffolding, complete the setup:
+After scaffolding, complete the setup (the CLI already created `.env` from `.env.example`):
 
 ```bash
 cd your-project
-cp .env.example .env
 # Edit .env with your Supabase credentials (see Environment Variables below)
-bun install
-bunx prisma generate
+bun install   # runs prisma generate via postinstall
 bunx prisma db push
 # (Optional) Run supabase_setup.sql via Supabase SQL Editor for example tables
 bun run dev
 ```
 
-### Solo Landing Page
+### Landing Page Only
 
 ```bash
 cd your-project
@@ -119,7 +117,7 @@ bun run dev
 │   ├── dashboard/                   #   Dashboard components, sidebar
 │   ├── navigation/                  #   Header, footer, nav config
 │   ├── profile/                     #   Profile view, avatar upload
-│   └── (items)/                     #   Example CRUD services (Supabase)
+│   └── feature-demo/                #   Example CRUD services (Supabase)
 │
 ├── i18n/
 │   ├── routing.ts                   # next-intl routing config
@@ -144,8 +142,7 @@ bun run dev
 │   └── es.json
 │
 ├── prisma/
-│   ├── schema.prisma                # Database schema (no url — uses prisma.config.ts)
-│   └── migrations/                  # Generated migrations
+│   └── schema.prisma                # Database schema (no url — uses prisma.config.ts)
 │
 ├── prisma.config.ts                 # Prisma 7 datasource config
 ├── middleware.ts                    # i18n + auth middleware
@@ -222,7 +219,29 @@ bunx prisma db push
 
 ### Example Feature: CRUD Items
 
-The `features/(items)/services/` directory provides an example of Supabase-based CRUD operations against a `public.items` table. Run `supabase_setup.sql` in your Supabase SQL Editor to create the table with Row Level Security.
+The `features/feature-demo/services/` directory provides an example of Supabase-based CRUD operations against a `public.items` table. Run `supabase_setup.sql` in your Supabase SQL Editor to create the table with Row Level Security.
+
+### Storage: avatars bucket
+
+The profile avatar upload (`features/profile/services/upload-avatar.ts`) needs a PUBLIC Supabase Storage bucket named `avatars`. Files are stored at `<userId>/avatar.<ext>` and re-uploaded with upsert. `supabase_setup.sql` does not create the bucket, so on a fresh Supabase project the upload fails until the bucket and policies exist. Create them in the Supabase SQL Editor:
+
+```sql
+insert into storage.buckets (id, name, public)
+values ('avatars', 'avatars', true)
+on conflict (id) do nothing;
+
+create policy "Avatar images are publicly readable"
+on storage.objects for select
+using (bucket_id = 'avatars');
+
+create policy "Users can upload their own avatar"
+on storage.objects for insert to authenticated
+with check (bucket_id = 'avatars' and (storage.foldername(name))[1] = auth.uid()::text);
+
+create policy "Users can update their own avatar"
+on storage.objects for update to authenticated
+using (bucket_id = 'avatars' and (storage.foldername(name))[1] = auth.uid()::text);
+```
 
 ## Authentication
 
@@ -304,7 +323,7 @@ export const routing = defineRouting({
 | Client Component | `useTranslations` from `'next-intl'`         |
 | Navigation       | `Link`, `useRouter` from `@/i18n/navigation` |
 
-> **Important**: next-intl is pinned to 3.26.5 — do not upgrade. v4 crashes with Next.js 16.
+> **Important**: next-intl is pinned to 3.26.5 — do not upgrade casually. The v4 migration (supported on Next.js 15) is pending and has not been validated with this setup.
 
 ## Theming & Dark Mode
 
@@ -433,7 +452,7 @@ For questions or suggestions:
 
 - **GitHub:** [github.com/mmgonnar](https://github.com/mmgonnar)
 - **LinkedIn:** [linkedin.com/in/mmgonnar](https://www.linkedin.com/in/mmgonnar/)
-- **Email:** [mmgonnar@gmail.com](mailto:mmg.onnar@gmail.com)
+- **Email:** [mm.gonnar@gmail.com](mailto:mm.gonnar@gmail.com)
 - **Twitter:** [@mmgonnar](https://x.com/mmgonnar)
 
-Your feedback and contributions are welcome! This project aims to make teaching more efficient and enjoyable.
+Your feedback and contributions are welcome!

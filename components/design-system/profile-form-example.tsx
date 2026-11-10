@@ -72,6 +72,7 @@ export function ProfileFormExample({ onSuccess }: ProfileFormExampleProps) {
 
   async function onSubmit() {
     console.log('onSubmit');
+    onSuccess?.();
   }
 
   return (

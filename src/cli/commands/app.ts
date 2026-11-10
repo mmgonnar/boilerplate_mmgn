@@ -14,18 +14,21 @@ import * as pc from 'picocolors';
 const LANDING_DELETIONS = [
   'features/profile',
   'features/auth',
-  'features/(items)',
+  'features/feature-demo',
+  'features/dashboard',
   'app/[locale]/(auth)',
   'app/[locale]/(dashboard)',
+  'app/auth',
+  'lib/prisma.ts',
   'prisma',
   'prisma.config.ts',
   'supabase_setup.sql',
 ];
 
-const LANDING_NAV_CONFIG = `interface FooterColumnType {
+const LANDING_NAV_CONFIG = `type FooterColumnType = {
   title: string;
   links: { label: string; href: string }[];
-}
+};
 
 export const APP_MODE = {
   variant: 'landing',
@@ -66,7 +69,8 @@ export const FOOTER_LINKS: FooterColumnType[] = [
 ];
 `;
 
-const LANDING_I18N_REQUEST = `import { getRequestConfig } from 'next-intl/server';
+const LANDING_I18N_REQUEST = `import type { AbstractIntlMessages } from 'next-intl';
+import { getRequestConfig } from 'next-intl/server';
 
 import commonEn from '@/messages/en.json';
 import commonEs from '@/messages/es.json';
@@ -75,7 +79,7 @@ import navigationEs from '@/features/navigation/messages/es.json';
 
 import { routing } from './routing';
 
-const messages: Record<string, Record<string, any>> = {
+const messages: Record<string, AbstractIntlMessages> = {
   en: { ...commonEn, ...navigationEn },
   es: { ...commonEs, ...navigationEs },
 };
@@ -148,6 +152,9 @@ export async function runApp(templateDir: string) {
       const basename = path.basename(src);
 
       if (src.startsWith(targetDir)) return false;
+      // CLI sources and build output belong to the npm package, not to apps.
+      if (src === path.join(templateDir, 'src')) return false;
+      if (src === path.join(templateDir, 'dist')) return false;
       if (basename === 'node_modules') return false;
       if (basename === '.git') return false;
       if (basename === '.next') return false;
@@ -175,6 +182,15 @@ export async function runApp(templateDir: string) {
       path.join(targetDir, '.env'),
     );
 
+    // npm strips .gitignore from published tarballs, so the template ships
+    // as "gitignore" and gets its dot back here.
+    const gitignoreTemplate = path.join(targetDir, 'gitignore');
+    if (await fs.pathExists(gitignoreTemplate)) {
+      await fs.move(gitignoreTemplate, path.join(targetDir, '.gitignore'), {
+        overwrite: true,
+      });
+    }
+
     if (variant === 'landing') {
       s.message('Cleaning template (Landing Page Only)...');
 
@@ -188,12 +204,22 @@ export async function runApp(templateDir: string) {
 
         pkg.name = projectName;
 
-        if (pkg.dependencies) delete pkg.dependencies['@prisma/client'];
-        if (pkg.devDependencies) delete pkg.devDependencies['prisma'];
+        if (pkg.dependencies) {
+          delete pkg.dependencies['@prisma/client'];
+          delete pkg.dependencies['@prisma/adapter-pg'];
+          delete pkg.dependencies['pg'];
+          delete pkg.dependencies['prisma'];
+        }
+        if (pkg.devDependencies) {
+          delete pkg.devDependencies['prisma'];
+          delete pkg.devDependencies['@types/pg'];
+        }
         if (pkg.scripts) {
           delete pkg.scripts['postinstall'];
           delete pkg.scripts['db:generate'];
           delete pkg.scripts['db:push'];
+          // The dashboard build runs prisma generate first; landing has no Prisma.
+          pkg.scripts['build'] = 'next build';
         }
 
         await fs.writeJson(pkgPath, pkg, { spaces: 2 });
@@ -214,6 +240,49 @@ export async function runApp(templateDir: string) {
         pkg.name = projectName;
         await fs.writeJson(pkgPath, pkg, { spaces: 2 });
       }
+    }
+
+    // The generated app is a project, not a publishable copy of this CLI:
+    // drop the npm packaging fields and the CLI's own scripts.
+    const pkgPath = path.join(targetDir, 'package.json');
+    if (await fs.pathExists(pkgPath)) {
+      const pkg = await fs.readJson(pkgPath);
+
+      pkg.private = true;
+      pkg.version = '0.1.0';
+      delete pkg.bin;
+      delete pkg.files;
+      delete pkg.repository;
+      delete pkg.bugs;
+      delete pkg.homepage;
+      delete pkg.keywords;
+
+      // The CLI's own runtime deps; the generated app never prompts,
+      // colors terminal output, or copies template files.
+      if (pkg.dependencies) {
+        delete pkg.dependencies['@clack/prompts'];
+        delete pkg.dependencies['fs-extra'];
+        delete pkg.dependencies['picocolors'];
+      }
+      if (pkg.devDependencies) {
+        delete pkg.devDependencies['@types/fs-extra'];
+      }
+
+      if (pkg.scripts) {
+        delete pkg.scripts['build:cli'];
+        delete pkg.scripts['clone'];
+        delete pkg.scripts['predev'];
+        delete pkg.scripts['prepublishOnly'];
+        delete pkg.scripts['mmgn'];
+        if (typeof pkg.scripts['build'] === 'string') {
+          pkg.scripts['build'] = pkg.scripts['build'].replace(
+            /^bun run build:cli && /,
+            '',
+          );
+        }
+      }
+
+      await fs.writeJson(pkgPath, pkg, { spaces: 2 });
     }
 
     s.stop('Project configured successfully!');

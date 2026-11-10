@@ -33,12 +33,13 @@ export function ProfileView() {
       toast.success('¡Foto de perfil actualizada con éxito! ✨', {
         id: toastId,
       });
-    } catch (error: any) {
+    } catch (error) {
       console.error(error);
-      toast.error(
-        error.message || 'No se pudo actualizar la imagen de perfil.',
-        { id: toastId },
-      );
+      const message =
+        error instanceof Error
+          ? error.message
+          : 'No se pudo actualizar la imagen de perfil.';
+      toast.error(message, { id: toastId });
     } finally {
       setIsUploading(false);
     }
