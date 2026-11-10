@@ -57,7 +57,7 @@ export function LoginForm({
 
     apiCallToast(signInPromise, {
       loading: t('login.submit_loading'),
-      successMessage: t('login.welcome') || t('login.welcome_back'),
+      successMessage: t('login.welcome'),
       errorMessage: t('errors.invalid_credentials'),
       router,
       redirectTo: redirectTo ?? '/dashboard',
