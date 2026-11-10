@@ -98,7 +98,30 @@ export default getRequestConfig(async ({ requestLocale }) => {
 });
 `;
 
-export async function runApp(templateDir: string) {
+const VARIANTS = ['dashboard', 'landing'] as const;
+
+type Variant = (typeof VARIANTS)[number];
+
+type AppFlags = {
+  name?: string;
+  variant?: string;
+};
+
+function isVariant(value: string): value is Variant {
+  return (VARIANTS as readonly string[]).includes(value);
+}
+
+export async function runApp(templateDir: string, flags: AppFlags = {}) {
+  // Checked before the intro so a bad flag fails plainly, with no half-drawn prompt.
+  if (flags.variant !== undefined && !isVariant(flags.variant)) {
+    console.error(
+      pc.red(
+        `Invalid --variant "${flags.variant}". Expected one of: ${VARIANTS.join(', ')}.`,
+      ),
+    );
+    process.exit(1);
+  }
+
   const pkg = await fs.readJson(
     path.resolve(templateDir, 'package.json'),
   );
@@ -108,38 +131,54 @@ export async function runApp(templateDir: string) {
     ),
   );
 
-  const projectName = await text({
-    message: 'What will your new project be called?',
-    placeholder: 'my-awesome-app',
-    validate(value) {
-      if (value.trim().length === 0) return 'Project name is required';
-    },
-  });
+  let projectName: string;
 
-  if (isCancel(projectName)) {
-    cancel('Operation cancelled.');
-    process.exit(0);
+  if (flags.name !== undefined) {
+    projectName = flags.name;
+  } else {
+    const answer = await text({
+      message: 'What will your new project be called?',
+      placeholder: 'my-awesome-app',
+      validate(value) {
+        if (value.trim().length === 0) return 'Project name is required';
+      },
+    });
+
+    if (isCancel(answer)) {
+      cancel('Operation cancelled.');
+      process.exit(0);
+    }
+
+    projectName = answer as string;
   }
 
-  const variant = await select({
-    message: 'Select the variant you need:',
-    options: [
-      {
-        value: 'dashboard',
-        label: '🚀 Full Dashboard',
-        hint: 'Auth + i18n + Storage + CRUD',
-      },
-      {
-        value: 'landing',
-        label: '🎨 Landing Page Only',
-        hint: 'Removes Supabase, Auth and private routes',
-      },
-    ],
-  });
+  let variant: Variant;
 
-  if (isCancel(variant)) {
-    cancel('Operation cancelled.');
-    process.exit(0);
+  if (flags.variant !== undefined && isVariant(flags.variant)) {
+    variant = flags.variant;
+  } else {
+    const answer = await select({
+      message: 'Select the variant you need:',
+      options: [
+        {
+          value: 'dashboard',
+          label: '🚀 Full Dashboard',
+          hint: 'Auth + i18n + Storage + CRUD',
+        },
+        {
+          value: 'landing',
+          label: '🎨 Landing Page Only',
+          hint: 'Removes Supabase, Auth and private routes',
+        },
+      ],
+    });
+
+    if (isCancel(answer)) {
+      cancel('Operation cancelled.');
+      process.exit(0);
+    }
+
+    variant = answer as Variant;
   }
 
   const s = spinner();
