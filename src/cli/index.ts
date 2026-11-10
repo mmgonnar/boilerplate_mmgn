@@ -1,4 +1,4 @@
-#!/usr/bin/env bun
+#!/usr/bin/env node
 
 import { fileURLToPath } from 'url';
 import * as fs from 'fs-extra';
