@@ -1,15 +1,18 @@
 import createMiddleware from 'next-intl/middleware';
 import { type NextRequest, NextResponse } from 'next/server';
 
+import { routing } from '@/i18n/routing';
 import { createClient } from '@/lib/supabase/middleware';
 
 const PROTECTED_ROUTES = ['/dashboard', '/profile', '/settings'];
 
-const intlMiddleware = createMiddleware({
-  locales: ['es', 'en'],
-  defaultLocale: 'es',
-  localePrefix: 'as-needed',
-});
+const intlMiddleware = createMiddleware(routing);
+
+// Matches a locale segment only when the path ends there or a slash follows,
+// so /es/dashboard loses its prefix while /esports keeps its path intact.
+const LOCALE_PREFIX_PATTERN = new RegExp(
+  `^/(?:${routing.locales.join('|')})(?=/|$)`,
+);
 
 export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
@@ -42,7 +45,7 @@ export async function middleware(request: NextRequest) {
 
   // 5. Limpiar el pathname del idioma para validar las rutas protegidas
   const cleanPath =
-    pathname.replace(/^\/(es|en)/, '').replace(/\/$/, '') || '/';
+    pathname.replace(LOCALE_PREFIX_PATTERN, '').replace(/\/$/, '') || '/';
 
   const isProtected = PROTECTED_ROUTES.some(
     (route) => cleanPath === route || cleanPath.startsWith(route + '/'),
@@ -50,7 +53,8 @@ export async function middleware(request: NextRequest) {
 
   // 6. Si la ruta es protegida y el usuario no existe, redirigir al login
   if (isProtected && !user) {
-    const locale = request.cookies.get('NEXT_LOCALE')?.value || 'es';
+    const locale =
+      request.cookies.get('NEXT_LOCALE')?.value || routing.defaultLocale;
     const loginUrl = new URL(`/${locale}/login`, request.url);
     const redirectRes = NextResponse.redirect(loginUrl);
 

@@ -6,6 +6,7 @@ import { getMessages, getTranslations } from 'next-intl/server';
 import { ThemeProvider } from 'next-themes';
 import { headers } from 'next/headers';
 
+import { routing } from '@/i18n/routing';
 import { AuthProvider } from '@/providers/auth-provider';
 
 import '../globals.css';
@@ -25,8 +26,8 @@ export async function generateMetadata({
   const headersList = await headers();
   const pathname = headersList.get('x-pathname') ?? '/';
 
-  // 💡 BOILERPLATE NOTE: Update this array if your project supports more locales (e.g. ['es', 'en', 'fr'])
-  const locales = ['es', 'en'];
+  // 💡 BOILERPLATE NOTE: Locales come from i18n/routing.ts, add new ones there
+  const locales = routing.locales;
   let pathWithoutLocale = pathname;
 
   for (const l of locales) {
@@ -53,10 +54,11 @@ export async function generateMetadata({
     alternates: {
       canonical,
       languages: {
-        // 💡 BOILERPLATE NOTE: Map hreflang alternate URLs here.
+        // 💡 BOILERPLATE NOTE: One hreflang per configured locale.
         // If your default locale uses localePrefix: 'as-needed', adjust paths to match your URL structure.
-        en: `${baseUrl}/en${cleanPath}`,
-        es: `${baseUrl}/es${cleanPath}`,
+        ...Object.fromEntries(
+          locales.map((l) => [l, `${baseUrl}/${l}${cleanPath}`]),
+        ),
         'x-default': `${baseUrl}${cleanPath}`,
       },
     },

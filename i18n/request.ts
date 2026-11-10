@@ -21,7 +21,9 @@ const messages: Record<string, AbstractIntlMessages> = {
 export default getRequestConfig(async ({ requestLocale }) => {
   let locale = await requestLocale;
 
-  if (!locale || !routing.locales.includes(locale as 'es' | 'en')) {
+  const supportedLocales: readonly string[] = routing.locales;
+
+  if (!locale || !supportedLocales.includes(locale)) {
     locale = routing.defaultLocale;
   }
 
