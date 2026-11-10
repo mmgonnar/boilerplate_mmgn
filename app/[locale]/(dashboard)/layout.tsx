@@ -6,7 +6,7 @@ import toast from 'react-hot-toast';
 import { useRouter } from '@/i18n/navigation';
 import { useAuth } from '@/providers/auth-provider';
 
-import { Sidebar } from '@/features/dashboard';
+import { Sidebar, useLogoutMessages } from '@/features/dashboard';
 import { HeaderDashboard } from '@/features/navigation';
 
 export default function DashboardLayout({
@@ -16,6 +16,7 @@ export default function DashboardLayout({
 }) {
   const { user, signOut, isLoading } = useAuth();
   const router = useRouter();
+  const logoutMessages = useLogoutMessages();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   useEffect(() => {
@@ -30,21 +31,18 @@ export default function DashboardLayout({
     if (isLoggingOut) return;
 
     setIsLoggingOut(true);
-    const toastId = toast.loading('Cerrando sesión...');
+    const toastId = toast.loading(logoutMessages.loading);
 
     try {
       await signOut();
-      toast.success('Sesión cerrada correctamente', { id: toastId });
+      toast.success(logoutMessages.success, { id: toastId });
       router.push('/login');
     } catch (error) {
-      // 🚀 Eliminamos el ": any" aquí, dejando que TypeScript use su comportamiento nativo
       setIsLoggingOut(false);
 
-      // ✅ Evaluamos de forma segura si el error tiene un mensaje de texto
+      // ✅ Only trust the error's own text when it actually carries one
       const errorMessage =
-        error instanceof Error
-          ? error.message
-          : 'No se pudo cerrar la sesión. Inténtalo de nuevo.';
+        error instanceof Error ? error.message : logoutMessages.error;
 
       toast.error(errorMessage, { id: toastId });
     }

@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 import { useTranslations } from 'next-intl';
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
 
 import { Button, Form, FormField, Input } from '@/components/ui';
 import { useRouter } from '@/i18n/navigation';
@@ -57,7 +57,7 @@ export function LoginForm({
 
     apiCallToast(signInPromise, {
       loading: t('login.submit_loading'),
-      successMessage: t('login.welcome') || t('login.welcome_back'),
+      successMessage: t('login.welcome'),
       errorMessage: t('errors.invalid_credentials'),
       router,
       redirectTo: redirectTo ?? '/dashboard',

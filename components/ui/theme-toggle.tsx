@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 
+import { useTranslations } from 'next-intl';
 import { useTheme } from 'next-themes';
 
 import { cn } from '@/lib/utils';
@@ -11,6 +12,7 @@ import { Button } from './button';
 
 export function ThemeToggle() {
   const { setTheme, resolvedTheme } = useTheme();
+  const t = useTranslations('common');
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => setMounted(true), []);
@@ -28,7 +30,7 @@ export function ThemeToggle() {
       variant="ghost"
       size="icon"
       onClick={() => setTheme(isDark ? 'light' : 'dark')}
-      aria-label={isDark ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
+      aria-label={isDark ? t('theme_light') : t('theme_dark')}
       className="relative overflow-hidden"
     >
       <Sun
@@ -53,7 +55,7 @@ export function ThemeToggle() {
         )}
       />
 
-      <span className="sr-only">Cambiar tema</span>
+      <span className="sr-only">{t('theme_toggle')}</span>
     </Button>
   );
 }

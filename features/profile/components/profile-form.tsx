@@ -4,6 +4,8 @@ import * as React from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 
+import { useTranslations } from 'next-intl';
+
 import {
   AvatarUpload,
   Button,
@@ -19,7 +21,11 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Mail, User } from 'lucide-react';
 import { z } from 'zod';
 
-import { updateAvatarMetadata, uploadAvatar } from '../services';
+import {
+  isAvatarErrorKey,
+  updateAvatarMetadata,
+  uploadAvatar,
+} from '../services';
 
 const profileSettingsSchema = z.object({
   name: z.string().min(1, 'El nombre es requerido'),
@@ -30,6 +36,7 @@ type ProfileSettingsValues = z.infer<typeof profileSettingsSchema>;
 
 export function ProfileForm() {
   const { user } = useAuth();
+  const t = useTranslations();
   const [isUploading, setIsUploading] = React.useState(false);
   const [isSaving, setIsSaving] = React.useState(false);
 
@@ -60,8 +67,11 @@ export function ProfileForm() {
       await updateAvatarMetadata(publicUrl);
       toast.success('¡Foto de perfil actualizada! ✨', { id: toastId });
     } catch (error) {
-      const msg =
-        error instanceof Error ? error.message : 'Error al subir la imagen.';
+      const msg = isAvatarErrorKey(error)
+        ? t(error.message)
+        : error instanceof Error
+          ? error.message
+          : 'Error al subir la imagen.';
       toast.error(msg, { id: toastId });
     } finally {
       setIsUploading(false);

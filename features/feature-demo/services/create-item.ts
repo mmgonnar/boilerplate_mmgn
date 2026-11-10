@@ -3,7 +3,7 @@ import { createClient } from '@/lib/supabase/client';
 export async function createItem(title: string, description?: string) {
   const supabase = createClient();
 
-  // Obtenemos la sesión actual para amarrar el user_id de forma segura
+  // Read the current session so the user_id is bound server-side
   const {
     data: { user },
   } = await supabase.auth.getUser();

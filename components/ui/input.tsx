@@ -4,7 +4,7 @@ import * as React from 'react';
 
 import { cn } from '@/lib/utils';
 
-// ─── Types ────────────────────────────────────────────────────────────────────
+// ─── Types ───────────────────────────────────────────────────────────────────
 export type InputProps = {
   label?: string;
   error?: string;
@@ -16,7 +16,7 @@ export type InputProps = {
   'size'
 >
 
-// ─── Componente ───────────────────────────────────────────────────────────────
+// ─── Component ───────────────────────────────────────────────────────────────
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
   (
     {
@@ -44,9 +44,9 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         .join(' ') || undefined;
 
     return (
-      /* Añadimos pb-5 (padding-bottom) para reservar el espacio exacto 
-        que ocupará el texto absoluto (14px de texto + margen). Así evitamos 
-        saltos de línea y que se encime con el siguiente input.
+      /* pb-5 reserves the exact height the absolutely positioned text will
+        take (14px of text plus margin), which keeps the layout from jumping
+        and stops it overlapping the next input.
       */
       <div className="relative flex w-full flex-col gap-1.5 text-left pb-1">
         {/* Label */}
@@ -91,7 +91,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
               // ── Focus ─────────────────────────────────────────────────────
               'outline-none',
               'focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background',
-              // ── Transición ────────────────────────────────────────────────
+              // ── Transition ─────────────────────────────────────────────────
               'transition-[border-color,box-shadow] duration-200',
               // ── Disabled ──────────────────────────────────────────────────
               'disabled:cursor-not-allowed disabled:opacity-50',
@@ -99,7 +99,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
               error
                 ? 'border-destructive focus-visible:ring-destructive'
                 : 'focus-visible:ring-ring',
-              // ── Padding dinámico según iconos ─────────────────────────────
+              // ── Dynamic padding based on icons ─────────────────────────────
               leftIcon && 'pl-9',
               rightIcon && 'pr-9',
               className,
@@ -115,8 +115,8 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           )}
         </div>
 
-        {/* Contenedor de Feedback Absoluto:
-          Se posiciona al fondo (`bottom-0`) de manera absoluta para que no empuje el DOM.
+        {/* Absolute feedback container:
+          pinned to `bottom-0` so it never pushes the DOM around.
         */}
         {error && (
           <p

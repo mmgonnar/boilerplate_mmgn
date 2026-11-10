@@ -54,7 +54,7 @@
     "predev": "kill -9 $(lsof -ti tcp:3000) || true",
     "dev": "next dev",
     "build": "bun run build:cli && prisma generate --schema=./prisma/schema.prisma && next build",
-    "build:cli": "bun build ./src/cli/index.ts --outdir ./dist/cli --target node --format esm",
+    "build:cli": "bun build ./src/cli/index.ts --outdir ./dist/cli --target node --format esm && node scripts/write-cli-package-type.mjs",
     "prepublishOnly": "bun run build:cli",
     "start": "next start",
     "lint": "eslint",

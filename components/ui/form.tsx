@@ -17,7 +17,7 @@ type FormProps<TFieldValues extends FieldValues> = {
   children: React.ReactNode;
 }
 
-// Nota la coma después de TFieldValues, es un truco para archivos .tsx
+// Note the comma after TFieldValues, it is a trick for .tsx files
 export function Form<TFieldValues extends FieldValues>({
   form,
   onSubmit,
@@ -38,7 +38,7 @@ export function Form<TFieldValues extends FieldValues>({
 }
 
 // ─── FormField ────────────────────────────────────────────────────────────────
-// Usar sintaxis de flecha con genéricos suele ser más estable en TSX
+// Arrow syntax with generics tends to be more stable in TSX
 export const FormField = <
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,

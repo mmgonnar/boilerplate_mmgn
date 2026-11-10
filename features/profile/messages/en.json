@@ -1,0 +1,8 @@
+{
+  "profile": {
+    "errors": {
+      "avatar_upload_failed": "The image could not be uploaded.",
+      "avatar_url_failed": "The public avatar URL could not be generated."
+    }
+  }
+}

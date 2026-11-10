@@ -9,6 +9,14 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+// Internal links go through the locale-aware Link from @/i18n/navigation, which
+// would otherwise prefix an absolute URL, a mailto or a bare hash with the locale.
+const EXTERNAL_HREF_PATTERN = /^(?:[a-z][a-z0-9+.-]*:|\/\/|#)/i;
+
+export function isExternalHref(href: string) {
+  return EXTERNAL_HREF_PATTERN.test(href);
+}
+
 export type ApiCallToastOptions = {
   loading: string;
   successMessage: string;

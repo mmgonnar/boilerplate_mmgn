@@ -1,5 +1,19 @@
 import { createClient } from '@/lib/supabase/client';
 
+// A plain service cannot call a translation hook, so it throws the message KEY
+// and the component that caught it does the lookup, via isAvatarErrorKey below.
+export const AVATAR_ERROR_KEYS = {
+  uploadFailed: 'profile.errors.avatar_upload_failed',
+  publicUrlMissing: 'profile.errors.avatar_url_failed',
+} as const;
+
+export function isAvatarErrorKey(value: unknown): value is Error {
+  return (
+    value instanceof Error &&
+    (Object.values(AVATAR_ERROR_KEYS) as string[]).includes(value.message)
+  );
+}
+
 export async function uploadAvatar(
   file: File,
   userId: string,
@@ -17,14 +31,15 @@ export async function uploadAvatar(
     });
 
   if (uploadError) {
-    throw new Error(`Error al subir la imagen: ${uploadError.message}`);
+    // The driver message rides along on cause, so nothing diagnostic is lost.
+    throw new Error(AVATAR_ERROR_KEYS.uploadFailed, { cause: uploadError });
   }
 
-  // Obtenemos la URL pública del archivo recién subido
+  // Read the public URL of the file we just uploaded
   const { data } = supabase.storage.from('avatars').getPublicUrl(filePath);
 
   if (!data?.publicUrl) {
-    throw new Error('No se pudo generar la URL pública del avatar.');
+    throw new Error(AVATAR_ERROR_KEYS.publicUrlMissing);
   }
 
   return data.publicUrl;

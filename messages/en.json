@@ -5,6 +5,9 @@
     "loading": "Loading...",
     "back": "Go back",
     "site_title": "Boilerplate",
-    "site_description": "Production-ready boilerplate to kickstart your projects."
+    "site_description": "Production-ready boilerplate to kickstart your projects.",
+    "theme_light": "Switch to light mode",
+    "theme_dark": "Switch to dark mode",
+    "theme_toggle": "Toggle theme"
   }
 }

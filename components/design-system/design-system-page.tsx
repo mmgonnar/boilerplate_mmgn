@@ -371,7 +371,7 @@ export function DesignSystemPage() {
               </CardContent>
             </Card>
 
-            {/* Caso de Uso: Perfil de Estudiante (ClassAid) */}
+            {/* Use case: student profile */}
             <Card className="overflow-hidden border-primary/20">
               <div className="h-2 bg-primary w-full" />{' '}
               {/* Acento visual superior */}
@@ -411,7 +411,7 @@ export function DesignSystemPage() {
         {/* --- BREADCRUMB --- */}
         <SectionWrapper title="Navigation: Breadcrumb (Data-driven)">
           <div className="space-y-8 p-8 border border-border rounded-2xl bg-card/10">
-            {/* Caso 1: Básico con Iconos */}
+            {/* Case 1: basic with icons */}
             <div className="space-y-3">
               <p className="text-[10px] font-bold text-muted-foreground uppercase">
                 Con Iconos y Rutas
@@ -429,7 +429,7 @@ export function DesignSystemPage() {
               />
             </div>
 
-            {/* Caso 2: Colapsado Automático */}
+            {/* Case 2: automatic collapse */}
             <div className="space-y-3">
               <p className="text-[10px] font-bold text-muted-foreground uppercase">
                 Auto-colapso (maxItems: 3)
@@ -489,7 +489,7 @@ export function DesignSystemPage() {
         {/* --- SKELETON --- */}
         <SectionWrapper title="Feedback: Skeletons">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {/* Ejemplo 1: Card de Usuario Cargando */}
+            {/* Example 1: user card loading */}
             <div className="p-6 border border-border rounded-xl space-y-4">
               <div className="flex items-center gap-3">
                 <SkeletonAvatar size="lg" />

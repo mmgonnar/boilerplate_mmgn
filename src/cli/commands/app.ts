@@ -98,7 +98,46 @@ export default getRequestConfig(async ({ requestLocale }) => {
 });
 `;
 
-export async function runApp(templateDir: string) {
+const VARIANTS = ['dashboard', 'landing'] as const;
+
+type Variant = (typeof VARIANTS)[number];
+
+type AppFlags = {
+  name?: string;
+  variant?: string;
+};
+
+function isVariant(value: string): value is Variant {
+  return (VARIANTS as readonly string[]).includes(value);
+}
+
+// The name becomes the "name" field of the generated package.json, so it has
+// to satisfy npm: lowercase, no spaces, no leading dot or underscore.
+const NPM_NAME_PATTERN = /^[a-z0-9][a-z0-9._-]*$/;
+
+function describeNameProblem(value: string): string | undefined {
+  if (value.length === 0) return 'Project name is required';
+  if (value.length > 214) {
+    return 'Project name must be 214 characters or fewer';
+  }
+  if (!NPM_NAME_PATTERN.test(value)) {
+    return 'Project name must be a valid npm package name: lowercase letters, digits, dots, hyphens and underscores, starting with a letter or a digit';
+  }
+
+  return undefined;
+}
+
+export async function runApp(templateDir: string, flags: AppFlags = {}) {
+  // Checked before the intro so a bad flag fails plainly, with no half-drawn prompt.
+  if (flags.variant !== undefined && !isVariant(flags.variant)) {
+    console.error(
+      pc.red(
+        `Invalid --variant "${flags.variant}". Expected one of: ${VARIANTS.join(', ')}.`,
+      ),
+    );
+    process.exit(1);
+  }
+
   const pkg = await fs.readJson(
     path.resolve(templateDir, 'package.json'),
   );
@@ -108,44 +147,82 @@ export async function runApp(templateDir: string) {
     ),
   );
 
-  const projectName = await text({
-    message: 'What will your new project be called?',
-    placeholder: 'my-awesome-app',
-    validate(value) {
-      if (value.trim().length === 0) return 'Project name is required';
-    },
-  });
+  let projectName: string;
 
-  if (isCancel(projectName)) {
-    cancel('Operation cancelled.');
-    process.exit(0);
+  if (flags.name !== undefined) {
+    projectName = flags.name.trim();
+    const problem = describeNameProblem(projectName);
+
+    if (problem) {
+      // Flag mode has nobody to re-ask, so a bad --name is fatal.
+      console.error(pc.red(`Invalid --name "${flags.name}". ${problem}.`));
+      process.exit(1);
+    }
+  } else {
+    const answer = await text({
+      message: 'What will your new project be called?',
+      placeholder: 'my-awesome-app',
+      validate(value) {
+        // Returning a string keeps the prompt open and shows the reason.
+        return describeNameProblem(value.trim());
+      },
+    });
+
+    if (isCancel(answer)) {
+      cancel('Operation cancelled.');
+      process.exit(0);
+    }
+
+    projectName = (answer as string).trim();
   }
 
-  const variant = await select({
-    message: 'Select the variant you need:',
-    options: [
-      {
-        value: 'dashboard',
-        label: '🚀 Full Dashboard',
-        hint: 'Auth + i18n + Storage + CRUD',
-      },
-      {
-        value: 'landing',
-        label: '🎨 Landing Page Only',
-        hint: 'Removes Supabase, Auth and private routes',
-      },
-    ],
-  });
+  let variant: Variant;
 
-  if (isCancel(variant)) {
-    cancel('Operation cancelled.');
-    process.exit(0);
+  if (flags.variant !== undefined && isVariant(flags.variant)) {
+    variant = flags.variant;
+  } else {
+    const answer = await select({
+      message: 'Select the variant you need:',
+      options: [
+        {
+          value: 'dashboard',
+          label: '🚀 Full Dashboard',
+          hint: 'Auth + i18n + Storage + CRUD',
+        },
+        {
+          value: 'landing',
+          label: '🎨 Landing Page Only',
+          hint: 'Removes Supabase, Auth and private routes',
+        },
+      ],
+    });
+
+    if (isCancel(answer)) {
+      cancel('Operation cancelled.');
+      process.exit(0);
+    }
+
+    variant = answer as Variant;
+  }
+
+  const targetDir = path.join(process.cwd(), projectName);
+
+  // Refuse before the first write, so a second run cannot half-overwrite a project.
+  if (await fs.pathExists(targetDir)) {
+    const existingEntries = await fs.readdir(targetDir);
+
+    if (existingEntries.length > 0) {
+      console.error(
+        pc.red(
+          `Target directory "${projectName}" already exists and is not empty. Nothing was changed.`,
+        ),
+      );
+      process.exit(1);
+    }
   }
 
   const s = spinner();
   s.start('Cloning and configuring your boilerplate...');
-
-  const targetDir = path.join(process.cwd(), projectName as string);
 
   try {
     const filterFunc = (src: string, _dest: string) => {

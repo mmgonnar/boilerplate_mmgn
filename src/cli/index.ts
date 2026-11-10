@@ -1,4 +1,4 @@
-#!/usr/bin/env bun
+#!/usr/bin/env node
 
 import { fileURLToPath } from 'url';
 import * as fs from 'fs-extra';
@@ -11,14 +11,62 @@ const projectRoot = path.resolve(__dirname, '../..');
 
 async function showHelp() {
   console.log(`
-  ${pc.bold('mmgn')} — Boilerplate scaffolding CLI
+  ${pc.bold('mmgn')}, Boilerplate scaffolding CLI
 
   ${pc.dim('Usage:')}
     mmgn app        ${pc.dim('Scaffold a new project')}
     mmgn env        ${pc.dim('Copy .env to current project')}
     mmgn --help     ${pc.dim('Show this help')}
     mmgn --version  ${pc.dim('Show version')}
+
+  ${pc.dim('Options for "app":')}
+    --name <name>               ${pc.dim('Project name, skips the name prompt')}
+    --variant <dashboard|landing>  ${pc.dim('Variant, skips the variant prompt')}
+
+  ${pc.dim('Any option you leave out is still asked interactively.')}
   `);
+}
+
+export type AppFlags = {
+  name?: string;
+  variant?: string;
+};
+
+// Flags are optional; whatever is not passed falls back to its prompt.
+function parseAppFlags(argv: string[]): AppFlags {
+  const flags: AppFlags = {};
+  const named = ['--name', '--variant'] as const;
+
+  for (let i = 0; i < argv.length; i++) {
+    const arg = argv[i];
+    const inline = named.find((flag) => arg.startsWith(`${flag}=`));
+
+    if (inline) {
+      flags[inline.slice(2) as 'name' | 'variant'] = arg.slice(
+        inline.length + 1,
+      );
+      continue;
+    }
+
+    const match = named.find((flag) => flag === arg);
+
+    if (!match) {
+      console.error(pc.red(`Unknown option for "app": ${arg}`));
+      process.exit(1);
+    }
+
+    const value = argv[i + 1];
+
+    if (value === undefined || value.startsWith('--')) {
+      console.error(pc.red(`Missing value for ${match}`));
+      process.exit(1);
+    }
+
+    flags[match.slice(2) as 'name' | 'variant'] = value;
+    i++;
+  }
+
+  return flags;
 }
 
 async function showVersion() {
@@ -32,7 +80,7 @@ async function main() {
   switch (command) {
     case 'app':
       const { runApp } = await import('./commands/app');
-      await runApp(projectRoot);
+      await runApp(projectRoot, parseAppFlags(process.argv.slice(3)));
       break;
     case 'env':
       const { runEnv } = await import('./commands/env');

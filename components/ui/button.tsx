@@ -2,13 +2,12 @@
 
 import * as React from 'react';
 
-import Link from 'next/link';
-
-import { cn } from '@/lib/utils';
+import { Link } from '@/i18n/navigation';
+import { cn, isExternalHref } from '@/lib/utils';
 import { type VariantProps, cva } from 'class-variance-authority';
 import { Loader2 } from 'lucide-react';
 
-// ─── Variantes ────────────────────────────────────────────────────────────────
+// ─── Variants ────────────────────────────────────────────────────────────────
 const buttonVariants = cva(
   [
     'inline-flex items-center justify-center gap-2',
@@ -49,7 +48,7 @@ const buttonVariants = cva(
   },
 );
 
-// ─── Types ────────────────────────────────────────────────────────────────────
+// ─── Types ───────────────────────────────────────────────────────────────────
 type ButtonVariant = VariantProps<typeof buttonVariants>;
 
 type BaseButtonProps = {
@@ -71,7 +70,7 @@ type LinkOnlyProps = BaseButtonProps &
 
 export type ButtonProps = ButtonOnlyProps | LinkOnlyProps;
 
-// ─── Componente ────────────────────────────────────────────────────────────────
+// ─── Component ───────────────────────────────────────────────────────────────
 function Button(
   props: ButtonProps & { ref?: React.Ref<HTMLButtonElement | HTMLAnchorElement> },
 ) {
@@ -117,13 +116,22 @@ function Button(
   if ('href' in rest) {
     const { href, external } = rest as LinkOnlyProps;
 
+    // An absolute URL or a mailto must not be rewritten with the active locale.
+    if (external || isExternalHref(href)) {
+      return (
+        <a
+          href={href}
+          className={classes}
+          target={external ? '_blank' : undefined}
+          rel={external ? 'noopener noreferrer' : undefined}
+        >
+          {content}
+        </a>
+      );
+    }
+
     return (
-      <Link
-        href={href}
-        className={classes}
-        target={external ? '_blank' : undefined}
-        rel={external ? 'noopener noreferrer' : undefined}
-      >
+      <Link href={href} className={classes}>
         {content}
       </Link>
     );
