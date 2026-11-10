@@ -221,6 +221,28 @@ bunx prisma db push
 
 The `features/feature-demo/services/` directory provides an example of Supabase-based CRUD operations against a `public.items` table. Run `supabase_setup.sql` in your Supabase SQL Editor to create the table with Row Level Security.
 
+### Storage: avatars bucket
+
+The profile avatar upload (`features/profile/services/upload-avatar.ts`) needs a PUBLIC Supabase Storage bucket named `avatars`. Files are stored at `<userId>/avatar.<ext>` and re-uploaded with upsert. `supabase_setup.sql` does not create the bucket, so on a fresh Supabase project the upload fails until the bucket and policies exist. Create them in the Supabase SQL Editor:
+
+```sql
+insert into storage.buckets (id, name, public)
+values ('avatars', 'avatars', true)
+on conflict (id) do nothing;
+
+create policy "Avatar images are publicly readable"
+on storage.objects for select
+using (bucket_id = 'avatars');
+
+create policy "Users can upload their own avatar"
+on storage.objects for insert to authenticated
+with check (bucket_id = 'avatars' and (storage.foldername(name))[1] = auth.uid()::text);
+
+create policy "Users can update their own avatar"
+on storage.objects for update to authenticated
+using (bucket_id = 'avatars' and (storage.foldername(name))[1] = auth.uid()::text);
+```
+
 ## Authentication
 
 ### How It Works
@@ -430,7 +452,7 @@ For questions or suggestions:
 
 - **GitHub:** [github.com/mmgonnar](https://github.com/mmgonnar)
 - **LinkedIn:** [linkedin.com/in/mmgonnar](https://www.linkedin.com/in/mmgonnar/)
-- **Email:** [mmgonnar@gmail.com](mailto:mmg.onnar@gmail.com)
+- **Email:** [mm.gonnar@gmail.com](mailto:mm.gonnar@gmail.com)
 - **Twitter:** [@mmgonnar](https://x.com/mmgonnar)
 
-Your feedback and contributions are welcome! This project aims to make teaching more efficient and enjoyable.
+Your feedback and contributions are welcome!

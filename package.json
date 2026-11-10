@@ -2,7 +2,7 @@
   "name": "mmgn",
   "version": "0.1.9",
   "private": false,
-  "description": "mmgonar Next.js boilerplate — scaffolding CLI with Auth + i18n + Dashboard + Landing variants",
+  "description": "mmgonnar Next.js boilerplate, scaffolding CLI with Auth + i18n + Dashboard + Landing variants",
   "license": "MIT",
   "author": "mmgonnar",
   "repository": {

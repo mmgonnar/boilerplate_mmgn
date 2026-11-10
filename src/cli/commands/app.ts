@@ -257,6 +257,17 @@ export async function runApp(templateDir: string) {
       delete pkg.homepage;
       delete pkg.keywords;
 
+      // The CLI's own runtime deps; the generated app never prompts,
+      // colors terminal output, or copies template files.
+      if (pkg.dependencies) {
+        delete pkg.dependencies['@clack/prompts'];
+        delete pkg.dependencies['fs-extra'];
+        delete pkg.dependencies['picocolors'];
+      }
+      if (pkg.devDependencies) {
+        delete pkg.devDependencies['@types/fs-extra'];
+      }
+
       if (pkg.scripts) {
         delete pkg.scripts['build:cli'];
         delete pkg.scripts['clone'];
