@@ -1,6 +1,6 @@
 'use client';
 import { useTranslations } from 'next-intl';
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
 
 import { Logo } from '@/components';
 import { Breadcrumb, SocialMedia } from '@/components/ui';
@@ -87,14 +87,14 @@ function MadeBy({
   return (
     <p className="text-xs text-muted-foreground">
       {t('made_by')}{' '}
-      <Link
+      <a
         href={githubUrl}
         target="_blank"
         rel="noopener noreferrer"
         className="hover:text-foreground transition-colors"
       >
         {company}
-      </Link>
+      </a>
     </p>
   );
 }

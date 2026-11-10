@@ -3,7 +3,7 @@
 import * as React from 'react';
 
 import { useTranslations } from 'next-intl';
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
 
 import { Logo } from '@/components';
 import { Avatar, Button, LanguageToggle, ThemeToggle } from '@/components/ui';
