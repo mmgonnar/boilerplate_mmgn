@@ -396,19 +396,21 @@ Supabase free tier **hibernates** databases after 7 days of inactivity. A GitHub
 ### How it works
 
 ```
-GitHub Actions (daily 06:00 UTC) → curl → Supabase REST API (profiles table)
+GitHub Actions (daily 06:00 UTC) → curl → Supabase REST API (items table)
 ```
 
 ### Setup
 
-1. Add these **secrets** in your repo: Settings → Secrets and variables → Actions:
+1. Run `supabase_setup.sql` in the Supabase SQL Editor. The workflow pings the `items` table, which that script creates. Without it the request returns 404 and the database is never touched.
 
-   | Secret              | Value                                                 |
-   | ------------------- | ----------------------------------------------------- |
-   | `SUPABASE_URL`      | Your `NEXT_PUBLIC_SUPABASE_URL`                       |
-   | `SUPABASE_ANON_KEY` | Your `NEXT_PUBLIC_SUPABASE_ANON_KEY`                  |
+2. Add these **secrets** in your repo: Settings → Secrets and variables → Actions:
 
-2. Trigger manually: Actions → "Supabase Keep Alive" → "Run workflow"
+   | Secret              | Value                                |
+   | ------------------- | ------------------------------------ |
+   | `SUPABASE_URL`      | Your `NEXT_PUBLIC_SUPABASE_URL`      |
+   | `SUPABASE_ANON_KEY` | Your `NEXT_PUBLIC_SUPABASE_ANON_KEY` |
+
+3. Trigger manually: Actions → "Supabase Keep Alive" → "Run workflow"
 
 > **Note**: The workflow is available only in the boilerplate repository. It is **excluded** from scaffolded projects by the CLI's `filterFunc`.
 
