@@ -8,7 +8,7 @@ import { createClient } from '@/lib/supabase/server';
 import { ResetPasswordForm } from '@/features/auth';
 
 export const metadata: Metadata = {
-  title: 'Design System',
+  title: 'Reset Password',
 };
 
 export const dynamic = 'force-dynamic';
