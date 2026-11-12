@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 import { ForgotPasswordForm } from '@/features/auth';
 
 export const metadata: Metadata = {
-  title: 'Olvidé mi contraseña',
+  title: 'Forgot Password',
 };
 
 export default function LoginPage() {
