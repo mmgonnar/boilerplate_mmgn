@@ -27,23 +27,43 @@
 
 - [Bun](https://bun.sh) >= 1.2
 
-## CLI — `bunx mmgn`
+## CLI
 
 Scaffold a new project from the boilerplate with a single command:
 
 ```bash
 bunx mmgn@latest app
+# or with npm
+npx mmgn@latest app
 ```
 
 You'll be prompted for:
 
-- **Project name**
-- **Variant** — choose between:
+- **Project name**: must be a valid npm package name (lowercase letters, digits, dots, hyphens and underscores, no spaces).
+- **Variant**: choose between:
 
 | Variant               | Description                                                         |
 | --------------------- | ------------------------------------------------------------------- |
 | **Full Dashboard**    | Full boilerplate: Auth + i18n + Dashboard + CRUD + Prisma           |
 | **Landing Page Only** | Landing-only: public pages only, no Auth, no Dashboard, no database |
+
+### Non-interactive mode
+
+Pass both values as flags to skip the prompts, for scripts or CI:
+
+```bash
+bunx mmgn@latest app --name my-app --variant dashboard
+bunx mmgn@latest app --name my-site --variant landing
+```
+
+| Flag                            | Description                                 |
+| ------------------------------- | ------------------------------------------- |
+| `--name <name>`                 | Project name, skips the name prompt         |
+| `--variant <dashboard\|landing>` | Variant to scaffold, skips the variant prompt |
+
+Any flag you leave out is still asked interactively. An invalid `--name` or `--variant` exits with an error instead of prompting.
+
+The CLI never writes into a folder that already exists and is not empty: it stops and changes nothing.
 
 ### Full Dashboard
 
@@ -70,13 +90,16 @@ bun run dev
 
 ### Available Commands
 
-| Command                | Description                                                 |
-| ---------------------- | ----------------------------------------------------------- |
-| `bunx mmgn@latest app` | Scaffold a new project (sanitized)                          |
-| `bunx mmgn env`        | Copy `.env` from boilerplate to current project (local use) |
-| `bunx mmgn --version`  | Show version                                                |
-| `bunx mmgn --help`     | Show help                                                   |
-| `bun run clone <name>` | Full clone with all files (`.github/`, docs, etc.)          |
+| Command                                                  | Description                                                     |
+| -------------------------------------------------------- | --------------------------------------------------------------- |
+| `bunx mmgn@latest app`                                   | Scaffold a new project (sanitized), asking for name and variant |
+| `bunx mmgn@latest app --name <name> --variant <variant>` | Scaffold a new project with no prompts                          |
+| `bunx mmgn env`                                          | Copy `.env` from boilerplate to current project (local use), asks before overwriting an existing `.env` |
+| `bunx mmgn --version`                                    | Show version                                                    |
+| `bunx mmgn --help`                                       | Show help                                                       |
+| `bun run clone <name>`                                   | Full clone with all files (`.github/`, docs, etc.)              |
+
+Every `bunx mmgn` command also works with `npx mmgn`.
 
 ## Environment Variables
 
